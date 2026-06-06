@@ -1,6 +1,6 @@
 ---
 name: 'Coverage Guardian'
-description: 'Identifies uncovered code paths and generates targeted tests to close coverage gaps. Targets 80% line / 70% branch on business logic. Interprets JaCoCo reports.'
+description: 'Multi-stack coverage gap analysis (Java + Angular). Closes coverage gaps across backend and frontend. For Java-only JaCoCo XML analysis, use jacoco-coverage-tester instead.'
 model: claude-sonnet-4-5
 tools: ['read', 'edit', 'search', 'findTestFiles', 'runTests']
 target: vscode

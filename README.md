@@ -1,6 +1,6 @@
 # Enterprise Engineering Intelligence Kit (EEIK) Bootstrap
 
-A ready-to-fork workspace seed that provisions Claude Code and GitHub Copilot with rich, structured context for enterprise software development programs. Drop the files from this repository into any project and Copilot becomes a context-aware assistant that understands your technology stack, coding conventions, specialist agent roles, and operational processes — from day one.
+A ready-to-fork workspace seed that provisions Claude Code and GitHub Copilot with rich, structured context for enterprise software development programs. Drop the files from this repository into any project and both tools become context-aware assistants that understand your technology stack, coding conventions, specialist agent roles, and operational processes — from day one.
 
 This is **not a runnable application**. It is a configuration and context layer for Claude Code and GitHub Copilot.
 
@@ -8,44 +8,31 @@ This is **not a runnable application**. It is a configuration and context layer 
 
 ## Repository Structure
 
-This repository follows the [GitHub Copilot Customization Cheat Sheet](https://docs.github.com/en/copilot/reference/customization-cheat-sheet) and [Claude Code Customization](https://code.claude.com/docs/en/settings) recommended layout:
-
 ```
-.github/
+.github/                             ← GitHub Copilot configuration
 ├── copilot-instructions.md          ← Always-on repo-wide context (auto-loaded)
-├── instructions/                    ← Path-specific instructions (auto-applied by file type)
-│   ├── spring-boot.instructions.md
-│   ├── java-legacy.instructions.md
-│   ├── angular.instructions.md
-│   ├── mainframe.instructions.md
-│   ├── sql.instructions.md
-│   ├── test.instructions.md
-│   ├── aws-architecture.instructions.md
-│   ├── containerisation.instructions.md
-│   ├── cdk-terraform.instructions.md
-│   ├── enterprise-architecture.instructions.md
-│   ├── cicd.instructions.md
-│   ├── aws-data-ml-ai.instructions.md
-│   ├── incident-ops.instructions.md
-│   ├── project-estimation.instructions.md
-│   └── deployment.instructions.md
-├── agents/                          ← Custom agent personas (select via @ dropdown)
-│   ├── developer.agent.md           ← 10 migrated from prompts/agents/
-│   ├── ... (10 original agents)
-│   └── ... (22 new specialist agents)
-├── prompts/                         ← Reusable prompt templates (manual invocation)
-│   ├── tasks/                       ← 13 single-purpose task prompts
-│   └── workflows/                   ← 6 multi-step orchestrated workflows
-├── skills/                          ← Auto-loaded skill bundles
-│   ├── estimation/SKILL.md
-│   ├── jacoco-analysis/SKILL.md
-│   ├── aws-cdk-deploy/SKILL.md
-│   ├── incident-response/SKILL.md
-│   └── code-quality-scan/SKILL.md
-└── hooks/                           ← Lifecycle hooks (session, tool-use logging)
-    ├── session-hooks.json
-    └── tool-use-hooks.json
-AGENTS.md                            ← Full agent catalogue and quick-reference
+├── instructions/          (29)      ← Path-specific instructions (auto-applied by file type)
+├── agents/                (44)      ← Custom agent personas (select via @ in Copilot Chat)
+├── prompts/
+│   ├── tasks/             (22)      ← Single-purpose task prompts
+│   └── workflows/         (14)      ← Multi-step orchestrated workflows
+├── skills/                (12)      ← Auto-loaded reusable capability packs
+└── hooks/                  (2)      ← Session and tool-use lifecycle logging
+
+.claude/                             ← Claude Code configuration
+├── settings.json                    ← Model, permissions, hooks
+├── agents/                (44)      ← Claude Code specialist agents (auto-selected)
+├── commands/              (10)      ← Slash commands (/adr, /estimate, /review, …)
+├── hooks/                  (4)      ← pre-bash-guard, pre-write-guard, post-edit-check, on-stop
+├── memory/                (10)      ← Persistent context loaded at session start
+└── standards/              (8)      ← Coding standards per technology domain
+
+.vscode/                             ← VS Code settings and extension recommendations
+.editorconfig                        ← Cross-editor formatting rules
+AGENTS.md                            ← Complete agent catalogue and quick-reference
+CLAUDE.md                            ← Claude Code session brief and golden rules
+TRACKER.md                           ← Bootstrap completion tracker
+docs/                                ← Detailed specifications and implementation guides
 ```
 
 ---
@@ -54,37 +41,48 @@ AGENTS.md                            ← Full agent catalogue and quick-referenc
 
 | Domain | Stack |
 |--------|-------|
-| **Legacy Java** | Spring 4.x/5.x, Spring MVC, JdbcTemplate, Maven multi-module |
-| **Modern Java** | Spring Boot 3.x, Java 17/21, Spring Data JPA, Spring Security 6.x, OpenAPI 3 |
-| **Angular** | Angular 15+, Standalone Components, Signals API, NgRx, RxJS |
-| **Mainframe** | IBM COBOL 6.x, Assembler (HLASM), JCL, CICS, DB2 z/OS |
-| **AWS** | CDK (TypeScript), Terraform HCL, ECS/EKS, Lambda, RDS, SageMaker, Bedrock |
-| **Data / ML / AI** | SageMaker, Glue, Athena, Bedrock, LangChain, RAG pipelines |
-| **Platform** | Docker, Kubernetes, GitHub Actions, Jenkins, CloudWatch |
+| **Legacy Java** | Spring 4.x/5.x, Spring MVC, JdbcTemplate, JUnit 4, Maven |
+| **Modern Java** | Spring Boot 3.x, Java 17/21, `jakarta.*`, Spring Data JPA, Spring Security 6.x, OpenAPI 3 |
+| **Angular** | Angular 17+, Standalone Components, Signals API, NgRx, RxJS 7+, strict TypeScript |
+| **Mainframe** | IBM COBOL 6.x, HLASM, JCL, CICS, DB2 z/OS |
+| **IBM i** | RPG IV, RPGLE (ILE), CL, DDS, DB2 for i |
+| **AWS** | CDK TypeScript, Terraform HCL, ECS Fargate, EKS, Lambda, RDS Aurora, SageMaker, Bedrock |
+| **Data / ML / AI** | SageMaker Pipelines, Bedrock, LangChain, LangGraph, RAG, MLOps |
+| **Agentic AI** | LangGraph, CrewAI, AutoGen, MCP, Agent-to-Agent (A2A) protocols |
+| **Platform** | Docker, Kubernetes, GitHub Actions, CloudWatch, X-Ray |
 
 ---
 
 ## How to Adopt This Bootstrap
 
-### 1. Copy the Configuration Files
+### 1. Copy the Configuration Layers
 
 ```bash
+# GitHub Copilot layer
 cp -r .github/        /path/to/your-project/.github/
+
+# Claude Code layer
+cp -r .claude/        /path/to/your-project/.claude/
+
+# Editor config
 cp -r .vscode/        /path/to/your-project/.vscode/
 cp    .editorconfig   /path/to/your-project/.editorconfig
 cp    AGENTS.md       /path/to/your-project/AGENTS.md
+cp    CLAUDE.md       /path/to/your-project/CLAUDE.md
 ```
 
 ### 2. Customise Master Instructions
 
-Open `.github/copilot-instructions.md` and update:
-- **Program Context** — describe your specific project and domains
-- **Technology Stack Summary** — reflect your actual versions
-- **Dependency Policy** — your real `pom.xml` / `package.json` baseline
+Edit `.github/copilot-instructions.md`:
+- **Program Context** — describe your specific project and bounded contexts
+- **Technology Stack** — reflect your actual versions and dependency policy
+
+Edit `.claude/memory/project-context.md`:
+- Fill in service inventory, environment URLs, AWS account IDs, on-call contacts
 
 ### 3. Adjust `applyTo` Glob Patterns
 
-Each file in `.github/instructions/` has an `applyTo` frontmatter field. Update to match your source layout:
+Each file in `.github/instructions/` has an `applyTo` frontmatter. Update to match your source layout:
 
 ```markdown
 ---
@@ -94,220 +92,275 @@ applyTo: "src/main/java/com/yourcompany/**/*.java"
 
 ### 4. Remove Unused Domains
 
-If your project has no mainframe code, delete:
-- `.github/instructions/mainframe.instructions.md`
-- `.github/agents/modernization-expert.agent.md`
-- `.github/prompts/tasks/modernize-cobol-to-java.prompt.md`
-- `.github/prompts/workflows/cobol-to-java-workflow.prompt.md`
+Delete instruction files, agents, and prompts for domains not used in your project:
 
-### 5. Open in VS Code
+```bash
+# Example: no mainframe code
+rm .github/instructions/mainframe*.instructions.md
+rm .github/agents/modernization-expert.agent.md
+rm .github/agents/ibmi-modernization-expert.agent.md
+rm .github/prompts/tasks/modernize-*.prompt.md
+rm .github/prompts/workflows/cobol-to-java-workflow.prompt.md
+rm .claude/agents/modernization-expert.md
+rm .claude/agents/ibmi-modernization-expert.md
+rm .claude/standards/mainframe.md
+```
 
-Accept the recommended extensions prompt, or run:
-`Extensions: Show Recommended Extensions` from the Command Palette.
-
-### 6. Verify Context is Loading
+### 5. Verify Context is Loading
 
 Open any `.java` file and ask Copilot Chat:
 > "What coding standards apply to this file?"
 
-Copilot should describe the standards from `copilot-instructions.md` and the relevant `*.instructions.md` file.
+It should describe the standards from `copilot-instructions.md` and the matching `*.instructions.md`.
+
+Ask Claude Code:
+> "What agents are available and when should I use each?"
 
 ---
 
-## Agent Catalogue (32 agents)
+## Agent Catalogue (44 agents per layer)
 
-All agents live in `.github/agents/` as `.agent.md` files. Select via the **@** dropdown in Copilot Chat. Full catalogue and descriptions: see **`AGENTS.md`** at the repository root.
+Full catalogue with descriptions: **`AGENTS.md`** at the repository root.
 
-### Java Development
-| Agent | Name | Primary Use |
-|-------|------|------------|
-| `java-dev.agent.md` | Java Developer | Ticket-scoped Spring Boot implementation |
-| `java-tech-lead.agent.md` | Java Tech Lead | PR gating, standards, tech debt |
-| `java-tester.agent.md` | Java Test Engineer | JUnit 5 / Testcontainers test suites |
-| `jacoco-coverage-tester.agent.md` | JaCoCo Coverage Analyst | Coverage gap analysis |
-| `developer.agent.md` | Senior Java/Angular Developer | Full-stack Java + Angular |
+### GitHub Copilot Agents — select via `@` in Copilot Chat
 
-### Angular Development
-| Agent | Name | Primary Use |
-|-------|------|------------|
-| `angular-dev.agent.md` | Angular Developer | Standalone components, signals, lazy routes |
-| `angular-tester.agent.md` | Angular Test Engineer | Jasmine/TestBed specs |
-| `angular-coverage-checker.agent.md` | Angular Coverage Analyst | Istanbul/Karma gap analysis |
+| Domain | Agents |
+|--------|--------|
+| Java | `java-dev`, `java-tech-lead`, `java-tester`, `jacoco-coverage-tester`, `developer` |
+| Angular | `angular-dev`, `angular-tester`, `angular-coverage-checker` |
+| Architecture | `architect`, `enterprise-architect`, `aws-architect`, `arb-reviewer` |
+| Cloud / Infra | `cdk-terraform-helper`, `aws-deploy-helper`, `local-deploy-helper`, `containerisation-helper`, `ci-engineer`, `devsecops-engineer` |
+| Quality | `reviewer`, `security-auditor`, `performance-reviewer`, `coverage-enforcer`, `test-quality-enforcer`, `tester` |
+| Data / ML / AI | `data-scientist-aws`, `ml-engineer-aws`, `ai-engineer-aws`, `mlops-engineer`, `ai-governance-officer` |
+| Agentic AI | `langraph-engineer`, `crewai-engineer`, `autogen-engineer`, `mcp-engineer`, `a2a-engineer` |
+| Modernisation | `modernization-expert`, `ibmi-modernization-expert` |
+| Delivery / Ops | `estimator`, `project-tracker`, `ops-engineer`, `sre-engineer`, `incident-handler`, `rca-agent` |
+| Docs | `analyst`, `technical-writer` |
 
-### Architecture & Design
-| Agent | Name | Primary Use |
-|-------|------|------------|
-| `architect.agent.md` | Solution Architect | ADRs, bounded contexts, API contracts |
-| `enterprise-architect.agent.md` | Enterprise Architect | Capability maps, technology lifecycle, TOGAF |
-| `aws-architect.agent.md` | AWS Solution Architect | Well-Architected reviews, CDK stacks |
+### Claude Code Agents — auto-selected by task context
 
-### Code Quality & Security
-| Agent | Name | Primary Use |
-|-------|------|------------|
-| `reviewer.agent.md` | Code Reviewer | [BLOCKER]/[MAJOR]/[MINOR]/[NIT] PR reviews |
-| `security-auditor.agent.md` | Security Auditor | OWASP Top 10 + remediation code |
-| `performance-reviewer.agent.md` | Performance Specialist | N+1 queries, resource leaks |
-| `coverage-enforcer.agent.md` | Coverage Guardian | Gap analysis + targeted test generation |
-| `test-quality-enforcer.agent.md` | Test Quality Inspector | Anti-pattern detection and regeneration |
-| `tester.agent.md` | QA Automation Engineer | Full test pyramid |
-| `analyst.agent.md` | Business Analyst | OpenAPI specs, Gherkin criteria |
-
-### Infrastructure & Deployment
-| Agent | Name | Primary Use |
-|-------|------|------------|
-| `cdk-terraform-helper.agent.md` | CDK / Terraform Helper | IaC stacks |
-| `aws-deploy-helper.agent.md` | AWS Deploy Helper | Deploy commands, rollback runbooks |
-| `local-deploy-helper.agent.md` | Local Deploy Helper | Docker Compose, smoke tests |
-| `containerisation-helper.agent.md` | Containerisation Helper | Dockerfiles, K8s manifests |
-| `ci-engineer.agent.md` | CI Engineer | GitHub Actions / Jenkins pipelines |
-
-### Data, ML & AI (AWS Stack)
-| Agent | Name | Primary Use |
-|-------|------|------------|
-| `data-scientist-aws.agent.md` | AWS Data Scientist | SageMaker notebooks, Glue ETL, Athena |
-| `ml-engineer-aws.agent.md` | AWS ML Engineer | SageMaker pipelines, MLOps, model registry |
-| `ai-engineer-aws.agent.md` | AWS AI Engineer | Bedrock LLM, RAG pipelines, guardrails |
-
-### Delivery & Operations
-| Agent | Name | Primary Use |
-|-------|------|------------|
-| `estimator.agent.md` | Estimator | Bottom-up estimates (8h/day × 80% = 6.4h/day) |
-| `project-tracker.agent.md` | Project Tracker | Sprint burndown, story status, velocity |
-| `ops-engineer.agent.md` | Ops Engineer | CloudWatch dashboards, alarms, runbooks |
-| `incident-handler.agent.md` | Incident Handler | P1/P2 war room coordination |
-| `rca-agent.agent.md` | RCA Agent | 5-Whys root cause analysis |
-
-### Modernisation
-| Agent | Name | Primary Use |
-|-------|------|------------|
-| `modernization-expert.agent.md` | Mainframe Modernization Specialist | COBOL → Java + semantic risk matrix |
+Same 44 domains; invoke explicitly: *"Using the `java-developer` agent, implement the OrderService"*
 
 ---
 
-## Instruction Files (Auto-Applied)
+## Instruction Files (29 — Auto-Applied by File Type)
 
-| File | `applyTo` Glob | Domain |
-|------|---------------|--------|
-| `spring-boot.instructions.md` | `**/src/main/java/**/*.java` | Spring Boot 3.x / Java 17/21 |
-| `java-legacy.instructions.md` | `src/main/java/**/*.java` | Spring 4/5 / Java 8/11 |
-| `angular.instructions.md` | `**/*.ts, **/*.html, **/*.scss` | Angular 15+ |
-| `mainframe.instructions.md` | `**/*.cbl, **/*.asm, **/*.jcl` | COBOL / JCL / Assembler |
-| `sql.instructions.md` | `**/*.sql, **/mapper/**/*.xml` | DB2 / MyBatis |
-| `test.instructions.md` | `**/*Test.java, **/*.spec.ts` | JUnit 5 / Jasmine |
-| `aws-architecture.instructions.md` | `**/*.tf, **/cdk/**/*.ts, **/template.yaml` | AWS CDK / Terraform / CloudFormation |
-| `containerisation.instructions.md` | `**/Dockerfile*, **/docker-compose*.yml, **/*.k8s.yaml` | Docker / Kubernetes |
-| `cdk-terraform.instructions.md` | `**/cdk.json, **/*.tf, **/infra/**/*.ts` | IaC (CDK + Terraform) |
-| `enterprise-architecture.instructions.md` | `**/architecture/**, **/adr/**` | EA artifacts |
-| `cicd.instructions.md` | `**/.github/workflows/**, **/Jenkinsfile` | CI/CD pipelines |
-| `aws-data-ml-ai.instructions.md` | `**/*.ipynb, **/sagemaker/**, **/bedrock/**` | Data / ML / AI |
-| `incident-ops.instructions.md` | `**/runbooks/**, **/incidents/**` | Ops / Incident / RCA |
-| `project-estimation.instructions.md` | `**/estimates/**, **/*.estimate.md` | Estimation |
-| `deployment.instructions.md` | `**/deploy/**, **/scripts/deploy*` | Deployment scripts |
+| File | Applies To |
+|------|-----------|
+| `spring-boot.instructions.md` | `**/src/main/java/**/*.java` |
+| `java-legacy.instructions.md` | Legacy Spring 4/5 Java files |
+| `java-quality.instructions.md` | Java code quality and test coverage |
+| `angular.instructions.md` | `**/*.ts`, `**/*.html`, `**/*.scss` |
+| `mainframe.instructions.md` | `**/*.cbl`, `**/*.asm`, `**/*.jcl` |
+| `mainframe-extended.instructions.md` | Extended COBOL/JCL patterns |
+| `ibmi.instructions.md` | `**/*.rpgle`, `**/*.clle`, `**/*.dds` |
+| `sql.instructions.md` | `**/*.sql`, MyBatis mapper XML |
+| `test.instructions.md` | `**/*Test.java`, `**/*.spec.ts` |
+| `aws-architecture.instructions.md` | `**/*.tf`, `**/cdk/**/*.ts` |
+| `aws-data-ml-ai.instructions.md` | `**/*.ipynb`, `**/sagemaker/**` |
+| `cdk-terraform.instructions.md` | CDK stacks and Terraform modules |
+| `containerisation.instructions.md` | Dockerfiles, docker-compose, K8s manifests |
+| `cicd.instructions.md` | `.github/workflows/**`, Jenkinsfile |
+| `deployment.instructions.md` | Deployment scripts |
+| `enterprise-architecture.instructions.md` | `**/architecture/**`, `**/adr/**` |
+| `architecture-governance.instructions.md` | ARB reviews and standards compliance |
+| `devsecops.instructions.md` | Security pipeline configuration |
+| `incident-ops.instructions.md` | `**/runbooks/**`, `**/incidents/**` |
+| `project-estimation.instructions.md` | `**/estimates/**`, `**/*.estimate.md` |
+| `ai-governance.instructions.md` | AI system governance artefacts |
+| `langgraph.instructions.md` | LangGraph agent graph code |
+| `crewai.instructions.md` | CrewAI multi-agent code |
+| `autogen.instructions.md` | Microsoft AutoGen code |
+| `mcp-protocol.instructions.md` | MCP server/client code |
+| `a2a-protocol.instructions.md` | Agent-to-Agent communication code |
+| `mlops-pipeline.instructions.md` | MLOps pipeline code |
+| `sre.instructions.md` | SLO definitions and runbooks |
+| `memory-architecture.instructions.md` | `.claude/memory/**` files |
 
 ---
 
-## Skills (Auto-Loaded)
-
-Skills in `.github/skills/` are automatically selected by Copilot when relevant:
+## Skills (12 — Auto-Loaded by GitHub Copilot)
 
 | Skill | Triggers When |
 |-------|--------------|
-| `estimation` | Asked to estimate effort, size a story, or plan delivery |
-| `jacoco-analysis` | Asked about JaCoCo reports, coverage thresholds, or missed branches |
-| `aws-cdk-deploy` | Asked about CDK deploy commands, cdk diff, or rollback |
+| `estimation` | Estimating effort, sizing stories, planning delivery |
+| `jacoco-analysis` | JaCoCo reports, coverage thresholds, missed branches |
+| `aws-cdk-deploy` | CDK deploy, diff, or rollback |
 | `incident-response` | Declaring or managing a P1/P2 incident |
-| `code-quality-scan` | Triaging SonarQube, SpotBugs, Checkstyle, or OWASP findings |
+| `code-quality-scan` | SonarQube, SpotBugs, OWASP findings |
+| `ai-governance` | AI system governance reviews and model cards |
+| `architecture-governance` | ARB gate reviews and standards compliance |
+| `devsecops` | Security pipeline configuration and gate setup |
+| `langgraph-patterns` | LangGraph graph design and state machines |
+| `mcp-server-design` | MCP server and tool schema design |
+| `mlops-pipeline` | MLOps pipelines, model registry, drift monitoring |
+| `sre-practices` | SLI/SLO definition and error budget management |
 
 ---
 
-## Orchestrated Workflows (6 total)
+## Orchestrated Workflows (14)
 
-| Workflow File | Agents Involved | Use For |
-|--------------|----------------|---------|
-| `full-feature-dev.prompt.md` | Analyst → Architect → Developer → Tester → Coverage → Reviewer | New feature end-to-end |
-| `pr-review-workflow.prompt.md` | Reviewer → Security → Performance → Test Quality | Automated PR review |
-| `tdd-cycle.prompt.md` | Analyst → Tester → Developer → Reviewer → Coverage | Test-Driven Development |
-| `cobol-to-java-workflow.prompt.md` | Analyst → Modernization → Architect → Developer → Tester → Security | COBOL migration |
-| `aws-infra-deploy.prompt.md` | AWS Architect → CDK Helper → CI Engineer → Deploy Helper → Ops | AWS infra delivery |
-| `incident-rca-workflow.prompt.md` | Incident Handler → Ops → Incident Handler → RCA → Project Tracker | Incident to RCA |
+Reference in Copilot Chat with `#file:.github/prompts/workflows/<name>.prompt.md`:
+
+| Workflow | Description |
+|---------|-------------|
+| `full-feature-dev` | Analyst → Architect → Developer → Tester → Coverage → Reviewer |
+| `pr-review-workflow` | Code → Security → Performance → Test Quality |
+| `tdd-cycle` | Red → Green → Refactor → Coverage |
+| `cobol-to-java-workflow` | COBOL modernisation pipeline |
+| `aws-infra-deploy` | Architect → CDK → CI/CD → Deploy → Ops |
+| `incident-rca-workflow` | Detection → Triage → War Room → Resolution → RCA |
+| `arb-review-workflow` | Formal ARB gate review |
+| `ai-governance-review` | AI system classification → Model Card → Risk Assessment → Sign-Off |
+| `multi-agent-system-design` | Problem Decomposition → Topology → State → Implement |
+| `mcp-server-development` | Capability Design → Security → Schema → Implement |
+| `ibmi-to-cloud-workflow` | IBM i Discovery → Architecture → Phased Migration → Cutover |
+| `devsecops-pipeline-review` | Audit → Gap Analysis → Remediate → Validate |
+| `game-day-exercise` | Hypothesis → Baseline → Inject → Observe → Report |
+| `ml-model-delivery` | Experiment → Governance → MLOps → Deploy → Monitor |
+
+---
+
+## Task Prompts (22)
+
+Reference with `#file:.github/prompts/tasks/<name>.prompt.md`:
+
+| Prompt | Action |
+|--------|--------|
+| `generate-unit-tests` | JUnit 5 / Jasmine test class |
+| `generate-integration-tests` | Spring Boot + Testcontainers |
+| `generate-rest-api` | Controller + service + DTO + OpenAPI |
+| `generate-angular-component` | Standalone component + spec |
+| `generate-angular-service` | HttpClient service + spec |
+| `generate-mapstruct-mapper` | MapStruct interface |
+| `generate-openapi-spec` | OpenAPI 3.0 YAML spec |
+| `add-javadoc` | Complete Javadoc on all public members |
+| `add-logging` | SLF4J at correct levels throughout |
+| `code-review` | Structured single-class review |
+| `explain-code` | Plain-English explanation |
+| `explain-mainframe-program` | COBOL/JCL/Assembler walkthrough |
+| `explain-rpg-program` | IBM i RPG IV / RPGLE analysis |
+| `refactor-to-clean-code` | SOLID / clean code refactor |
+| `modernize-cobol-to-java` | COBOL → Java with risk matrix |
+| `modernize-rpg-to-java` | RPG → Java migration |
+| `write-adr` | Architecture Decision Record scaffold |
+| `write-rfc` | Request for Comments document |
+| `write-model-card` | AI/ML model card |
+| `ai-risk-assessment` | EU AI Act + GDPR risk assessment |
+| `define-sli-slo` | SLI/SLO definition with error budget |
+| `update-project-memory` | Update `.claude/memory/` files |
+
+---
+
+## Claude Code Slash Commands (10)
+
+Type in Claude Code to activate specialist workflows:
+
+| Command | Description |
+|---------|-------------|
+| `/adr "decision title"` | Scaffold Architecture Decision Record |
+| `/rca "symptoms"` | Blameless 5-Whys root cause analysis |
+| `/estimate "feature"` | P50/P80/P90 effort estimate |
+| `/review` | Full PR review: correctness, security, performance, quality |
+| `/incident "severity: P1, service: X, symptom: Y"` | Declare and coordinate an incident |
+| `/security-scan [path]` | OWASP Top 10 review + secrets scan |
+| `/deploy-check "env: X, service: Y"` | Pre-deployment readiness checklist |
+| `/memory-update "what changed"` | Update `.claude/memory/` persistent context |
+| `/coverage-report [path]` | JaCoCo/Istanbul gap analysis + targeted tests |
+| `/sync-docs [path]` | Validate API docs against OpenAPI spec |
+
+---
+
+## Claude Code Memory Files
+
+`.claude/memory/` files are read at session start — no re-explaining the project on every session:
+
+| File | Purpose |
+|------|---------|
+| `project-context.md` | **Fill this in** — service inventory, environments, auth patterns |
+| `domain-glossary.md` | Business term definitions for this domain |
+| `decisions.md` | Lightweight architecture decision log |
+| `constraints.md` | Hard constraints that must never be violated |
+| `patterns.md` | Approved patterns and forbidden anti-patterns |
+| `tech-debt.md` | Prioritised tech debt register |
+| `rca-tracker.md` | Incident/RCA status and corrective action tracking |
+| `session-log.md` | Auto-updated by `on-stop.sh` hook |
+| `rejected-approaches.md` | Tried-and-rejected solutions |
+
+---
+
+## Coding Standards
+
+`.claude/standards/` provides the mandatory rules agents read before writing code:
+
+| File | Covers |
+|------|--------|
+| `java.md` | Spring Boot 3.x, constructor injection, SLF4J, jakarta.*, JUnit 5 |
+| `angular.md` | Standalone components, signals, OnPush, reactive forms |
+| `aws.md` | IAM least privilege, encryption, CDK patterns, tagging |
+| `sql.md` | No SELECT *, parameterised queries, Flyway conventions |
+| `testing.md` | JUnit 5/AssertJ/Mockito, Jasmine/Karma, AAA pattern, thresholds |
+| `cicd.md` | Pipeline stages, quality gates, OIDC auth, artefact promotion |
+| `containers.md` | Multi-stage Dockerfiles, non-root users, JVM flags, K8s probes |
+| `mainframe.md` | COBOL, RPG, CL, JCL standards and migration guidance |
 
 ---
 
 ## Estimator Formula
 
-The `estimator.agent.md` uses this formula for all estimates:
+All estimates use:
 
 > **Human Days = Σ Raw Hours ÷ 6.4**
->
-> 6.4 = 8 hours/day × 80% efficiency (accounts for meetings, PR cycles, context-switching, interruptions)
+> `6.4 = 8 hours/day × 80% efficiency`
 
-Estimates include P50 / P80 / P90 confidence ranges. Commit to **P80** for sprints; use **P90** for release planning.
-
----
-
-## Task Prompts Quick Reference
-
-Reference task prompts in Copilot Chat with `#file:.github/prompts/tasks/<name>.prompt.md`:
-
-| Prompt | Action |
-|--------|--------|
-| `generate-unit-tests.prompt.md` | Full JUnit 5 test class |
-| `generate-integration-tests.prompt.md` | Spring Boot + Testcontainers |
-| `code-review.prompt.md` | Structured single-class review |
-| `generate-rest-api.prompt.md` | Controller + service + DTO + OpenAPI |
-| `generate-angular-component.prompt.md` | Standalone component + spec |
-| `generate-angular-service.prompt.md` | HttpClient service + spec |
-| `add-javadoc.prompt.md` | Complete Javadoc on all public members |
-| `add-logging.prompt.md` | SLF4J at correct levels throughout |
-| `explain-code.prompt.md` | Plain-English explanation (COBOL-aware) |
-| `explain-mainframe-program.prompt.md` | COBOL/JCL/Assembler walkthrough |
-| `refactor-to-clean-code.prompt.md` | SOLID / clean code refactor |
-| `modernize-cobol-to-java.prompt.md` | COBOL → Java with risk matrix |
-| `generate-mapstruct-mapper.prompt.md` | MapStruct interface |
-| `generate-openapi-spec.prompt.md` | OpenAPI 3.0 YAML spec |
+| Scenario | Multiplier | Use For |
+|----------|------------|---------|
+| P50 | ×1.0 | Sprint planning baseline |
+| P80 | ×1.3 | Sprint commitment |
+| P90 | ×1.6 | Release planning buffer |
 
 ---
 
 ## Hooks
 
-Lifecycle hooks in `.github/hooks/` log Copilot activity to local log files:
+### GitHub Copilot (`/.github/hooks/`)
+| Hook | Events | Output |
+|------|--------|--------|
+| `session-hooks.json` | sessionStart, sessionEnd, userPromptSubmitted | `.copilot-session.log` |
+| `tool-use-hooks.json` | preToolUse, postToolUse, errorOccurred | `.copilot-tool.log` |
 
-| Hook File | Events | Log File |
-|-----------|--------|---------|
-| `session-hooks.json` | sessionStart, sessionEnd, userPromptSubmitted | `.copilot-session.log`, `.copilot-prompts.log` |
-| `tool-use-hooks.json` | preToolUse, postToolUse, errorOccurred | `.copilot-tool.log`, `.copilot-errors.log` |
-
-Add `*.log` to your `.gitignore` to keep local log files out of version control.
+### Claude Code (`/.claude/hooks/`)
+| Hook | Trigger | Action |
+|------|---------|--------|
+| `pre-bash-guard.sh` | Before every Bash command | Blocks: force-push, `rm -rf /`, `DROP DATABASE`, `cdk destroy`, AWS terminations |
+| `pre-write-guard.sh` | Before every file write | Validates target path safety |
+| `post-edit-check.sh` | After every file edit | Post-write validation |
+| `on-stop.sh` | Session end | Auto-updates `.claude/memory/session-log.md` |
 
 ---
 
-## IntelliJ / JetBrains Usage
+## Adoption Checklist
 
-GitHub Copilot in IntelliJ reads `.github/copilot-instructions.md` automatically. Access agents, instructions, and prompts via `#file:` references in Copilot Chat. See `intellij/` directory for plugin recommendations and settings guidance.
+Before using this bootstrap in a production project:
 
----
-
-## Validation Checklist
-
-Before using this bootstrap in a new project:
-
-- [ ] `copilot-instructions.md` customised for the project (Program Context, stack versions, dependency policy)
-- [ ] `applyTo` glob patterns in `*.instructions.md` updated for the project's source layout
-- [ ] Unused domain instruction files removed (e.g., mainframe if no COBOL)
-- [ ] At least one agent invoked and responding in the correct persona
-- [ ] `pr-review-workflow` runs end-to-end on a sample PR
-- [ ] VS Code recommended extensions installed
-- [ ] `.editorconfig` enforcing formatting on save
-- [ ] `AGENTS.md` added to repo root for team discoverability
-- [ ] Log files (`.copilot-*.log`) added to `.gitignore`
+- [ ] `copilot-instructions.md` customised (program context, stack, dependency policy)
+- [ ] `.claude/memory/project-context.md` filled in (services, environments, auth)
+- [ ] `applyTo` glob patterns updated to match project source layout
+- [ ] Unused domain files removed (e.g., no mainframe → remove mainframe agents/instructions)
+- [ ] At least one Copilot agent invoked and responding in correct persona
+- [ ] At least one Claude Code slash command tested (`/estimate "hello world feature"`)
+- [ ] `.gitignore` includes `.copilot-*.log` and `.claude/memory/session-log.md`
+- [ ] Recommended VS Code extensions installed (`.vscode/extensions.json`)
+- [ ] Golden Rules from `CLAUDE.md` understood by the team
 
 ---
 
 ## Contributing
 
-1. Follow file naming: `<name>.agent.md`, `<name>.instructions.md`, `<name>.prompt.md`
-2. Every `.agent.md` needs: `name`, `description`, `model`, `tools` in frontmatter
-3. Every `.instructions.md` needs: `applyTo`, `description` in frontmatter
-4. Every `SKILL.md` needs: `name`, `description` in frontmatter; `name` must match folder name
-5. Test each new file by invoking it in Copilot Chat and verifying the response persona
-6. Register new agents in `AGENTS.md` and add entries to the tables in `copilot-instructions.md`
+1. **File naming:** `<name>.agent.md`, `<name>.instructions.md`, `<name>.prompt.md`
+2. **Agent frontmatter:** `name`, `description` (trigger condition), `model`, `tools`
+3. **Instruction frontmatter:** `applyTo` glob pattern
+4. **Skill frontmatter:** `name`, `description`; folder name must match skill name
+5. **Register new agents** in `AGENTS.md` and `CLAUDE.md` agent table
+6. **Update TRACKER.md** when adding new files
+7. Test each new file: invoke in Copilot Chat and Claude Code, verify persona is correct

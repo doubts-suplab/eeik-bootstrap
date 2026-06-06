@@ -27,17 +27,16 @@ Agents live in `.claude/agents/`. Claude Code automatically selects the most rel
 
 | Domain | Agents |
 |--------|--------|
-| Java / Spring Boot | `java-developer`, `java-tech-lead`, `java-tester`, `jacoco-coverage-tester` |
+| Java / Spring Boot | `java-developer`, `java-tech-lead`, `java-tester`, `jacoco-coverage-tester`, `senior-developer` |
 | Angular | `angular-developer`, `angular-tester`, `angular-coverage-checker` |
 | Architecture | `architect`, `enterprise-architect`, `arb-reviewer` |
-| AWS / Cloud | `aws-architect`, `cdk-terraform-helper`, `aws-deploy-helper` |
-| Quality | `code-reviewer`, `security-auditor`, `performance-engineer`, `coverage-enforcer` |
-| AI / ML | `ai-engineer`, `ml-engineer`, `data-scientist`, `mlops-engineer` |
+| Cloud / Infra | `aws-architect`, `cdk-terraform-helper`, `aws-deploy-helper`, `ci-engineer`, `containerisation-helper`, `devsecops-engineer`, `local-deploy-helper` |
+| Quality | `code-reviewer`, `security-auditor`, `performance-engineer`, `coverage-enforcer`, `test-quality-enforcer`, `tester` |
+| AI / ML | `ai-engineer`, `ml-engineer`, `data-scientist`, `mlops-engineer`, `ai-governance-officer` |
 | Agentic AI | `langraph-engineer`, `crewai-engineer`, `autogen-engineer`, `mcp-engineer`, `a2a-engineer` |
-| Delivery | `estimator`, `project-tracker`, `business-analyst` |
+| Delivery | `estimator`, `project-tracker`, `business-analyst`, `technical-writer` |
 | Operations | `incident-handler`, `rca-agent`, `ops-engineer`, `sre-engineer` |
 | Modernisation | `modernization-expert`, `ibmi-modernization-expert` |
-| Docs / Governance | `technical-writer`, `ai-governance-officer` |
 
 ---
 

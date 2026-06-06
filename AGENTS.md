@@ -1,122 +1,203 @@
 # Agent Catalogue
 
-This file indexes all GitHub Copilot agents available in this bootstrap repository. Each agent is a specialist AI persona defined as a `.agent.md` file in `.github/agents/`. Select an agent from the Copilot Chat agent dropdown to activate it.
+Complete index of all agents, skills, and workflows in the EEIK Bootstrap repository.
+
+- **GitHub Copilot agents** — `.github/agents/` — activated via Copilot Chat `@` selector in VS Code
+- **Claude Code agents** — `.claude/agents/` — auto-selected by Claude Code based on task context
+- **Skills** — `.github/skills/` — auto-loaded reusable capability packs
+- **Workflows** — `.github/prompts/workflows/` — multi-agent orchestration prompts
 
 ---
 
-## How to Use Agents
+## GitHub Copilot Agents (44 total)
 
-1. Open GitHub Copilot Chat in VS Code
-2. Click the **@** icon in the chat input (or type `@`)
-3. Select the agent by its **name** from the dropdown
-4. The agent's persona, tools, and instructions activate for that session
-
----
-
-## Agent Index
-
-### Java Development
+### Java / Spring Boot
 
 | Agent File | Name | Use When |
 |-----------|------|---------|
-| `.github/agents/java-dev.agent.md` | Java Developer | Implementing a specific Spring Boot ticket (service, controller, DTO, repository) |
-| `.github/agents/java-tech-lead.agent.md` | Java Tech Lead | Gating a PR, enforcing standards, classifying tech debt, mentoring |
-| `.github/agents/java-tester.agent.md` | Java Test Engineer | Writing JUnit 5 unit, slice, and Testcontainers integration tests |
-| `.github/agents/jacoco-coverage-tester.agent.md` | JaCoCo Coverage Analyst | Analysing JaCoCo reports and closing coverage gaps |
-| `.github/agents/developer.agent.md` | Senior Java/Angular Developer | Full-stack implementation (Java + Angular together) |
+| `java-dev.agent.md` | Java Developer | Implementing a Spring Boot ticket (service, controller, DTO, repository) |
+| `java-tech-lead.agent.md` | Java Tech Lead | PR gating, standards enforcement, tech debt classification |
+| `java-tester.agent.md` | Java Test Engineer | JUnit 5 unit, slice, and Testcontainers integration tests |
+| `jacoco-coverage-tester.agent.md` | JaCoCo Coverage Analyst | Analysing JaCoCo reports and closing coverage gaps |
+| `developer.agent.md` | Senior Developer | Full-stack implementation (Java + Angular together) |
 
-### Angular Development
+### Angular
 
 | Agent File | Name | Use When |
 |-----------|------|---------|
-| `.github/agents/angular-dev.agent.md` | Angular Developer | Building standalone components, services, signals, lazy routes |
-| `.github/agents/angular-tester.agent.md` | Angular Test Engineer | Writing Jasmine/TestBed component and service specs |
-| `.github/agents/angular-coverage-checker.agent.md` | Angular Coverage Analyst | Analysing Istanbul/Karma coverage and closing gaps |
+| `angular-dev.agent.md` | Angular Developer | Standalone components, signals, reactive forms, lazy routes |
+| `angular-tester.agent.md` | Angular Test Engineer | Jasmine/TestBed specs for components and services |
+| `angular-coverage-checker.agent.md` | Angular Coverage Analyst | Istanbul/Karma coverage analysis and gap closure |
 
 ### Architecture & Design
 
 | Agent File | Name | Use When |
 |-----------|------|---------|
-| `.github/agents/architect.agent.md` | Solution Architect | ADRs, bounded context design, API contracts, non-functional requirements |
-| `.github/agents/enterprise-architect.agent.md` | Enterprise Architect | Capability maps, technology lifecycle, TOGAF-aligned EA artifacts |
-| `.github/agents/aws-architect.agent.md` | AWS Solution Architect | AWS Well-Architected reviews, CDK stacks, cost estimates, VPC/ECS/RDS design |
+| `architect.agent.md` | Solution Architect | ADRs, bounded context design, API contracts, NFRs |
+| `enterprise-architect.agent.md` | Enterprise Architect | Capability maps, TOGAF, technology lifecycle, EA artefacts |
+| `aws-architect.agent.md` | AWS Solution Architect | Well-Architected reviews, CDK stacks, VPC/ECS/RDS design |
+| `arb-reviewer.agent.md` | ARB Reviewer | Architecture Review Board gate reviews and sign-off |
 
 ### Code Review & Quality
 
 | Agent File | Name | Use When |
 |-----------|------|---------|
-| `.github/agents/reviewer.agent.md` | Code Reviewer | PR reviews with [BLOCKER]/[MAJOR]/[MINOR]/[NIT] findings |
-| `.github/agents/security-auditor.agent.md` | Application Security Auditor | OWASP Top 10 audit with CVSS ratings and remediation code |
-| `.github/agents/performance-reviewer.agent.md` | Performance Specialist | N+1 queries, unbounded results, resource leaks, rendering performance |
-| `.github/agents/coverage-enforcer.agent.md` | Coverage Guardian | Coverage gap analysis and targeted test generation |
-| `.github/agents/test-quality-enforcer.agent.md` | Test Quality Inspector | Detecting and fixing test anti-patterns |
-
-### Testing
-
-| Agent File | Name | Use When |
-|-----------|------|---------|
-| `.github/agents/tester.agent.md` | QA Automation Engineer | Full test pyramid (unit, slice, integration, contract) for any stack |
-| `.github/agents/analyst.agent.md` | Business Analyst | OpenAPI specs, Gherkin acceptance criteria, data models |
+| `reviewer.agent.md` | Code Reviewer | PR reviews with [BLOCKER]/[MAJOR]/[MINOR]/[NIT] findings |
+| `security-auditor.agent.md` | Security Auditor | OWASP Top 10 audit, CVSS ratings, remediation code |
+| `performance-reviewer.agent.md` | Performance Specialist | N+1 queries, unbounded results, rendering bottlenecks |
+| `coverage-enforcer.agent.md` | Coverage Guardian | Coverage gap analysis and targeted test generation |
+| `test-quality-enforcer.agent.md` | Test Quality Inspector | Anti-pattern detection and test suite remediation |
+| `tester.agent.md` | QA Engineer | Full test pyramid for any stack |
 
 ### Infrastructure & Deployment
 
 | Agent File | Name | Use When |
 |-----------|------|---------|
-| `.github/agents/cdk-terraform-helper.agent.md` | CDK / Terraform Helper | Writing CDK TypeScript stacks or Terraform HCL modules |
-| `.github/agents/aws-deploy-helper.agent.md` | AWS Deploy Helper | Generating deploy commands, pre-deploy checklists, rollback runbooks |
-| `.github/agents/local-deploy-helper.agent.md` | Local Deploy Helper | Docker Compose setup, local env scripts, smoke tests |
-| `.github/agents/containerisation-helper.agent.md` | Containerisation Helper | Dockerfiles, K8s manifests, Helm charts, container security |
-| `.github/agents/ci-engineer.agent.md` | CI Engineer | GitHub Actions and Jenkins pipelines with quality gates |
+| `cdk-terraform-helper.agent.md` | CDK / Terraform Helper | CDK TypeScript stacks or Terraform HCL modules |
+| `aws-deploy-helper.agent.md` | AWS Deploy Helper | Deploy commands, pre-deploy checklists, rollback runbooks |
+| `local-deploy-helper.agent.md` | Local Deploy Helper | Docker Compose, local env setup, seed data |
+| `containerisation-helper.agent.md` | Containerisation Helper | Dockerfiles, K8s manifests, container security hardening |
+| `ci-engineer.agent.md` | CI Engineer | GitHub Actions pipelines, quality gates, build optimisation |
+| `devsecops-engineer.agent.md` | DevSecOps Engineer | SAST/DAST/secrets scanning, security pipeline gates |
 
-### Data, ML & AI (AWS)
-
-| Agent File | Name | Use When |
-|-----------|------|---------|
-| `.github/agents/data-scientist-aws.agent.md` | AWS Data Scientist | SageMaker notebooks, Glue ETL, Athena, feature engineering |
-| `.github/agents/ml-engineer-aws.agent.md` | AWS ML Engineer | SageMaker training pipelines, model registry, MLOps, inference endpoints |
-| `.github/agents/ai-engineer-aws.agent.md` | AWS AI Engineer | Bedrock LLM integration, RAG pipelines, prompt engineering, guardrails |
-
-### Delivery & Operations
+### Data, ML & AI
 
 | Agent File | Name | Use When |
 |-----------|------|---------|
-| `.github/agents/estimator.agent.md` | Estimator | Bottom-up effort estimates (8h/day × 80% efficiency = 6.4h/day) |
-| `.github/agents/project-tracker.agent.md` | Project Tracker | Sprint burndown, story status, velocity trends, blocker escalation |
-| `.github/agents/ops-engineer.agent.md` | Ops Engineer | CloudWatch dashboards, alarms, auto-scaling, cost optimisation, runbooks |
-| `.github/agents/incident-handler.agent.md` | Incident Handler | P1/P2 war room coordination, ITIL status updates, stakeholder comms |
-| `.github/agents/rca-agent.agent.md` | RCA Agent | 5-Whys root cause analysis, timeline reconstruction, corrective actions |
+| `data-scientist-aws.agent.md` | Data Scientist | SageMaker experiments, EDA, feature engineering, model evaluation |
+| `ml-engineer-aws.agent.md` | ML Engineer | SageMaker training pipelines, model serving, MLOps |
+| `ai-engineer-aws.agent.md` | AI Engineer | Bedrock LLM integration, RAG pipelines, prompt engineering |
+| `mlops-engineer.agent.md` | MLOps Engineer | Model registry, drift monitoring, automated retraining |
+| `ai-governance-officer.agent.md` | AI Governance Officer | Model cards, EU AI Act classification, AI risk assessment |
+
+### Agentic AI
+
+| Agent File | Name | Use When |
+|-----------|------|---------|
+| `langraph-engineer.agent.md` | LangGraph Engineer | Stateful graph agent workflows and state machines |
+| `crewai-engineer.agent.md` | CrewAI Engineer | Multi-agent crews with role-based task delegation |
+| `autogen-engineer.agent.md` | AutoGen Engineer | Microsoft AutoGen conversation patterns and GroupChat |
+| `mcp-engineer.agent.md` | MCP Engineer | Model Context Protocol server and tool design |
+| `a2a-engineer.agent.md` | A2A Engineer | Agent-to-Agent communication protocol design |
 
 ### Modernisation
 
 | Agent File | Name | Use When |
 |-----------|------|---------|
-| `.github/agents/modernization-expert.agent.md` | Mainframe Modernization Specialist | COBOL/JCL/Assembler → Java migration with semantic risk matrix |
+| `modernization-expert.agent.md` | Modernisation Expert | COBOL/JCL → Java migration, Spring 4/5 → Boot 3.x upgrade |
+| `ibmi-modernization-expert.agent.md` | IBM i Expert | RPG/CL/DDS analysis, IBM i to Java migration strategy |
+
+### Delivery & Operations
+
+| Agent File | Name | Use When |
+|-----------|------|---------|
+| `estimator.agent.md` | Estimator | P50/P80/P90 bottom-up effort estimates |
+| `project-tracker.agent.md` | Project Tracker | Sprint health, dependency mapping, delivery status |
+| `ops-engineer.agent.md` | Ops Engineer | CloudWatch dashboards, alarms, runbooks, capacity planning |
+| `sre-engineer.agent.md` | SRE Engineer | SLI/SLO definition, error budget policy, toil elimination |
+| `incident-handler.agent.md` | Incident Handler | P1/P2 incident coordination and stakeholder communication |
+| `rca-agent.agent.md` | RCA Agent | Post-incident 5-Whys analysis and corrective actions |
+
+### Governance & Documentation
+
+| Agent File | Name | Use When |
+|-----------|------|---------|
+| `analyst.agent.md` | Business Analyst | OpenAPI specs, Gherkin acceptance criteria, data models |
+| `technical-writer.agent.md` | Technical Writer | API docs, architecture guides, onboarding, runbooks |
+| `ai-governance-officer.agent.md` | AI Governance Officer | AI risk registers, model cards, compliance checklists |
 
 ---
 
-## Agent Skills
+## Claude Code Agents (44 total)
 
-The following reusable skills are available in `.github/skills/` and are automatically loaded by Copilot when relevant:
+Claude Code auto-selects the most relevant agent from `.claude/agents/` based on your task. You can also invoke explicitly: *"Using the `java-developer` agent, implement the OrderService"*.
 
-| Skill Folder | Name | Triggers When |
-|-------------|------|--------------|
-| `estimation/` | estimation | Asked to estimate, size, or plan effort |
-| `jacoco-analysis/` | jacoco-analysis | Asked about JaCoCo, coverage thresholds, or missed branches |
-| `aws-cdk-deploy/` | aws-cdk-deploy | Asked about CDK deploy, cdk diff, or stack rollback |
-| `incident-response/` | incident-response | Declaring or managing a P1/P2 incident |
-| `code-quality-scan/` | code-quality-scan | Triaging SonarQube, SpotBugs, Checkstyle, or OWASP findings |
+### Java / Spring Boot
+`java-developer` · `java-tech-lead` · `java-tester` · `jacoco-coverage-tester` · `senior-developer`
+
+### Angular
+`angular-developer` · `angular-tester` · `angular-coverage-checker`
+
+### Architecture
+`architect` · `enterprise-architect` · `arb-reviewer`
+
+### Cloud & Infrastructure
+`aws-architect` · `cdk-terraform-helper` · `aws-deploy-helper` · `ci-engineer` · `containerisation-helper` · `devsecops-engineer` · `local-deploy-helper`
+
+### Data, ML & AI
+`ai-engineer` · `data-scientist` · `ml-engineer` · `mlops-engineer` · `ai-governance-officer`
+
+### Agentic AI
+`langraph-engineer` · `crewai-engineer` · `autogen-engineer` · `mcp-engineer` · `a2a-engineer`
+
+### Modernisation
+`modernization-expert` · `ibmi-modernization-expert`
+
+### Quality & Security
+`code-reviewer` · `security-auditor` · `performance-engineer` · `coverage-enforcer` · `test-quality-enforcer` · `tester` · `business-analyst`
+
+### Delivery & Operations
+`estimator` · `project-tracker` · `ops-engineer` · `sre-engineer` · `incident-handler` · `rca-agent` · `technical-writer`
 
 ---
 
-## Orchestrated Workflows
+## Skills (12 total)
 
-Invoke these prompt files via `#file:` in Copilot Chat for multi-agent workflows:
+Auto-loaded by Copilot when context matches. Located in `.github/skills/`.
 
-| Prompt File | Workflow |
-|------------|---------|
-| `.github/prompts/workflows/full-feature-dev.prompt.md` | End-to-end feature: Analyst → Architect → Developer → Tester → Coverage → Reviewer |
-| `.github/prompts/workflows/pr-review-workflow.prompt.md` | Automated PR scan: Code → Security → Performance → Test Quality |
-| `.github/prompts/workflows/tdd-cycle.prompt.md` | Red → Green → Refactor → Coverage |
-| `.github/prompts/workflows/cobol-to-java-workflow.prompt.md` | COBOL modernisation pipeline |
-| `.github/prompts/workflows/aws-infra-deploy.prompt.md` | AWS infra: Architect → CDK → CI/CD → Deploy → Smoke Test |
-| `.github/prompts/workflows/incident-rca-workflow.prompt.md` | Incident: Detection → Triage → War Room → Resolution → RCA |
+| Skill | Use When |
+|-------|---------|
+| `estimation/` | Estimating, sizing, or planning effort |
+| `jacoco-analysis/` | JaCoCo reports, coverage thresholds, missed branches |
+| `aws-cdk-deploy/` | CDK deploy, diff, or stack rollback |
+| `incident-response/` | Declaring or managing a P1/P2 incident |
+| `code-quality-scan/` | SonarQube, SpotBugs, OWASP Dependency Check findings |
+| `ai-governance/` | AI system governance reviews and model cards |
+| `architecture-governance/` | ARB gate reviews and architecture compliance |
+| `devsecops/` | Security pipeline configuration and gate setup |
+| `langgraph-patterns/` | LangGraph graph design and state machine patterns |
+| `mcp-server-design/` | MCP server and tool schema design |
+| `mlops-pipeline/` | MLOps pipelines, model registry, drift monitoring |
+| `sre-practices/` | SLI/SLO definition and error budget management |
+
+---
+
+## Orchestrated Workflows (14 total)
+
+Located in `.github/prompts/workflows/`. Reference via `#file:` in Copilot Chat.
+
+| Workflow | Description |
+|---------|-------------|
+| `full-feature-dev.prompt.md` | Analyst → Architect → Developer → Tester → Coverage → Reviewer |
+| `pr-review-workflow.prompt.md` | Code → Security → Performance → Test Quality review |
+| `tdd-cycle.prompt.md` | Red → Green → Refactor → Coverage |
+| `cobol-to-java-workflow.prompt.md` | COBOL modernisation: Analyse → Design → Implement → Test |
+| `aws-infra-deploy.prompt.md` | Architect → CDK → CI/CD → Deploy → Smoke Test |
+| `incident-rca-workflow.prompt.md` | Detection → Triage → War Room → Resolution → RCA |
+| `arb-review-workflow.prompt.md` | Formal ARB gate review: Intake → Standards → Assess → Recommend |
+| `ai-governance-review.prompt.md` | AI system: Classification → Model Card → Risk Assessment → Sign-Off |
+| `multi-agent-system-design.prompt.md` | Problem Decomposition → Agent Topology → State Design → Implement |
+| `mcp-server-development.prompt.md` | Capability Design → Security → Schema → Implement → Document |
+| `ibmi-to-cloud-workflow.prompt.md` | Discovery → Architecture → Phased Migration → Cutover |
+| `devsecops-pipeline-review.prompt.md` | Audit → Gap Analysis → Remediate → Validate |
+| `game-day-exercise.prompt.md` | Hypothesis → Baseline → Inject → Observe → Report |
+| `ml-model-delivery.prompt.md` | Experiment → Governance → MLOps → Deploy → Monitor |
+
+---
+
+## Slash Commands (Claude Code only)
+
+Located in `.claude/commands/`. Type `/command-name` in Claude Code.
+
+| Command | Description |
+|---------|-------------|
+| `/adr "decision title"` | Scaffold a new Architecture Decision Record |
+| `/rca "symptoms"` | Open a blameless RCA workflow |
+| `/estimate "feature description"` | Produce P50/P80/P90 effort estimate |
+| `/review` | Run full PR review checklist |
+| `/incident "severity: P1, service: name, symptom: ..."` | Declare and coordinate an incident |
+| `/security-scan [path]` | OWASP Top 10 review and secrets scan |
+| `/deploy-check "env: X, service: Y"` | Pre-deployment readiness checklist |
+| `/memory-update "what changed"` | Update `.claude/memory/` files |
+| `/coverage-report [path]` | Coverage gap analysis with targeted test stubs |
+| `/sync-docs [path]` | Sync API documentation against OpenAPI specs |

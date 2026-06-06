@@ -1,9 +1,10 @@
 ---
 name: coverage-enforcer
 description: >
-  Use for coverage gap analysis and generating targeted tests to close gaps. Trigger
-  when coverage is below threshold, when a class has missing test scenarios, or when
-  a JaCoCo or Istanbul report shows uncovered paths.
+  Use for multi-stack coverage gap analysis (Java + Angular) and generating targeted
+  tests to close gaps. Trigger when coverage is below threshold across both backend
+  and frontend, or when Istanbul/Karma reports show uncovered Angular paths. For
+  Java-only JaCoCo XML report analysis, use jacoco-coverage-tester instead.
 model: claude-sonnet-4-6
 tools: [Read, Write, Edit, Bash, Glob, Grep]
 ---

@@ -10,12 +10,12 @@
   ],
   "github.copilot.chat.reviewSelection.instructions": [
     {
-      "file": ".github/prompts/agents/reviewer.prompt.md"
+      "file": ".github/agents/reviewer.agent.md"
     }
   ],
   "github.copilot.chat.testGeneration.instructions": [
     {
-      "file": ".github/prompts/agents/tester.prompt.md"
+      "file": ".github/agents/tester.agent.md"
     }
   ],
   "github.copilot.renameSuggestions.triggerAutomatically": true,
