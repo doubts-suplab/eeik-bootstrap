@@ -1,0 +1,115 @@
+{
+  "model": "claude-sonnet-4-6",
+  "permissions": {
+    "allow": [
+      "git status",
+      "git log",
+      "git diff",
+      "git branch",
+      "git show",
+      "git stash",
+      "git fetch",
+      "git remote",
+      "git add",
+      "git commit",
+      "git checkout",
+      "git switch",
+      "git push",
+      "mvn test",
+      "mvn compile",
+      "mvn verify",
+      "mvn package",
+      "mvn dependency:tree",
+      "npm test",
+      "npm run build",
+      "npm run lint",
+      "npm install",
+      "docker-compose up",
+      "docker-compose ps",
+      "docker ps",
+      "docker build",
+      "cdk diff",
+      "cdk synth",
+      "aws ecs describe-*",
+      "aws logs *",
+      "aws cloudwatch *",
+      "aws s3 ls",
+      "aws secretsmanager list-secrets",
+      "ls",
+      "find",
+      "grep",
+      "cat",
+      "head",
+      "tail",
+      "wc",
+      "curl",
+      "python3",
+      "pip install"
+    ],
+    "deny": [
+      "git push --force",
+      "git push -f",
+      "git reset --hard",
+      "rm -rf /",
+      "rm -rf ~",
+      "rm -rf /home",
+      "rm -rf /usr",
+      "rm -rf /etc",
+      "DROP DATABASE",
+      "DROP SCHEMA",
+      "DROP TABLE",
+      "TRUNCATE TABLE",
+      "cdk destroy",
+      "aws ec2 terminate-instances",
+      "aws rds delete-db-instance",
+      "aws rds delete-db-cluster",
+      "aws s3 rb --force"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/pre-bash-guard.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/pre-write-guard.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/post-edit-check.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/on-stop.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "env": {
+    "SPRING_PROFILES_ACTIVE": "local"
+  }
+}
