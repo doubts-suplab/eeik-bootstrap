@@ -1,0 +1,46 @@
+name: governance-review
+description: Full governance review workflow — adapts to governance profile
+version: 1.0
+
+steps:
+  - id: architecture-review
+    name: Architecture Review
+    agent: architecture-reviewer
+    condition: governance_profile in [standard, regulated, enterprise]
+    action: >
+      Review solution architecture document against architecture principles,
+      NFR standard, and integration standard. Produce findings.
+
+  - id: security-review
+    name: Security Review
+    agent: security-auditor
+    condition: governance_profile in [standard, regulated, enterprise]
+    depends_on: [architecture-review]
+    action: >
+      Review infrastructure and application code for security gaps.
+      Check OWASP Top 10, IAM least privilege, secrets management.
+
+  - id: arb-gate
+    name: ARB Gate
+    agent: arb-reviewer
+    condition: governance_profile == enterprise
+    depends_on: [architecture-review, security-review]
+    action: >
+      Formal ARB gate review. Produce APPROVE / APPROVE WITH CONDITIONS / REJECT.
+
+  - id: compliance-review
+    name: Compliance Review
+    agent: compliance-reviewer
+    condition: governance_profile in [regulated, enterprise]
+    depends_on: [security-review]
+    action: >
+      Review against applicable compliance frameworks from manifest.compliance_frameworks.
+
+  - id: ai-governance
+    name: AI Governance Review
+    agent: ai-governance-officer
+    condition: ai.enabled == true AND governance_profile in [regulated, enterprise]
+    depends_on: [architecture-review]
+    action: >
+      Review AI system design, model card, evaluation results. Classify risk level.
+      Produce AI governance sign-off.

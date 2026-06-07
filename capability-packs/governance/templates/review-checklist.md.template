@@ -1,0 +1,35 @@
+# {Review Type} Checklist
+
+**Service:** {service-name}  
+**Date:** {date}  
+**Reviewer:** {reviewer}  
+**Governance Profile:** {basic | standard | regulated | enterprise}
+
+---
+
+## Checklist
+
+| # | Item | Status | Notes |
+|---|------|--------|-------|
+| 1 | {item} | ✅ Pass / ❌ Fail / ⚠️ Partial | {notes} |
+
+---
+
+## Findings
+
+### CRITICAL
+- {finding}: {remediation}
+
+### MAJOR
+- {finding}: {recommendation}
+
+### MINOR
+- {finding}
+
+---
+
+## Verdict
+
+**Decision:** APPROVE / APPROVE WITH CONDITIONS / REQUEST CHANGES / REJECT  
+**Conditions:** {if applicable}  
+**Reviewer Sign-off:** {name} — {date}

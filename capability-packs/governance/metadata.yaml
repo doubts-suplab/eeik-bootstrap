@@ -1,0 +1,14 @@
+name: governance-pack
+version: 1.0
+owner: eeik
+category: core
+description: >
+  Enterprise governance — architecture reviews, security reviews, PRR, AI governance,
+  compliance. Profile-driven: basic/standard/regulated/enterprise.
+tags: [governance, review, compliance, security, prr, core]
+manifest_triggers:
+  - field: governance.profile
+    values: [basic, standard, regulated, enterprise]
+agents_provided: [architecture-reviewer, security-reviewer, production-readiness-reviewer, compliance-reviewer]
+commands_provided: [run-review, run-prr, run-ai-review, run-compliance-check]
+standards_provided: [governance-standard, review-standard, compliance-standard]

@@ -1,0 +1,27 @@
+name: production-readiness-review
+description: Production readiness assessment before go-live
+version: 1.0
+
+steps:
+  - id: prr
+    name: Production Readiness Review
+    agent: production-readiness-reviewer
+    action: >
+      Run full PRR checklist: observability, SLOs, operations, deployment,
+      DR, security. Produce READY / CONDITIONALLY READY / NOT READY verdict.
+
+  - id: security-final
+    name: Final Security Check
+    agent: security-auditor
+    depends_on: [prr]
+    action: >
+      Verify no critical security findings outstanding from security review.
+      Confirm secrets are rotated for production environment.
+
+  - id: sign-off
+    name: Go / No-Go Decision
+    agent: production-readiness-reviewer
+    depends_on: [prr, security-final]
+    action: >
+      Issue final GO / NO-GO decision. List any conditions that must be
+      satisfied within 24 hours of deployment.

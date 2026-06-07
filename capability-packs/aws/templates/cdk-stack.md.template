@@ -1,0 +1,44 @@
+# CDK Stack Template
+
+```typescript
+import * as cdk from 'aws-cdk-lib';
+import * as ecs from 'aws-cdk-lib/aws-ecs';
+import * as ec2 from 'aws-cdk-lib/aws-ec2';
+import * as ssm from 'aws-cdk-lib/aws-ssm';
+import { Construct } from 'constructs';
+
+export interface {Service}StackProps extends cdk.StackProps {
+  environment: 'dev' | 'staging' | 'prod';
+  projectName: string;
+  team: string;
+  costCentre: string;
+}
+
+export class {Service}Stack extends cdk.Stack {
+  constructor(scope: Construct, id: string, props: {Service}StackProps) {
+    super(scope, id, props);
+
+    // Apply mandatory tags to all resources
+    cdk.Tags.of(this).add('Project', props.projectName);
+    cdk.Tags.of(this).add('Environment', props.environment);
+    cdk.Tags.of(this).add('Team', props.team);
+    cdk.Tags.of(this).add('CostCentre', props.costCentre);
+    cdk.Tags.of(this).add('ManagedBy', 'cdk');
+
+    const isProd = props.environment === 'prod';
+
+    // Lookup VPC from NetworkStack output
+    const vpc = ec2.Vpc.fromLookup(this, 'Vpc', {
+      vpcName: `${props.projectName}-vpc-${props.environment}`,
+    });
+
+    // TODO: Add your resources here
+
+    // Export outputs via SSM for cross-stack reference
+    new ssm.StringParameter(this, 'ClusterArn', {
+      parameterName: `/${props.environment}/${props.projectName}/cluster-arn`,
+      stringValue: 'TODO',
+    });
+  }
+}
+```

@@ -1,0 +1,44 @@
+name: agent-design
+description: End-to-end workflow for designing and evaluating a new AI agent
+version: 1.0
+
+steps:
+  - id: requirements
+    name: Requirements & Governance
+    agent: ai-architect
+    action: >
+      Elicit agent purpose, domain, regulatory context. Determine if AI governance 
+      review is required. Produce requirements summary.
+
+  - id: design
+    name: Agent Design
+    agent: ai-architect
+    depends_on: [requirements]
+    action: >
+      Produce agent definition using agent-definition.md.template. Define state schema,
+      tool whitelist, escalation strategy, and failure handling.
+
+  - id: prompt
+    name: Prompt Engineering
+    agent: prompt-engineer
+    depends_on: [design]
+    action: >
+      Write system prompt following prompt-standard. Include role, capabilities,
+      constraints, output format, and examples.
+
+  - id: evaluation-design
+    name: Evaluation Dataset Design
+    agent: ai-architect
+    depends_on: [prompt]
+    action: >
+      Design evaluation dataset with 20+ test cases covering happy path, edge cases,
+      and adversarial inputs. Define pass criteria per case.
+
+  - id: governance
+    name: AI Governance Review
+    agent: ai-governance-officer
+    depends_on: [design, prompt]
+    condition: governance_required == true
+    action: >
+      Review agent against AI governance standard. Produce model card.
+      Sign off or flag required changes.

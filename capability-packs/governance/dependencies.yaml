@@ -1,0 +1,3 @@
+dependencies:
+  - name: architecture-pack
+    reason: architecture-principles.md and nfr-standard.md used in architecture reviews

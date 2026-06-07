@@ -1,0 +1,49 @@
+name: architecture-design
+description: End-to-end workflow for designing a new service architecture
+version: 1.0
+
+steps:
+  - id: requirements
+    name: Gather Requirements
+    agent: solution-architect
+    action: >
+      Elicit bounded context, NFRs (performance, availability, security, compliance),
+      integration landscape, and key constraints. Produce a requirements summary.
+    output: requirements-summary.md
+
+  - id: design
+    name: Produce Solution Architecture
+    agent: solution-architect
+    depends_on: [requirements]
+    action: >
+      Using templates/solution-architecture.md.template, produce a complete
+      solution architecture document. Include component diagram, integration design,
+      security design, and data design.
+    output: docs/architecture/{service-name}-architecture.md
+
+  - id: adrs
+    name: Draft Architecture Decision Records
+    agent: architect
+    depends_on: [design]
+    action: >
+      Identify the 3–5 most significant decisions in the architecture.
+      Draft an ADR for each using templates/adr-template.md.
+    output: docs/decisions/ADR-NNN-{decision}.md
+
+  - id: review
+    name: Architecture Review
+    agent: arb-reviewer
+    depends_on: [design, adrs]
+    action: >
+      Review the produced architecture against architecture-principles.md,
+      nfr-standard.md, and integration-standard.md. Produce review findings.
+    output: review-report.md
+
+  - id: approval
+    name: ARB Sign-off
+    agent: arb-reviewer
+    depends_on: [review]
+    action: >
+      Produce final ARB recommendation: APPROVE, APPROVE WITH CONDITIONS, or DEFER.
+      Document conditions if applicable.
+    output: arb-decision.md

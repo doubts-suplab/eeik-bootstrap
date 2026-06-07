@@ -1,0 +1,17 @@
+name: java-pack
+version: 1.0
+owner: eeik
+category: core
+description: >
+  Enterprise Java engineering capability pack for Spring Boot 3.x / Java 21.
+  Enforces EEIK golden rules: constructor injection, SLF4J, jakarta.*, no SELECT *.
+
+tags: [java, spring-boot, java21, backend, core]
+
+manifest_triggers:
+  - field: technology.backend.language
+    values: [java, mixed]
+
+agents_provided: [java-architect, spring-boot-engineer, java-code-reviewer, java-test-engineer]
+commands_provided: [review-java, improve-coverage, analyze-performance]
+standards_provided: [java-standard, spring-standard, testing-standard, api-standard]

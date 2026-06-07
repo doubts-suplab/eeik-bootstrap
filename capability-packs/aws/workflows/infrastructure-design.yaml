@@ -1,0 +1,27 @@
+name: aws-infrastructure-design
+description: End-to-end workflow for designing and reviewing AWS infrastructure
+version: 1.0
+
+steps:
+  - id: design
+    name: Infrastructure Design
+    agent: aws-solutions-architect
+    action: Produce architecture diagram, CDK stack breakdown, IAM design, and cost estimate.
+
+  - id: security-review
+    name: Security Review
+    agent: cloud-security-reviewer
+    depends_on: [design]
+    action: Review design against aws-pack security standard. Flag CRITICAL/HIGH findings.
+
+  - id: implement
+    name: CDK Implementation
+    agent: cdk-engineer
+    depends_on: [security-review]
+    action: Implement CDK stacks from approved design. Include unit tests.
+
+  - id: review-code
+    name: CDK Code Review
+    agent: cloud-security-reviewer
+    depends_on: [implement]
+    action: Review implemented CDK against security standard and tagging standard.

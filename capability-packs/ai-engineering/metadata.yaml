@@ -1,0 +1,16 @@
+name: ai-engineering-pack
+version: 1.0
+owner: eeik
+category: core
+description: Agentic AI engineering — agent design, LangGraph, RAG, prompt engineering, evaluation.
+tags: [ai, agents, langgraph, rag, llm, agentic, core]
+manifest_triggers:
+  - field: ai.enabled
+    values: [true]
+  - field: ai.pattern
+    values: [rag, single-agent, multi-agent, enterprise-agent-platform]
+  - field: project.project_type
+    values: [agent-platform]
+agents_provided: [ai-architect, langgraph-architect, rag-specialist, prompt-engineer]
+commands_provided: [design-agent, evaluate-agent, design-rag]
+standards_provided: [agent-standard, prompt-standard, evaluation-standard, memory-standard]

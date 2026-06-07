@@ -1,0 +1,123 @@
+# Solution Architecture: {Service Name}
+
+**Status:** Draft / Review / Approved  
+**Version:** 1.0  
+**Author:** {Author}  
+**Date:** {Date}  
+**Bounded Context:** {Context}
+
+---
+
+## 1. Executive Summary
+
+{2–3 sentences: what this service does, why it exists, and the key architectural decision.}
+
+---
+
+## 2. Context & Drivers
+
+### Business Context
+{What business problem does this solve? Who are the users?}
+
+### Technical Drivers
+{What technical constraints or opportunities shape this design?}
+
+### Non-Functional Requirements
+
+| NFR | Target | Measurement |
+|-----|--------|-------------|
+| API p99 latency | < 500ms | ALB access logs |
+| Availability | 99.9% | CloudWatch synthetic |
+| RTO | < 1 hour | Runbook drill |
+| RPO | < 15 minutes | Backup restore test |
+
+---
+
+## 3. Architecture Overview
+
+```mermaid
+graph TD
+    Client --> ALB
+    ALB --> Service
+    Service --> DB[(Database)]
+    Service --> Queue[SQS Queue]
+    Queue --> Consumer
+```
+
+---
+
+## 4. Components
+
+| Component | Technology | Responsibility |
+|-----------|-----------|----------------|
+| API Layer | Spring Boot 3 / API Gateway | Request routing, auth validation |
+| Service Layer | Java 21 | Business logic |
+| Data Layer | Aurora PostgreSQL | Persistent state |
+| Messaging | SQS / EventBridge | Async processing |
+
+---
+
+## 5. Integration Design
+
+### Synchronous APIs Consumed
+| Service | Endpoint | Timeout | Circuit Breaker |
+|---------|----------|---------|-----------------|
+
+### Events Published
+| Event Name | Schema | Consumer(s) |
+|------------|--------|-------------|
+
+### Events Consumed
+| Event Name | Producer | Idempotency Key |
+|------------|----------|-----------------|
+
+---
+
+## 6. Security Design
+
+- **Authentication:** {e.g. Cognito JWT, IAM role}
+- **Authorisation:** {e.g. RBAC, scope-based}
+- **Data Classification:** {Public / Internal / Confidential / Restricted}
+- **PII Handling:** {Yes/No — describe handling}
+- **Secrets Management:** AWS Secrets Manager — path: `/{env}/{service}/`
+
+---
+
+## 7. Data Design
+
+- **Database:** {Engine, version}
+- **Schema:** {Schema name}
+- **Migration:** Flyway
+- **Backup:** {Frequency, retention}
+- **Data residency:** {Region}
+
+---
+
+## 8. Deployment & Operations
+
+- **Deployment unit:** ECS Fargate / Lambda
+- **Region:** eu-west-1 (primary)
+- **IaC:** CDK TypeScript
+- **CI/CD:** GitHub Actions
+- **Observability:** CloudWatch Logs, X-Ray, custom metrics
+
+---
+
+## 9. Risks & Mitigations
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|-----------|--------|------------|
+
+---
+
+## 10. Architecture Decisions
+
+| ADR | Decision | Status |
+|-----|----------|--------|
+| ADR-001 | {Decision} | Accepted |
+
+---
+
+## 11. Open Questions
+
+- {Question — Owner — Target date}

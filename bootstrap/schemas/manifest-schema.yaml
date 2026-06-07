@@ -1,0 +1,93 @@
+# EEIK Manifest Schema — Human-Readable Reference
+# Version: 1.0
+# Machine-validatable version: bootstrap/schemas/manifest-schema.json
+#
+# All fields below with their allowed values, defaults, and notes.
+# Required fields are marked (required).
+
+# ─── Manifest version ─────────────────────────────────────────
+schema_version: "1.0"   # (required) Major.Minor format
+
+# ─── Project identity ─────────────────────────────────────────
+project:
+  name:          string    # (required) kebab-case unique identifier
+  description:   string    # One-sentence description
+  owner:         string    # Owning team or squad
+  domain:        insurance | banking | healthcare | retail | generic   # (required)
+  project_type:  greenfield | modernization | poc | mvp | enterprise-platform | agent-platform  # (required)
+
+# ─── Technology stack ─────────────────────────────────────────
+technology:
+  backend:
+    language:    java | python | mixed   # (required)
+    version:     21 | 25 | 3.12         # numeric
+    framework:   spring-boot | quarkus | fastapi | django
+  frontend:
+    framework:   react | angular | none  # default: none
+  database:
+    type:        postgresql | mysql | aurora-postgresql | aurora-mysql | dynamodb | db2 | oracle | mixed
+    migration_tool: flyway | liquibase | none   # default: flyway
+    orm:         spring-data-jpa | spring-data-jdbc | jdbctemplate | sqlalchemy | none
+  messaging:
+    broker:      sqs | sns | eventbridge | kafka | kinesis | none
+    pattern:     event-driven | command-driven | pub-sub | streaming | none
+
+# ─── Architecture ─────────────────────────────────────────────
+architecture:
+  style:         monolith | modular-monolith | microservices | event-driven | serverless | agentic   # (required)
+  patterns:
+    - ddd | cqrs | saga | outbox | api-gateway | bff | strangler-fig   # list, optional
+  api_style:     rest | graphql | grpc | event | mixed   # default: rest
+
+# ─── Cloud platform ───────────────────────────────────────────
+cloud:
+  provider:      aws | azure | gcp | hybrid   # (required)
+  infra_as_code: cdk | terraform | both | none   # default: cdk
+  regions:
+    - eu-west-1   # list of target regions
+  multi_account: true | false   # default: true
+
+# ─── AI and agentic capabilities (optional) ───────────────────
+ai:
+  enabled:          true | false   # default: false
+  pattern:          rag | single-agent | multi-agent | enterprise-agent-platform | none
+  framework:        langgraph | crewai | autogen | mcp | bedrock-agents | none
+  foundation_model: claude | gpt-4 | llama | titan | mixed
+  governance_required: true | false   # auto-set true for regulated domains
+  memory_pattern:   in-session | persistent-db | vector-store | none
+
+# ─── Governance ───────────────────────────────────────────────
+governance:
+  profile:      basic | standard | regulated | enterprise   # (required)
+  # Note: insurance/banking/healthcare domains require regulated or enterprise
+  reviews_required:
+    - architecture-review
+    - security-review
+    - ai-governance-review
+    - production-readiness-review
+    - arb-gate
+    - compliance-review
+  compliance_frameworks:
+    - gdpr | pci-dss | hipaa | iso27001 | soc2 | eu-ai-act | none
+
+# ─── Delivery model ───────────────────────────────────────────
+delivery:
+  model:               single-team | multi-team | enterprise-program   # (required)
+  methodology:         agile | kanban | scaled-agile   # default: agile
+  sprint_length_weeks: 1 | 2 | 3 | 4   # default: 2
+  cicd_platform:       github-actions | jenkins | gitlab-ci | azure-devops | none   # default: github-actions
+
+# ─── Modernization (optional) ─────────────────────────────────
+modernization:
+  enabled:         true | false   # default: false
+  source_platform: ibmi | rpg | cobol | mainframe | oracle-forms | vb6 | mixed | none
+  strategy:        strangler-fig | rewrite | lift-and-shift | encapsulate | hybrid
+  wave_approach:   true | false   # default: true
+
+# ─── Observability (optional, defaults to enabled) ────────────
+observability:
+  enabled:      true | false   # default: true
+  logging:      cloudwatch | elk | splunk | datadog | none   # default: cloudwatch
+  tracing:      x-ray | jaeger | zipkin | datadog | none     # default: x-ray
+  metrics:      cloudwatch | prometheus | datadog | none      # default: cloudwatch
+  slo_required: true | false   # default: false

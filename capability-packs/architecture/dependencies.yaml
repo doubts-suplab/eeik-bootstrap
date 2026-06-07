@@ -1,1 +1,3 @@
+# Architecture pack has no pack dependencies.
+# It is a foundational pack and is always resolved first.
 dependencies: []

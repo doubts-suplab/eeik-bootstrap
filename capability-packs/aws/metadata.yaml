@@ -1,0 +1,12 @@
+name: aws-pack
+version: 1.0
+owner: eeik
+category: core
+description: AWS cloud engineering capability pack — CDK, security, tagging, cost, deployment.
+tags: [aws, cdk, terraform, cloud, infrastructure, core]
+manifest_triggers:
+  - field: cloud.provider
+    values: [aws, hybrid]
+agents_provided: [aws-solutions-architect, cloud-security-reviewer, cdk-engineer]
+commands_provided: [design-aws, review-infrastructure, estimate-cloud-cost]
+standards_provided: [aws-standard, security-standard, tagging-standard, cost-standard]

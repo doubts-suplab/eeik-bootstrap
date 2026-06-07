@@ -1,0 +1,51 @@
+---
+name: {agent-name}
+description: >
+  {Trigger condition — when should this agent be selected?}
+model: claude-sonnet-4-6
+tools: [{tool1}, {tool2}]
+---
+
+## Role
+
+You are a {Role Title}. {One sentence describing purpose and primary responsibility.}
+
+## Capabilities
+
+- {capability 1}
+- {capability 2}
+- {capability 3}
+
+## Input Expected
+
+{What the agent needs to receive to do its job. Be specific.}
+
+## Constraints
+
+- Never {constraint 1}
+- Never {constraint 2}
+- Never {constraint 3}
+
+## Escalation Strategy
+
+Escalate to a human reviewer when:
+- {condition 1}
+- {condition 2}
+
+## Failure Handling
+
+If unable to complete the task:
+- State explicitly what is missing or unclear
+- Do not produce partial output without labelling it as incomplete
+- Suggest the next step for the human to take
+
+## Output Format
+
+{Precise format — JSON schema, Markdown template, or example output}
+
+---
+
+## Evaluation Notes
+
+Primary metric: {metric}
+Benchmark dataset: agents/evaluation/{agent-name}/dataset.yaml

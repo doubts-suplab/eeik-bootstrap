@@ -1,0 +1,110 @@
+# Spring Boot Service Template
+
+## Package Structure
+
+```
+src/main/java/com/{company}/{service}/
+├── {ServiceName}Application.java
+├── web/
+│   ├── {Entity}Controller.java
+│   ├── dto/
+│   │   ├── {Entity}Request.java      (record)
+│   │   └── {Entity}Response.java     (record)
+│   └── {Entity}Mapper.java           (MapStruct)
+├── application/
+│   ├── {Entity}Service.java
+│   └── command/
+│       └── {Action}{Entity}Command.java  (record)
+├── domain/
+│   ├── model/
+│   │   └── {Entity}.java
+│   ├── event/
+│   │   └── {Entity}{Action}Event.java  (record)
+│   └── port/
+│       ├── {Entity}Repository.java   (interface)
+│       └── {Entity}EventPublisher.java (interface)
+└── infrastructure/
+    ├── persistence/
+    │   ├── Jpa{Entity}Repository.java
+    │   └── {Entity}Jpa{Entity}Adapter.java
+    └── messaging/
+        └── Sqs{Entity}EventPublisher.java
+```
+
+## Service Implementation
+
+```java
+package com.{company}.{service}.application;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional(readOnly = true)
+public class {Entity}Service {
+
+    private static final Logger log = LoggerFactory.getLogger({Entity}Service.class);
+
+    private final {Entity}Repository repository;
+    private final {Entity}EventPublisher eventPublisher;
+
+    public {Entity}Service(
+            {Entity}Repository repository,
+            {Entity}EventPublisher eventPublisher) {
+        this.repository = repository;
+        this.eventPublisher = eventPublisher;
+    }
+
+    public {Entity} findById({Entity}Id id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new {Entity}NotFoundException(id));
+    }
+
+    @Transactional
+    public {Entity} create(Create{Entity}Command command) {
+        log.info("Creating {entity}: name={}", command.name());
+        var entity = {Entity}.create(command);
+        var saved = repository.save(entity);
+        eventPublisher.publish(new {Entity}CreatedEvent(saved.getId()));
+        log.info("{Entity} created: id={}", saved.getId());
+        return saved;
+    }
+}
+```
+
+## Controller Implementation
+
+```java
+@RestController
+@RequestMapping("/v1/{entities}")
+@Tag(name = "{Entities}")
+public class {Entity}Controller {
+
+    private final {Entity}Service service;
+    private final {Entity}Mapper mapper;
+
+    public {Entity}Controller({Entity}Service service, {Entity}Mapper mapper) {
+        this.service = service;
+        this.mapper = mapper;
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get {entity} by ID")
+    @ApiResponse(responseCode = "200")
+    @ApiResponse(responseCode = "404", description = "{Entity} not found")
+    public {Entity}Response getById(@PathVariable UUID id) {
+        return mapper.toResponse(service.findById({Entity}Id.of(id)));
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Create {entity}")
+    @ApiResponse(responseCode = "201")
+    @ApiResponse(responseCode = "400", description = "Validation error")
+    public {Entity}Response create(@Valid @RequestBody Create{Entity}Request request) {
+        return mapper.toResponse(service.create(request.toCommand()));
+    }
+}
+```

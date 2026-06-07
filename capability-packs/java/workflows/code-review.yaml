@@ -1,0 +1,27 @@
+name: java-code-review
+description: Structured Java code review workflow
+version: 1.0
+
+steps:
+  - id: standards-check
+    name: Standards Compliance Check
+    agent: java-code-reviewer
+    action: Review all changed Java files against java-pack standards. Produce BLOCKING/MAJOR/MINOR findings.
+
+  - id: security-check
+    name: Security Review
+    agent: security-auditor
+    depends_on: [standards-check]
+    action: Check for injection risks, secrets in code, insecure deserialization, OWASP Top 10.
+
+  - id: coverage-check
+    name: Coverage Analysis
+    agent: jacoco-coverage-tester
+    depends_on: [standards-check]
+    action: Verify JaCoCo thresholds (80% line, 70% branch). Flag gaps.
+
+  - id: verdict
+    name: Final Verdict
+    agent: java-code-reviewer
+    depends_on: [standards-check, security-check, coverage-check]
+    action: Issue APPROVE or REQUEST CHANGES with consolidated findings.

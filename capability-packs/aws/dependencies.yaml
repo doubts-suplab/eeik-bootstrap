@@ -1,0 +1,3 @@
+dependencies:
+  - name: architecture-pack
+    reason: NFR standard and solution design context consumed by aws-solutions-architect

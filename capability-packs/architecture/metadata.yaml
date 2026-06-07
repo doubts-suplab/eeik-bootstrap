@@ -1,10 +1,40 @@
 name: architecture-pack
-
 version: 1.0
-
 owner: eeik
-
-category: architecture
-
+category: core
 description: >
-  Enterprise architecture capability pack.
+  Enterprise architecture capability pack providing solution design, ADR authoring,
+  NFR analysis, integration design, and modernisation planning intelligence.
+
+tags:
+  - architecture
+  - solution-design
+  - adr
+  - enterprise
+  - core
+
+manifest_triggers:
+  - field: architecture.style
+    values: [monolith, modular-monolith, microservices, event-driven, serverless, agentic]
+  - field: technology.backend.language
+    values: [java, python, mixed]
+  - field: project.project_type
+    values: [enterprise-platform, agent-platform]
+
+agents_provided:
+  - solution-architect
+  - enterprise-architect
+  - arb-reviewer
+  - modernization-architect
+
+commands_provided:
+  - create-architecture
+  - review-architecture
+  - create-adr
+  - create-rfc
+
+standards_provided:
+  - architecture-principles
+  - nfr-standard
+  - integration-standard
+  - event-driven-standard

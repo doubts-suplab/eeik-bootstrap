@@ -1,0 +1,23 @@
+# Risk Register
+
+**Project:** {project-name}  
+**Last Updated:** {date}  
+**Owner:** {owner}
+
+---
+
+| ID | Risk | Category | Likelihood | Impact | Score | Mitigation | Owner | Status |
+|----|------|----------|-----------|--------|-------|-----------|-------|--------|
+| R-001 | {risk description} | Security / Compliance / Technical / Operational | High/Med/Low | High/Med/Low | {L×I} | {mitigation action} | {owner} | Open/Mitigated/Accepted |
+
+---
+
+## Risk Scoring
+
+Likelihood × Impact:
+- High × High = 9 (Critical)
+- High × Med = 6 (High)
+- Med × Med = 4 (Medium)
+- Low × any = 1-3 (Low)
+
+Risks scored ≥ 6 must have an active mitigation plan and owner.

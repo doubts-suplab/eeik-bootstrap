@@ -1,0 +1,3 @@
+dependencies:
+  - name: architecture-pack
+    reason: Provides NFR standard and solution design context consumed by java-architect
