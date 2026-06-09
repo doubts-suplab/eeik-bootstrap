@@ -1,0 +1,36 @@
+name: security-scan
+description: "OWASP Top 10 review and secrets scan"
+trigger: "/security-scan [file or directory]"
+
+steps:
+  - id: secrets-scan
+    name: "Secrets Detection"
+    agent: security-auditor
+    action: "Scan for hardcoded credentials, API keys, passwords, tokens"
+
+  - id: owasp-review
+    name: "OWASP Top 10 Review"
+    agent: security-auditor
+    action: "Review against OWASP Top 10 — flag any violations"
+
+  - id: dependency-check
+    name: "Dependency Vulnerability Check"
+    agent: devsecops-engineer
+    action: "Review pom.xml or requirements.txt for known CVEs"
+
+  - id: iam-review
+    name: "IAM Policy Review"
+    agent: security-auditor
+    action: "Review IAM roles and policies for least-privilege violations"
+    condition: "cloud.provider = aws"
+
+  - id: report
+    name: "Security Report"
+    agent: security-auditor
+    action: |
+      Output findings by severity:
+      🔴 CRITICAL — block deployment
+      🟠 HIGH — fix before next sprint
+      🟡 MEDIUM — fix within quarter
+      🟢 LOW — backlog item
+      Final verdict: 🔴 BLOCK | 🟡 CONDITIONS | 🟢 APPROVE

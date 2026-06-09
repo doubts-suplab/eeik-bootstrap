@@ -1,0 +1,47 @@
+name: deploy-check
+description: "Pre-deployment readiness checklist"
+trigger: "/deploy-check env: dev|staging|prod, service: name"
+
+steps:
+  - id: build-check
+    name: "Build Verification"
+    agent: ops-engineer
+    checks:
+      - "Build passing on latest commit"
+      - "All tests green"
+      - "Coverage threshold met"
+      - "No BLOCKER findings in last review"
+
+  - id: config-check
+    name: "Configuration Check"
+    agent: ops-engineer
+    checks:
+      - "Environment-specific config present"
+      - "All required secrets exist in Secrets Manager"
+      - "CDK context values set for target account/region"
+      - "No hardcoded environment names in config"
+
+  - id: infra-check
+    name: "Infrastructure Check"
+    agent: cdk-engineer
+    checks:
+      - "CDK synth passes cleanly"
+      - "cdk-nag security rules pass"
+      - "No destructive changes (table drops, security group removals)"
+
+  - id: governance-check
+    name: "Governance Gate"
+    agent: architect
+    checks:
+      - "Required reviews completed for this environment"
+      - "ADRs created for significant decisions"
+    condition_regulated: "Compliance review signed off"
+    condition_enterprise: "ARB approval obtained for major changes"
+
+  - id: verdict
+    name: "Deploy Verdict"
+    agent: ops-engineer
+    action: |
+      ✅ GO — all checks passed
+      ⚠️ GO WITH CONDITIONS — minor gaps documented
+      ❌ NO GO — blocking issues present — list each one

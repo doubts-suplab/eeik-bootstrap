@@ -1,0 +1,91 @@
+name: EEIK Adapt
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'project-manifest.yaml'
+      - 'capability-packs/core/standards/**'
+      - 'scripts/generate_adapters.py'
+
+  workflow_dispatch:
+    inputs:
+      tools:
+        description: 'Comma-separated adapter tools to regenerate (default: all)'
+        required: false
+        default: 'kiro,codex,cursor,gemini'
+      dry_run:
+        description: 'Dry-run only (no commit)'
+        type: boolean
+        default: false
+
+jobs:
+  generate-adapters:
+    name: Regenerate Multi-Tool Adapters
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Generate adapters (dry-run)
+        if: ${{ inputs.dry_run == true }}
+        run: |
+          python3 scripts/generate_adapters.py \
+            --tools "${{ inputs.tools || 'kiro,codex,cursor,gemini' }}"
+
+      - name: Generate adapters (apply)
+        if: ${{ inputs.dry_run != true }}
+        run: |
+          python3 scripts/generate_adapters.py \
+            --apply \
+            --tools "${{ inputs.tools || 'kiro,codex,cursor,gemini' }}"
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git diff --stat
+          fi
+
+      - name: Commit updated adapters
+        if: steps.changes.outputs.changed == 'true' && inputs.dry_run != true
+        run: |
+          git config user.name  "eeik-bot[bot]"
+          git config user.email "eeik-bot@users.noreply.github.com"
+          git add .kiro/ AGENTS.md .cursor/ GEMINI.md
+          git commit -m "chore(adapters): regenerate multi-tool adapters [skip ci]
+
+          Triggered by manifest or standards change.
+          Tools: ${{ inputs.tools || 'kiro,codex,cursor,gemini' }}
+          Run: python3 scripts/generate_adapters.py --apply"
+          git push
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "### Adapter Generation Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          for adapter in ".kiro/steering/product.md" "AGENTS.md" ".cursor/rules/golden-rules.mdc" "GEMINI.md"; do
+            if [ -f "$adapter" ]; then
+              echo "- ✅ \`$adapter\`" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "- ⬜ \`$adapter\` (not generated)" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          done

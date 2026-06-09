@@ -1,0 +1,27 @@
+name: containers-pack
+version: "1.0"
+status: built
+
+manifest_triggers:
+  - field: architecture.patterns
+    contains: containers
+  - field: cloud.provider
+    value: aws
+    note: "Always relevant for AWS — ECS Fargate is primary container runtime"
+
+agents_provided:
+  - container-engineer
+  - ecs-specialist
+
+commands_provided:
+  - /review-dockerfile
+  - /design-ecs
+
+standards_provided:
+  - dockerfile-standard
+  - ecs-standard
+
+dependencies:
+  - architecture-pack
+  - aws-pack
+  - core-pack

@@ -1,0 +1,35 @@
+name: pr-review
+description: "Structured pull request review across all dimensions"
+trigger: "/review"
+
+steps:
+  - id: code-quality
+    name: "Code Quality Check"
+    agent: code-reviewer
+    action: "Review against golden-rules.md — classify all findings BLOCKER/MAJOR/MINOR/NIT"
+
+  - id: security-check
+    name: "Security Review"
+    agent: security-auditor
+    action: "Check OWASP Top 10, secrets, SQL injection, IAM, dependency CVEs"
+
+  - id: coverage-check
+    name: "Coverage Assessment"
+    agent: code-reviewer
+    action: "Verify test coverage did not decrease; flag untested paths"
+    condition: "technology.backend.language = java"
+
+  - id: architecture-check
+    name: "Architecture Alignment"
+    agent: architect
+    action: "Verify changes respect bounded context boundaries and hexagonal layers"
+    condition: "architecture.patterns includes ddd"
+
+  - id: verdict
+    name: "Review Verdict"
+    agent: code-reviewer
+    action: |
+      Produce final verdict:
+      ✅ APPROVE — no BLOCKER or MAJOR findings
+      ⚠️ APPROVE WITH CONDITIONS — MAJOR findings must be tracked
+      ❌ REQUEST CHANGES — BLOCKER findings present

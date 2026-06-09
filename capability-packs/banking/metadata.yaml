@@ -1,0 +1,30 @@
+name: banking-pack
+version: "1.0"
+status: built
+
+manifest_triggers:
+  - field: project.domain
+    value: banking
+
+agents_provided:
+  - banking-domain-expert
+  - payments-specialist
+  - risk-specialist
+
+standards_provided:
+  - banking-compliance-standard
+
+compliance_frameworks:
+  - gdpr
+  - pci-dss
+  - basel-iii
+  - fca-conduct-rules
+  - psd2
+
+governance_override:
+  minimum_profile: regulated
+
+dependencies:
+  - core-pack
+  - architecture-pack
+  - governance-pack

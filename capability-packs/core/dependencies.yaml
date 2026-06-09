@@ -1,0 +1,17 @@
+pack: core-pack
+depends_on: []
+note: "Core pack has no dependencies. It IS the foundation."
+
+required_by:
+  - architecture-pack
+  - java-pack
+  - aws-pack
+  - ai-engineering-pack
+  - governance-pack
+  - modernization-pack
+  - python-pack
+  - containers-pack
+  - delivery-pack
+  - insurance-pack
+  - banking-pack
+  - healthcare-pack

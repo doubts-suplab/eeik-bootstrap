@@ -1,0 +1,22 @@
+name: delivery-pack
+version: "1.0"
+status: built
+
+manifest_triggers:
+  always: true   # delivery context applies to every project
+
+agents_provided:
+  - sprint-planner
+  - release-manager
+  - project-tracker
+
+commands_provided:
+  - /sprint-plan
+  - /release-check
+
+standards_provided:
+  - cicd-standard
+  - branching-standard
+
+dependencies:
+  - core-pack

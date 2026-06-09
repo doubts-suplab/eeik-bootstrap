@@ -1,0 +1,139 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://eeik.dev/schemas/project-manifest/v1",
+  "title": "EEIK Project Manifest",
+  "description": "Schema for project-manifest.yaml — the source of truth for EEIK repo generation",
+  "type": "object",
+  "required": ["project", "technology", "governance"],
+  "additionalProperties": false,
+  "properties": {
+    "project": {
+      "type": "object",
+      "required": ["name", "type", "description"],
+      "properties": {
+        "name":        { "type": "string", "minLength": 1, "maxLength": 100 },
+        "type":        { "type": "string", "enum": ["greenfield", "brownfield", "migration", "modernisation"] },
+        "description": { "type": "string", "minLength": 10 },
+        "team":        { "type": "string" },
+        "domain":      { "type": "string", "enum": ["generic", "insurance", "banking", "healthcare", "retail", "logistics", "public-sector"] },
+        "environments": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["dev", "test", "staging", "prod", "uat", "pre-prod"] }
+        }
+      }
+    },
+    "technology": {
+      "type": "object",
+      "properties": {
+        "backend": {
+          "type": "object",
+          "properties": {
+            "language": { "type": "string", "enum": ["java", "python", "node", "go", "dotnet", "none"] },
+            "version":  { "type": "string" },
+            "framework": { "type": "string" },
+            "build_tool": { "type": "string", "enum": ["maven", "gradle", "pip", "poetry", "npm", "none"] }
+          }
+        },
+        "frontend": {
+          "type": "object",
+          "properties": {
+            "framework": { "type": "string", "enum": ["angular", "react", "vue", "none"] },
+            "version":   { "type": "string" }
+          }
+        },
+        "database": {
+          "type": "object",
+          "properties": {
+            "primary":   { "type": "string", "enum": ["postgres", "mysql", "oracle", "sqlserver", "dynamodb", "mongodb", "none"] },
+            "secondary": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "cloud": {
+          "type": "object",
+          "properties": {
+            "provider":     { "type": "string", "enum": ["aws", "azure", "gcp", "multi", "none"] },
+            "iac_tool":     { "type": "string", "enum": ["cdk", "terraform", "pulumi", "cloudformation", "none"] },
+            "services":     { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "containerisation": {
+          "type": "object",
+          "properties": {
+            "runtime":     { "type": "string", "enum": ["docker", "podman", "none"] },
+            "orchestrator":{ "type": "string", "enum": ["ecs-fargate", "eks", "ecs-ec2", "k8s", "none"] }
+          }
+        },
+        "mainframe": {
+          "type": "object",
+          "properties": {
+            "platform": { "type": "string", "enum": ["ibm-i", "zos", "none"] },
+            "languages": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "required": ["profile"],
+      "properties": {
+        "profile": {
+          "type": "string",
+          "enum": ["basic", "standard", "regulated", "enterprise"],
+          "description": "basic=PoC, standard=production, regulated=insurance/banking/healthcare, enterprise=multi-team ARB"
+        },
+        "compliance_frameworks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["gdpr", "pci-dss", "hipaa", "basel-iii", "solvency-ii", "eu-ai-act", "iso-27001", "soc2", "fca", "none"]
+          }
+        },
+        "adr_required":       { "type": "boolean" },
+        "coverage_threshold": { "type": "number", "minimum": 0, "maximum": 100 },
+        "branch_strategy":    { "type": "string", "enum": ["github-flow", "gitflow", "trunk-based"] }
+      }
+    },
+    "capability_packs": {
+      "type": "object",
+      "description": "Override auto-selected packs. Use explicit: true to lock selection.",
+      "properties": {
+        "explicit": { "type": "boolean" },
+        "include":  { "type": "array", "items": { "type": "string" } },
+        "exclude":  { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "agents": {
+      "type": "object",
+      "properties": {
+        "model_overrides": {
+          "type": "object",
+          "description": "Override default model for specific agent roles",
+          "additionalProperties": {
+            "type": "string",
+            "enum": ["claude-opus-4-6", "claude-sonnet-4-6", "claude-haiku-4-5-20251001"]
+          }
+        }
+      }
+    },
+    "integrations": {
+      "type": "object",
+      "properties": {
+        "ci_platform":  { "type": "string", "enum": ["github-actions", "jenkins", "gitlab-ci", "azure-devops", "none"] },
+        "artifact_registry": { "type": "string", "enum": ["ecr", "acr", "gcr", "nexus", "jfrog", "none"] },
+        "secret_store": { "type": "string", "enum": ["aws-secrets-manager", "azure-key-vault", "hashicorp-vault", "none"] },
+        "observability": { "type": "string", "enum": ["cloudwatch", "datadog", "splunk", "elastic", "none"] }
+      }
+    },
+    "adapters": {
+      "type": "object",
+      "description": "Which AI tool adapters to generate alongside Claude Code",
+      "properties": {
+        "kiro":    { "type": "boolean", "default": true },
+        "codex":   { "type": "boolean", "default": true },
+        "cursor":  { "type": "boolean", "default": false },
+        "gemini":  { "type": "boolean", "default": false },
+        "copilot": { "type": "boolean", "default": true }
+      }
+    }
+  }
+}

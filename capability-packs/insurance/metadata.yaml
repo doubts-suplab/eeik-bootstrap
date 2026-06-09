@@ -1,0 +1,33 @@
+name: insurance-pack
+version: "1.0"
+status: built
+
+manifest_triggers:
+  - field: project.domain
+    value: insurance
+
+agents_provided:
+  - insurance-domain-expert
+  - claims-specialist
+  - underwriting-specialist
+
+standards_provided:
+  - insurance-compliance-standard
+
+knowledge:
+  - insurance-domain-glossary
+  - insurance-business-rules
+  - solvency-ii-reference
+
+compliance_frameworks:
+  - gdpr
+  - solvency-ii
+  - fca-conduct-rules
+
+governance_override:
+  minimum_profile: regulated   # insurance always requires regulated+
+
+dependencies:
+  - core-pack
+  - architecture-pack
+  - governance-pack

@@ -1,0 +1,18 @@
+{
+  "hooks": [
+    {
+      "name": "post-edit-quality-check",
+      "event": "file:saved",
+      "matchPattern": "**/*.java",
+      "command": "bash .claude/hooks/post-edit-check.sh",
+      "description": "Run EEIK quality checks after Java file save"
+    },
+    {
+      "name": "post-edit-ts-check",
+      "event": "file:saved",
+      "matchPattern": "**/*.ts",
+      "command": "bash .claude/hooks/post-edit-check.sh",
+      "description": "Run EEIK quality checks after TypeScript file save"
+    }
+  ]
+}

@@ -1,0 +1,253 @@
+# Golden Rules Standard
+
+**Applies To:** All projects, all languages, all domains  
+**Enforced By:** `code-reviewer` agent, CI/CD hooks, `security-auditor` agent  
+**Status:** Non-negotiable
+
+---
+
+## The 12 Golden Rules
+
+These rules apply to every line of code committed to any EEIK-managed project. They are not preferences — violation of a BLOCKER rule prevents merge.
+
+---
+
+### Rule 1 — Constructor Injection Only
+
+**No `@Autowired` on fields. All injected fields are `final`.**
+
+```java
+// ❌ VIOLATION — field injection
+@Service
+public class OrderService {
+    @Autowired
+    private OrderRepository orderRepository;
+}
+
+// ✅ CORRECT — constructor injection
+@Service
+public class OrderService {
+    private final OrderRepository orderRepository;
+
+    public OrderService(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
+}
+```
+
+**Why:** Fields cannot be `final`. Cannot test without Spring context. Dependencies are invisible.
+
+---
+
+### Rule 2 — No Hardcoded Secrets
+
+**No credentials, API keys, passwords, or AWS account IDs in source code.**
+
+```java
+// ❌ VIOLATION
+String apiKey = "sk-live-abc123...";
+String dbPassword = "SuperSecret123";
+
+// ✅ CORRECT — environment variable or Secrets Manager
+String apiKey = System.getenv("API_KEY");
+// or via @Value, or SecretsManagerClient
+```
+
+**Why:** Source code is version-controlled and shared. Secrets in code become public.
+
+---
+
+### Rule 3 — SLF4J, Not System.out
+
+**Use `log.info(...)` with parameterised messages. Never `System.out.println()`.**
+
+```java
+// ❌ VIOLATION
+System.out.println("Processing order: " + orderId);
+
+// ✅ CORRECT
+log.info("Processing order id={}", orderId);
+```
+
+**Why:** `System.out` bypasses the logging framework — no level control, no structured output, no MDC context.
+
+---
+
+### Rule 4 — No SELECT *
+
+**Always specify explicit column lists in SQL.**
+
+```sql
+-- ❌ VIOLATION
+SELECT * FROM orders WHERE customer_id = :customerId;
+
+-- ✅ CORRECT
+SELECT id, customer_id, status, total_amount, created_at
+FROM orders
+WHERE customer_id = :customerId;
+```
+
+**Why:** Schema additions silently increase payload size and break mapping. Query plans are harder to optimise.
+
+---
+
+### Rule 5 — Parameterised Queries Only
+
+**No SQL string concatenation. Use named parameters.**
+
+```java
+// ❌ VIOLATION — SQL injection risk
+String sql = "SELECT * FROM orders WHERE id = '" + orderId + "'";
+
+// ✅ CORRECT
+String sql = "SELECT id, status FROM orders WHERE id = :orderId";
+namedJdbcTemplate.queryForObject(sql, Map.of("orderId", orderId), rowMapper);
+```
+
+**Why:** String concatenation enables SQL injection. Non-negotiable security rule.
+
+---
+
+### Rule 6 — java.time Only (Java projects)
+
+**No `java.util.Date`, `java.util.Calendar`, or `java.sql.Timestamp`.**
+
+```java
+// ❌ VIOLATION
+Date now = new Date();
+Calendar cal = Calendar.getInstance();
+
+// ✅ CORRECT
+Instant now = Instant.now();
+LocalDate today = LocalDate.now();
+ZonedDateTime zonedNow = ZonedDateTime.now(ZoneId.of("Europe/London"));
+```
+
+**Why:** `Date` and `Calendar` are mutable, non-thread-safe, and poorly designed. `java.time` is ISO 8601-correct.
+
+---
+
+### Rule 7 — jakarta.* in Spring Boot 3.x (Java projects)
+
+**No `javax.*` imports in Spring Boot 3.x code.**
+
+```java
+// ❌ VIOLATION in Spring Boot 3.x
+import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
+
+// ✅ CORRECT
+import jakarta.persistence.Entity;
+import jakarta.validation.constraints.NotNull;
+```
+
+**Why:** Spring Boot 3.x requires Jakarta EE 10. `javax.*` causes `ClassNotFoundException` at runtime.
+
+---
+
+### Rule 8 — Conventional Commits
+
+**All commit messages follow `type(scope): description` format.**
+
+```
+# ❌ VIOLATION
+"fix stuff"
+"wip"
+"updated OrderService"
+
+# ✅ CORRECT
+feat(orders): add order cancellation endpoint
+fix(payments): handle null amount in authorisation
+chore(deps): upgrade Spring Boot to 3.3.0
+test(orders): add Testcontainers integration test for cancellation
+```
+
+**Types:** `feat`, `fix`, `refactor`, `test`, `chore`, `docs`, `perf`, `ci`, `build`, `revert`
+
+---
+
+### Rule 9 — No Partial Implementations
+
+**Every committed method body is complete. No `// TODO implement this` in production code.**
+
+```java
+// ❌ VIOLATION
+public BigDecimal calculatePremium(Policy policy) {
+    // TODO: implement premium calculation
+    return null;
+}
+
+// ✅ CORRECT — if not yet implementable, throw explicitly
+public BigDecimal calculatePremium(Policy policy) {
+    throw new UnsupportedOperationException(
+        "Premium calculation not yet implemented — tracked in TD-042"
+    );
+}
+```
+
+---
+
+### Rule 10 — No Empty Catch Blocks
+
+**Every catch block at minimum logs the exception.**
+
+```java
+// ❌ VIOLATION
+try {
+    publishEvent(event);
+} catch (Exception e) {
+    // swallowed
+}
+
+// ✅ CORRECT
+try {
+    publishEvent(event);
+} catch (Exception e) {
+    log.error("Failed to publish event type={} id={}: {}", 
+               event.getType(), event.getId(), e.getMessage(), e);
+}
+```
+
+---
+
+### Rule 11 — No Thread.sleep() in Tests
+
+**Use Awaitility for async assertions.**
+
+```java
+// ❌ VIOLATION
+Thread.sleep(2000);
+assertThat(orderRepository.findById(id)).isPresent();
+
+// ✅ CORRECT
+await().atMost(5, SECONDS).until(() ->
+    orderRepository.findById(id).isPresent()
+);
+```
+
+---
+
+### Rule 12 — Optional.get() Only with Guard
+
+**Never call `Optional.get()` without a preceding `isPresent()` or use `orElseThrow()`.**
+
+```java
+// ❌ VIOLATION
+Order order = orderRepository.findById(id).get(); // NoSuchElementException risk
+
+// ✅ CORRECT
+Order order = orderRepository.findById(id)
+    .orElseThrow(() -> new OrderNotFoundException(id));
+```
+
+---
+
+## Enforcement
+
+| Severity | Rules | Gate |
+|----------|-------|------|
+| BLOCKER (pre-merge) | 2 (no secrets), 5 (SQL injection) | CI security scan |
+| BLOCKER (code review) | 1, 3, 4, 6, 7, 9, 10, 12 | `code-reviewer` agent |
+| MAJOR (code review) | 8, 11 | `code-reviewer` agent |
+
+Rules 1–12 are checked by the `code-reviewer` agent on every PR review.

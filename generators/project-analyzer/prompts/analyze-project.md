@@ -1,0 +1,281 @@
+# Analyze Project Prompt
+
+## Purpose
+
+Analyze an existing repository and produce a draft `project-manifest.yaml`.
+
+Activated by `/analyze-project [path]`.
+
+---
+
+## Step 1 — Discover the Repository
+
+Scan the repository root for these signal files:
+
+| File | What It Tells You |
+|------|------------------|
+| `pom.xml` | Java project; read `<java.version>`, `<spring-boot.version>`, `<dependencies>` |
+| `pyproject.toml` or `requirements.txt` | Python project; scan for fastapi, django, flask, langchain |
+| `package.json` (root) | Node/TypeScript project; scan for react, angular, express, next |
+| `build.gradle` | Gradle Java project |
+| `Dockerfile` | Containerised; inspect base image for language/runtime |
+| `docker-compose.yaml` | Local service topology; infer messaging brokers, databases |
+| `cdk.json` or `bin/*.ts` | AWS CDK infrastructure |
+| `main.tf` or `*.tf` | Terraform infrastructure |
+| `serverless.yml` | Serverless Framework |
+| `.github/workflows/*.yaml` | CI/CD platform and deployment pattern |
+| `src/` directory structure | Architecture style from package naming |
+| `application.yaml` / `application.properties` | Framework configuration, DB type |
+| `.env.example` | Environment variables → infer config dependencies |
+| `README.md` | Project description, team, purpose |
+
+---
+
+## Step 2 — Extract Technology Stack
+
+### Backend Language Detection
+
+```
+pom.xml present → language: java
+  Read <java.version> or <maven.compiler.source> → version
+  Read <artifactId>spring-boot-starter-*</artifactId> → framework: spring-boot
+  Read <artifactId>quarkus-core</artifactId> → framework: quarkus
+
+pyproject.toml present → language: python
+  [tool.poetry.dependencies] fastapi → framework: fastapi
+  django → framework: django
+
+package.json (root, no pom.xml) → language: typescript
+  express/koa → framework: express
+  next → framework: next
+```
+
+### Database Detection
+
+```
+application.yaml: spring.datasource.url
+  jdbc:postgresql → type: postgresql or aurora-postgresql
+  jdbc:mysql → type: mysql or aurora-mysql
+  jdbc:db2 → type: db2
+  jdbc:oracle → type: oracle
+
+pom.xml dependencies:
+  flyway-core → migration_tool: flyway
+  liquibase-core → migration_tool: liquibase
+  spring-data-jpa → orm: spring-data-jpa
+  spring-data-jdbc → orm: spring-data-jdbc
+
+docker-compose.yaml services:
+  postgres → type: postgresql
+  dynamodb-local → type: dynamodb
+```
+
+### Messaging Detection
+
+```
+pom.xml dependencies:
+  spring-kafka → broker: kafka
+  spring-cloud-aws-messaging → broker: sqs
+  aws-java-sdk-sns → broker: sns
+
+application.yaml:
+  spring.kafka.bootstrap-servers → broker: kafka
+  cloud.aws.sqs → broker: sqs
+```
+
+---
+
+## Step 3 — Infer Architecture Style
+
+Delegate to `extractors/architecture-extractor.md`.
+
+Signals to check:
+
+```
+src/ package structure:
+  domain/, application/, infrastructure/, web/ → hexagonal/DDD → style: microservices
+  controller/, service/, repository/ (flat) → style: modular-monolith or monolith
+  functions/ or handler/ (no service layer) → style: serverless
+  agents/, graphs/, nodes/ (Python) → style: agentic
+
+Patterns:
+  outbox_events table or OutboxEvent class → patterns: [outbox]
+  Command*.java + Query*.java → patterns: [cqrs]
+  *Saga.java → patterns: [saga]
+  @DomainEvent or *DomainEvent.java → patterns: [ddd]
+  ApiGateway CDK stack → patterns: [api-gateway]
+```
+
+---
+
+## Step 4 — Detect Cloud and IaC
+
+```
+cdk.json or infrastructure/cdk/ → provider: aws, infra_as_code: cdk
+main.tf present → infra_as_code: terraform
+  terraform { backend "s3" } → provider: aws
+  provider "azurerm" → provider: azure
+  provider "google" → provider: gcp
+
+cdk.json app entry or bin/*.ts:
+  Read Stack instantiation → infer regions
+  Check for multi-account setup (different accounts per stage)
+```
+
+---
+
+## Step 5 — Detect AI Capabilities
+
+```
+requirements.txt / pyproject.toml:
+  langgraph → framework: langgraph, pattern: multi-agent
+  langchain → framework: langgraph (likely), pattern: rag or single-agent
+  openai → foundation_model: gpt-4
+  anthropic → foundation_model: claude
+  crewai → framework: crewai, pattern: multi-agent
+  boto3 + bedrock in code → foundation_model: claude or mixed
+
+src/ structure:
+  agents/, graphs/, nodes/ → enabled: true
+  vector_store/ or embeddings/ → memory_pattern: vector-store
+```
+
+---
+
+## Step 6 — Assess Governance Maturity
+
+```
+docs/decisions/ with ADRs → governance history present
+.github/workflows/deploy-prod.yaml with environment: protection → approval gates exist
+CODEOWNERS file → team ownership defined
+.snyk or SECURITY.md → security process exists
+Compliance documents in docs/ → compliance_frameworks hint
+
+Infer governance profile:
+  ADRs + security scans + 2 approvers → standard or regulated
+  No ADRs, no security scans, no reviews → basic
+  Compliance docs + multi-account → regulated or enterprise
+```
+
+---
+
+## Step 7 — Generate Draft Manifest
+
+Produce `project-manifest.yaml` with confidence annotations:
+
+```yaml
+# EEIK Draft Manifest — Generated by /analyze-project
+# Review all INFERRED fields before running /validate-manifest
+# Confidence: HIGH = detected from code | MEDIUM = inferred | LOW = default assumed
+
+schema_version: "1.0"
+
+project:
+  name: {from README or directory name}          # INFERRED
+  description: {from README first paragraph}     # INFERRED — verify
+  owner: {from CODEOWNERS or README}             # INFERRED — verify
+  domain: generic                                # LOW — manually set if known
+  project_type: {greenfield|modernization|...}  # MEDIUM — verify
+
+technology:
+  backend:
+    language: java                               # HIGH — detected from pom.xml
+    version: 21                                  # HIGH — detected from pom.xml
+    framework: spring-boot                       # HIGH — detected from dependencies
+  database:
+    type: aurora-postgresql                      # HIGH — detected from datasource URL
+    migration_tool: flyway                       # HIGH — detected from dependency
+    orm: spring-data-jpa                         # HIGH — detected from dependency
+  messaging:
+    broker: sqs                                  # MEDIUM — detected from application.yaml
+    pattern: event-driven                        # MEDIUM — inferred from patterns
+
+architecture:
+  style: microservices                           # MEDIUM — inferred from package structure
+  patterns:
+    - ddd                                        # MEDIUM — inferred from domain/ package
+    - outbox                                     # HIGH — OutboxEvent class found
+  api_style: rest                                # MEDIUM — assumed
+
+cloud:
+  provider: aws                                  # HIGH — CDK detected
+  infra_as_code: cdk                             # HIGH — cdk.json found
+  regions:
+    - eu-west-1                                  # MEDIUM — from CDK context
+  multi_account: true                            # MEDIUM — inferred from stage config
+
+ai:
+  enabled: false                                 # HIGH — no AI dependencies detected
+
+governance:
+  profile: standard                              # MEDIUM — based on review process maturity
+  reviews_required:
+    - architecture-review
+    - security-review
+
+delivery:
+  model: multi-team                              # LOW — default
+  methodology: agile                             # LOW — default
+  sprint_length_weeks: 2                         # LOW — default
+  cicd_platform: github-actions                  # HIGH — .github/workflows/ found
+
+observability:
+  enabled: true                                  # MEDIUM — CloudWatch references found
+  logging: cloudwatch                            # MEDIUM — inferred
+  tracing: x-ray                                 # MEDIUM — inferred
+  slo_required: false                            # LOW — default
+```
+
+---
+
+## Step 8 — Generate Adoption Report
+
+Produce `adoption-report.md` alongside the manifest.
+
+---
+
+## Step 9 — Output Summary
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  EEIK Project Analyzer — Complete
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Project:        {name}
+Analyzed:       {n} files across {n} directories
+
+Detection Summary:
+  ✅ HIGH confidence ({n} fields)    — detected from code
+  ⚠️ MEDIUM confidence ({n} fields) — inferred from patterns  
+  ❓ LOW confidence ({n} fields)     — defaults assumed
+
+Generated:
+  📄 project-manifest.yaml (draft)
+  📄 adoption-report.md
+
+Required Actions Before Running /validate-manifest:
+  1. Verify project.domain — currently set to 'generic'
+  2. Confirm project.project_type — set to 'modernization'?
+  3. Review governance.profile — currently 'standard' (adjust if regulated domain)
+  4. Set cloud.regions correctly
+  5. Review all LOW confidence fields
+
+Next Steps:
+  1. Review and correct project-manifest.yaml
+  2. Run /validate-manifest
+  3. Run /generate-repo to apply EEIK structure
+  4. Commit both files to feature branch
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+---
+
+## Error Handling
+
+| Condition | Response |
+|-----------|----------|
+| Empty repository | Halt — "Cannot analyze an empty repository" |
+| No recognizable language | Set language: mixed, flag for manual review |
+| Multiple languages at root | Set language: mixed; describe each in notes |
+| Infrastructure only (no src/) | Warn — set project_type: platform-ops |
+| Monorepo detected | Warn — "This appears to be a monorepo. Analyze each service separately." |

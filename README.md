@@ -108,49 +108,52 @@ Future platform capabilities:
 ## Repository Structure
 
 ```
-.github/                             ← GitHub Copilot configuration
-├── copilot-instructions.md          ← Always-on repo-wide context (auto-loaded)
-├── instructions/          (29)      ← Path-specific instructions (auto-applied by file type)
-├── agents/                (44)      ← Custom agent personas (select via @ in Copilot Chat)
-├── prompts/
-│   ├── tasks/             (22)      ← Single-purpose task prompts
-│   └── workflows/         (14)      ← Multi-step orchestrated workflows
-├── skills/                (12)      ← Auto-loaded reusable capability packs
-└── hooks/                  (2)      ← Session and tool-use lifecycle logging
+── AI Tool Adapters (root — read by each tool automatically) ─────────────────
+CLAUDE.md          Claude Code session brief + golden rules
+AGENTS.md          OpenAI Codex CLI manifest
+GEMINI.md          Google Gemini CLI context
+CONTRIBUTING.md    Contribution guide
+SECURITY.md        Vulnerability reporting
 
-.claude/                             ← Claude Code configuration
-├── settings.json                    ← Model, permissions, hooks
-├── agents/                (44)      ← Claude Code specialist agents (auto-selected)
-├── commands/              (10)      ← Slash commands (/adr, /estimate, /review, …)
-├── hooks/                  (4)      ← pre-bash-guard, pre-write-guard, post-edit-check, on-stop
-├── memory/                (10)      ← Persistent context loaded at session start
-└── standards/              (8)      ← Coding standards per technology domain
+── Tool-Specific Config ──────────────────────────────────────────────────────
+.claude/           Claude Code  — agents, commands, hooks, memory, standards
+.github/           Copilot      — instructions, agents, prompts, workflows, hooks
+.kiro/             Kiro (AWS)   — steering docs, hooks
+.cursor/           Cursor       — .mdc rules (golden-rules, architecture, security)
 
-.vscode/                             ← VS Code settings and extension recommendations
-.editorconfig                        ← Cross-editor formatting rules
-AGENTS.md                            ← Complete agent catalogue and quick-reference
-CLAUDE.md                            ← Claude Code session brief and golden rules
+── Intelligence Layer (tool-agnostic) ────────────────────────────────────────
+capability-packs/  13 packs — core, java, python, aws, containers, modernization,
+                   ai-engineering, architecture, governance, delivery,
+                   insurance, banking, healthcare
+knowledge/         Patterns, anti-patterns, ADRs, lessons-learned,
+                   incident-repository, event-catalog, reference-architectures
+templates/         Code templates per technology domain
 
+── Generators ────────────────────────────────────────────────────────────────
+generators/        project-analyzer, repository-generator, agent-generator,
+                   capability-selector, knowledge-generator, governance-generator,
+                   model-router, adapter-generator
+bootstrap/         /bootstrap command: manifests, schemas, validators, resolvers
 
-docs/                                ← Detailed specifications and implementation guides
-bootstrap/
-generators/
-capability-packs/
-knowledge/
-templates/
-schemas/
-examples/
-tests/
-VISION.md
-ROADMAP.md
-ARCHITECTURE.md
-MANIFEST-SPEC.md
-AGENT-SPEC.md
-CAPABILITY-PACK-SPEC.md
-COMMAND-SPEC.md
-WORKFLOW-SPEC.md
-MODEL-ROUTING-SPEC.md
+── Executable Scripts ────────────────────────────────────────────────────────
+scripts/           eeik_cli.py          — central CLI entry point
+                   validate_manifest.py — JSON Schema + governance rules
+                   activate_packs.py    — manifest → .claude/ materialisation
+                   generate_adapters.py — synthesise multi-tool adapter files
+                   claude_harness.py    — run generators via claude --print
 
+── CI/CD ─────────────────────────────────────────────────────────────────────
+.github/workflows/ eeik-validate.yml   — manifest + agent lint on PR
+                   eeik-adapt.yml      — auto-regenerate adapters on manifest change
+
+── Documentation ─────────────────────────────────────────────────────────────
+docs/
+├── eeik-guide.html           Interactive visual guide (open in browser)
+├── specs/                    Internal design specs (11 files)
+├── concepts/                 Vision, architecture, AI governance
+├── reference/                Roadmap, inventory, platform capabilities
+├── getting-started/          Adoption guide, use cases
+└── [domain folders]          Architecture, AI engineering, modernization, etc.
 ```
 
 ---

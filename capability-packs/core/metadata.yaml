@@ -1,0 +1,44 @@
+name: core-pack
+version: "1.0"
+status: built
+description: "Foundational capability pack — cross-cutting agents, standards, and workflows for all projects"
+
+always_active: true
+
+agents_provided:
+  - architect
+  - enterprise-architect
+  - arb-reviewer
+  - code-reviewer
+  - security-auditor
+  - business-analyst
+  - estimator
+  - technical-writer
+  - project-tracker
+  - incident-handler
+  - rca-agent
+  - ops-engineer
+  - sre-engineer
+  - devsecops-engineer
+
+commands_provided:
+  - /review
+  - /estimate
+  - /security-scan
+  - /deploy-check
+  - /incident
+  - /rca
+  - /adr
+  - /memory-update
+
+standards_provided:
+  - golden-rules
+  - security-baseline
+  - observability-baseline
+  - commit-standard
+  - estimation-standard
+
+dependencies: []   # none — foundational
+
+manifest_triggers:
+  always: true     # loaded for every project regardless of manifest values

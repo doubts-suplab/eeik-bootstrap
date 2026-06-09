@@ -1,0 +1,28 @@
+name: healthcare-pack
+version: "1.0"
+status: built
+
+manifest_triggers:
+  - field: project.domain
+    value: healthcare
+
+agents_provided:
+  - healthcare-domain-expert
+  - clinical-data-specialist
+
+standards_provided:
+  - healthcare-compliance-standard
+
+compliance_frameworks:
+  - gdpr
+  - hipaa
+  - gdpr-health-data
+  - cqc-standards
+
+governance_override:
+  minimum_profile: regulated
+
+dependencies:
+  - core-pack
+  - architecture-pack
+  - governance-pack

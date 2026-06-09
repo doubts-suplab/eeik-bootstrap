@@ -1,0 +1,29 @@
+name: modernization-pack
+version: "1.0"
+status: built
+
+manifest_triggers:
+  - field: modernization.enabled
+    value: true
+  - field: project.project_type
+    value: modernization
+
+agents_provided:
+  - ibmi-modernization-expert
+  - cobol-analyzer
+  - modernization-architect
+  - legacy-integration-engineer
+
+commands_provided:
+  - /analyze-legacy
+  - /create-migration-wave
+  - /design-strangler
+
+standards_provided:
+  - modernization-standard
+  - strangler-fig-standard
+
+dependencies:
+  - architecture-pack
+  - java-pack
+  - aws-pack

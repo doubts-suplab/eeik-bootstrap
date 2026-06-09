@@ -1,0 +1,99 @@
+name: project-analysis
+description: "Analyze an existing repository and produce a draft project manifest"
+trigger: "/analyze-project [path]"
+
+inputs:
+  - name: project_path
+    default: "."
+    description: "Path to the repository root to analyze"
+
+steps:
+  - id: discover-files
+    name: "Discover Repository Files"
+    agent: architect
+    action: "Glob for signal files: pom.xml, pyproject.toml, package.json, cdk.json, *.tf, Dockerfile, .github/workflows/"
+    outputs:
+      - discovered_files: list
+      - language_signals: list
+
+  - id: extract-tech-stack
+    name: "Extract Technology Stack"
+    agent: architect
+    prompt: "generators/project-analyzer/prompts/analyze-project.md#Step-2"
+    inputs:
+      - discovered_files
+    outputs:
+      - technology: object
+      - confidence_map: object
+
+  - id: infer-architecture
+    name: "Infer Architecture Style and Patterns"
+    agent: architect
+    prompt: "generators/project-analyzer/extractors/architecture-extractor.md"
+    inputs:
+      - discovered_files
+      - technology
+    outputs:
+      - architecture: object
+
+  - id: detect-cloud
+    name: "Detect Cloud and IaC"
+    agent: aws-architect
+    prompt: "generators/project-analyzer/prompts/analyze-project.md#Step-4"
+    inputs:
+      - discovered_files
+    outputs:
+      - cloud: object
+
+  - id: detect-ai
+    name: "Detect AI Capabilities"
+    agent: ai-architect
+    prompt: "generators/project-analyzer/prompts/analyze-project.md#Step-5"
+    inputs:
+      - discovered_files
+    outputs:
+      - ai: object
+
+  - id: assess-governance
+    name: "Assess Governance Maturity"
+    agent: architect
+    prompt: "generators/project-analyzer/extractors/governance-extractor.md"
+    inputs:
+      - discovered_files
+    outputs:
+      - governance: object
+      - gaps: list
+
+  - id: generate-manifest
+    name: "Generate Draft Manifest"
+    agent: architect
+    prompt: "generators/project-analyzer/prompts/analyze-project.md#Step-7"
+    inputs:
+      - technology
+      - architecture
+      - cloud
+      - ai
+      - governance
+      - confidence_map
+    output_file: "project-manifest.yaml"
+
+  - id: generate-adoption-report
+    name: "Generate Adoption Report"
+    agent: architect
+    template: "generators/project-analyzer/reports/adoption-report-template.md"
+    inputs:
+      - technology
+      - architecture
+      - cloud
+      - governance
+      - gaps
+      - confidence_map
+    output_file: "adoption-report.md"
+
+  - id: output-summary
+    name: "Output Summary"
+    agent: architect
+    prompt: "generators/project-analyzer/prompts/analyze-project.md#Step-9"
+    inputs:
+      - confidence_map
+      - gaps

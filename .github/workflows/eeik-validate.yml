@@ -1,0 +1,104 @@
+name: EEIK Validate
+
+on:
+  pull_request:
+    paths:
+      - 'project-manifest.yaml'
+      - 'bootstrap/manifests/**'
+      - 'capability-packs/**'
+      - 'scripts/**'
+  push:
+    branches: [main, master]
+    paths:
+      - 'project-manifest.yaml'
+
+jobs:
+  validate-manifest:
+    name: Validate Project Manifest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install pyyaml jsonschema
+
+      - name: Check manifest exists
+        run: |
+          if [ ! -f project-manifest.yaml ]; then
+            echo "⚠ No project-manifest.yaml found."
+            echo "This is expected for a bootstrap repo — skipping validation."
+            exit 0
+          fi
+
+      - name: Validate manifest (strict mode on main)
+        run: |
+          if [ -f project-manifest.yaml ]; then
+            if [ "${{ github.ref }}" = "refs/heads/main" ] || [ "${{ github.ref }}" = "refs/heads/master" ]; then
+              python3 scripts/validate_manifest.py --strict
+            else
+              python3 scripts/validate_manifest.py
+            fi
+          fi
+
+  check-packs:
+    name: Verify Capability Packs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install pyyaml jsonschema
+
+      - name: Dry-run pack activation
+        run: |
+          if [ -f project-manifest.yaml ]; then
+            python3 scripts/activate_packs.py --list
+          else
+            echo "No manifest — skipping pack check"
+          fi
+
+  lint-agents:
+    name: Lint Agent Files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check agent YAML frontmatter
+        run: |
+          failed=0
+          for f in .claude/agents/*.md capability-packs/*/agents/*.md; do
+            [ -f "$f" ] || continue
+            # Check required frontmatter fields
+            if ! grep -q "^description:" "$f"; then
+              echo "FAIL: $f — missing 'description' in frontmatter"
+              failed=1
+            fi
+            if ! grep -q "^model:" "$f"; then
+              echo "WARN: $f — missing 'model' field (will use default)"
+            fi
+          done
+          [ $failed -eq 0 ] || exit 1
+          echo "✓ All agent files have required frontmatter"
+
+      - name: Check for hardcoded secrets
+        run: |
+          # Scan for obvious credential patterns
+          if grep -rE "(AKIA[0-9A-Z]{16}|password\s*=\s*['\"][^'\"]{4})" \
+            --include="*.md" --include="*.yaml" --include="*.yml" \
+            --exclude-dir=".git" .; then
+            echo "FAIL: Potential credentials found in repository"
+            exit 1
+          fi
+          echo "✓ No credential patterns detected"

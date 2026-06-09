@@ -1,0 +1,26 @@
+name: python-pack
+version: "1.0"
+status: built
+
+manifest_triggers:
+  - field: technology.backend.language
+    value: python
+
+agents_provided:
+  - python-developer
+  - python-tech-lead
+  - python-tester
+  - fastapi-engineer
+
+commands_provided:
+  - /review-python
+  - /improve-coverage-python
+
+standards_provided:
+  - python-standard
+  - fastapi-standard
+  - python-testing-standard
+
+dependencies:
+  - architecture-pack
+  - core-pack
