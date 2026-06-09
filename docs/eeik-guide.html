@@ -1114,18 +1114,24 @@
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-body">
-          <h3>Clone & Bootstrap</h3>
-          <p>Fork or clone eeik_bootstrap. Run <span class="mono">/bootstrap</span> in Claude Code (interactive) or copy the manifest template and fill it in manually.</p>
-          <div class="code-block">git clone https://github.com/&lt;org&gt;/eeik_bootstrap.git
-cd your-project
+          <h3>Clone & Copy Config Layers</h3>
+          <p>Fork or clone eeik_bootstrap, then copy config layers into your new project directory.</p>
+          <div class="code-block">EEIK=/path/to/eeik_bootstrap
 
-# Option A — Claude Code interactive bootstrap
-claude code
-/bootstrap
+mkdir my-new-service && cd my-new-service
+git init
 
-# Option B — copy and customise the manifest template
-cp eeik_bootstrap/bootstrap/manifest-template.yaml project-manifest.yaml
-# Edit: project name, stack, governance profile, AI tools to enable</div>
+cp -r $EEIK/.claude      ./.claude
+cp -r $EEIK/.github      ./.github
+cp -r $EEIK/.kiro        ./.kiro
+cp -r $EEIK/.cursor      ./.cursor
+cp    $EEIK/AGENTS.md    ./AGENTS.md
+cp    $EEIK/GEMINI.md    ./GEMINI.md
+
+# ⚠️  Use templates/PROJECT-CLAUDE.md — NOT EEIK's own CLAUDE.md
+# EEIK's CLAUDE.md describes the EEIK repo structure. If you copy it,
+# Claude Code thinks it's inside EEIK and writes artifacts there.
+cp    $EEIK/templates/PROJECT-CLAUDE.md ./CLAUDE.md</div>
         </div>
       </div>
       <div class="step">

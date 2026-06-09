@@ -2,7 +2,7 @@
 
 ## AI-Native Enterprise Engineering Bootstrap Platform
 
-A ready-to-fork enterprise engineering intelligence platform that provisions Claude Code and GitHub Copilot with rich, structured context for enterprise software development programs.
+A ready-to-fork seed repository that gives **6 AI coding tools** — Claude Code, GitHub Copilot, Kiro, Codex CLI, Cursor, and Gemini CLI — the enterprise context they need to act as specialist engineers from day one.
 
 EEIK transforms AI coding assistants from generic code generators into context-aware engineering partners that understand:
 
@@ -15,7 +15,7 @@ EEIK transforms AI coding assistants from generic code generators into context-a
 - AI engineering patterns
 - Organizational knowledge
 
-Drop the configuration layers from this repository into any project and both Claude Code and GitHub Copilot become engineering assistants that understand your ecosystem from day one.
+Drop the configuration layers from this repository into any project and all 6 AI tools become engineering assistants that understand your ecosystem from day one.
 
 EEIK is not a runnable application.
 
@@ -64,9 +64,13 @@ Every project should leave the organization smarter than it was before the proje
 EEIK combines:
 
 ### AI Configuration Layer
-For:
-- Claude Code
-- GitHub Copilot
+For all 6 AI tools:
+- **Claude Code** — `.claude/` (44 agents, 19 commands, hooks, memory)
+- **GitHub Copilot** — `.github/` (44 agents, instructions, prompts, workflows)
+- **Kiro** — `.kiro/steering/` (always-on steering docs)
+- **Codex CLI** — `AGENTS.md` + 5 subdirectory `AGENTS.md` templates
+- **Cursor** — `.cursor/rules/` (glob-matched `.mdc` rules)
+- **Gemini CLI** — `GEMINI.md` (persistent project context)
 
 ### Capability Layer
 Reusable engineering intelligence:
@@ -109,38 +113,41 @@ Future platform capabilities:
 
 ```
 ── AI Tool Adapters (root — read by each tool automatically) ─────────────────
-CLAUDE.md          Claude Code session brief + golden rules
-AGENTS.md          OpenAI Codex CLI manifest
-GEMINI.md          Google Gemini CLI context
+CLAUDE.md          ⚠️  This is EEIK's own brief — DO NOT copy to target projects
+                       Use templates/PROJECT-CLAUDE.md instead
+AGENTS.md          Codex CLI root context
+GEMINI.md          Gemini CLI persistent context
 CONTRIBUTING.md    Contribution guide
 SECURITY.md        Vulnerability reporting
 
 ── Tool-Specific Config ──────────────────────────────────────────────────────
-.claude/           Claude Code  — agents, commands, hooks, memory, standards
-.github/           Copilot      — instructions, agents, prompts, workflows, hooks
-.kiro/             Kiro (AWS)   — steering docs, hooks
+.claude/           Claude Code  — 44 agents, 19 commands, hooks, memory, standards
+.github/           Copilot      — 44 agents, instructions, prompts, workflows, hooks
+.kiro/             Kiro         — steering docs (product, tech, structure), hooks
 .cursor/           Cursor       — .mdc rules (golden-rules, architecture, security)
 
 ── Intelligence Layer (tool-agnostic) ────────────────────────────────────────
-capability-packs/  13 packs — core, java, python, aws, containers, modernization,
-                   ai-engineering, architecture, governance, delivery,
-                   insurance, banking, healthcare
-knowledge/         Patterns, anti-patterns, ADRs, lessons-learned,
-                   incident-repository, event-catalog, reference-architectures
-templates/         Code templates per technology domain
+capability-packs/  18 packs — core, architecture, java, aws, ai-engineering,
+                   governance, angular, react, data-engineering, python,
+                   openshift, containers, delivery, modernization,
+                   insurance, banking, belgium-insurance, healthcare
+templates/         PROJECT-CLAUDE.md  ← use this as CLAUDE.md in target projects
+                   Code templates per technology domain
 
 ── Generators ────────────────────────────────────────────────────────────────
-generators/        project-analyzer, repository-generator, agent-generator,
-                   capability-selector, knowledge-generator, governance-generator,
-                   model-router, adapter-generator
+generators/        adapter-generator  — Kiro/Codex/Cursor/Gemini adapter templates
+                     codex-subdirs/   — 5 subdirectory AGENTS.md templates
+                   repository-generator, agent-generator, capability-selector,
+                   knowledge-generator, governance-generator, model-router,
+                   project-analyzer
 bootstrap/         /bootstrap command: manifests, schemas, validators, resolvers
 
 ── Executable Scripts ────────────────────────────────────────────────────────
 scripts/           eeik_cli.py          — central CLI entry point
-                   validate_manifest.py — JSON Schema + governance rules
+                   validate_manifest.py — JSON Schema + 8 governance rules (no AI needed)
                    activate_packs.py    — manifest → .claude/ materialisation
-                   generate_adapters.py — synthesise multi-tool adapter files
-                   claude_harness.py    — run generators via claude --print
+                   generate_adapters.py — generate all 6 AI tool adapters
+                   claude_harness.py    — run generators via claude --print (CI)
 
 ── CI/CD ─────────────────────────────────────────────────────────────────────
 .github/workflows/ eeik-validate.yml   — manifest + agent lint on PR
@@ -148,12 +155,11 @@ scripts/           eeik_cli.py          — central CLI entry point
 
 ── Documentation ─────────────────────────────────────────────────────────────
 docs/
-├── eeik-guide.html           Interactive visual guide (open in browser)
-├── specs/                    Internal design specs (11 files)
-├── concepts/                 Vision, architecture, AI governance
-├── reference/                Roadmap, inventory, platform capabilities
-├── getting-started/          Adoption guide, use cases
-└── [domain folders]          Architecture, AI engineering, modernization, etc.
+├── eeik-guide.html    Interactive visual guide — open in browser for full overview
+├── specs/             Internal design specs
+├── concepts/          Vision, architecture, AI governance
+├── reference/         Roadmap, inventory, platform capabilities
+└── getting-started/   Adoption guide, use cases
 ```
 
 ---
@@ -213,23 +219,25 @@ EEIK separates reusable engineering intelligence into capability packs.
 
 Examples:
 ```
-capability-packs/
-├── architecture/
-├── governance/
-├── java/
-├── spring-boot/
-├── react/
-├── angular/
-├── python/
-├── aws/
-├── containers/
-├── ai-engineering/
-├── langgraph/
-├── modernization/
-├── operations/
-├── delivery/
-├── enterprise-architecture/
-└── insurance/
+capability-packs/       (18 packs)
+├── core/               foundational agents, golden rules, security/observability baselines
+├── architecture/       enterprise-architect, arb-reviewer, reference architectures
+├── java/               java-architect, spring-security-engineer, testcontainers patterns
+├── aws/                cdk-engineer, bedrock-rag-patterns, eventbridge-patterns
+├── ai-engineering/     ai-architect, rag-specialist, llm-evaluation-patterns, vector-db-selection
+├── governance/         compliance-reviewer, production-readiness-reviewer, GDPR/SOC2/PCI
+├── angular/            angular-developer, signals migration guide
+├── react/              react-developer (Next.js 14, Server Components, TanStack Query)
+├── data-engineering/   data-engineer, lakehouse-patterns (Spark/Glue/Kafka/dbt)
+├── python/             fastapi-engineer, python-developer
+├── openshift/          openshift-engineer, SCC patterns
+├── containers/         dockerfile-standard
+├── delivery/           branching-standard, Conventional Commits
+├── modernization/      ibmi-modernization-expert, cobol-standard, strangler-fig
+├── insurance/          claims-processing-patterns, insurance-domain-glossary
+├── banking/            swift-iso20022-patterns, banking-compliance-standard
+├── belgium-insurance/  belgium-insurance-expert, Branch 21/23/26, FSMA/NBB, TOB
+└── healthcare/         hl7-fhir-patterns, healthcare-compliance-standard
 ```
 
 Each pack may contain:
@@ -243,38 +251,50 @@ Each pack may contain:
 
 ## How to Adopt This Bootstrap
 
-### 1. Copy the Configuration Layers
+### 1. Create your project and copy the config layers
 
 ```bash
-# GitHub Copilot layer
-cp -r .github/        /path/to/your-project/.github/
+mkdir my-new-service && cd my-new-service
+git init
 
-# Claude Code layer
-cp -r .claude/        /path/to/your-project/.claude/
+EEIK=/path/to/eeik_bootstrap   # set this to where you cloned EEIK
 
-# Editor config
-cp -r .vscode/        /path/to/your-project/.vscode/
-cp    .editorconfig   /path/to/your-project/.editorconfig
-cp    AGENTS.md       /path/to/your-project/AGENTS.md
-cp    CLAUDE.md       /path/to/your-project/CLAUDE.md
+cp -r $EEIK/.claude      ./.claude
+cp -r $EEIK/.github      ./.github
+cp -r $EEIK/.kiro        ./.kiro
+cp -r $EEIK/.cursor      ./.cursor
+cp    $EEIK/AGENTS.md    ./AGENTS.md
+cp    $EEIK/GEMINI.md    ./GEMINI.md
+
+# ⚠️  IMPORTANT: use templates/PROJECT-CLAUDE.md — NOT CLAUDE.md from the EEIK root.
+# EEIK's CLAUDE.md describes the EEIK repo itself (bootstrap/, generators/, capability-packs/).
+# Claude Code reads it and thinks it's inside EEIK, causing artifacts to be created there.
+cp    $EEIK/templates/PROJECT-CLAUDE.md ./CLAUDE.md
 ```
 
-### 2. Customise Master Instructions
+### 2. Validate and generate adapters
 
-Edit `.github/copilot-instructions.md`:
-- **Program Context** — describe your specific project and bounded contexts
-- **Technology Stack** — reflect your actual versions and dependency policy
-- **Architecture style** — e.g., Event-driven, Layered, Hexagonal, Microservices
-- **Delivery model** — e.g., Continuous Delivery, Incremental delivery, Staged rollout
+```bash
+# Validate your manifest (optional — create project-manifest.yaml from bootstrap/manifests/manifest-template.yaml first)
+python3 $EEIK/scripts/validate_manifest.py project-manifest.yaml
 
-Edit `.claude/memory/project-context.md` with:
+# Regenerate all 6 AI tool adapters from your manifest
+python3 $EEIK/scripts/generate_adapters.py --apply
 
-- Service inventory
-- Environment details
-- Security requirements
-- Integration landscape
+# Materialise capability pack agents + standards into .claude/
+python3 $EEIK/scripts/activate_packs.py --apply
+```
 
-### 3. Adjust `applyTo` Glob Patterns
+### 3. Fill in project context
+
+Edit `.claude/memory/project-context.md` — this is what every agent reads at session start:
+
+- Service name and purpose
+- Environment URLs and AWS account IDs
+- Auth patterns (Cognito, IAM roles)
+- Database engine and schema name
+
+### 4. Adjust GitHub Copilot glob patterns
 
 Each file in `.github/instructions/` has an `applyTo` frontmatter. Update to match your source layout:
 
@@ -284,20 +304,19 @@ applyTo: "src/main/java/com/yourcompany/**/*.java"
 ---
 ```
 
-### 4. Remove Unused Domains
+### 5. Remove unused domains
 
-Delete instruction files, agents, and prompts for domains not used in your project.
+Delete agents and instructions for domains not in your stack — lean context = sharper agents.
 
+### 6. Open Claude Code in your new project (not in EEIK)
 
-### 5. Verify Context is Loading
+```bash
+cd my-new-service   # ← must be here, not in EEIK
+claude
 
-Open any `.java` file and ask Copilot Chat:
-> "What coding standards apply to this file?"
-
-It should describe the standards from `copilot-instructions.md` and the matching `*.instructions.md`.
-
-Ask Claude Code:
-> "What agents are available and when should I use each?"
+# Smoke-test:
+/estimate "implement POST /orders endpoint with idempotency key"
+```
 
 ---
 
@@ -435,21 +454,30 @@ Reference with `#file:.github/prompts/tasks/<name>.prompt.md`:
 
 ---
 
-## Claude Code Slash Commands (10)
+## Claude Code Slash Commands (19) — Claude Code only
 
-Type in Claude Code to activate specialist workflows:
+> Slash commands live in `.claude/commands/` and work **only in Claude Code**. Kiro, Codex CLI, Cursor, and Gemini CLI use steering docs and rules files instead.
 
 | Command | Description |
 |---------|-------------|
-| `/adr "decision title"` | Scaffold Architecture Decision Record |
-| `/rca "symptoms"` | Blameless 5-Whys root cause analysis |
-| `/estimate "feature"` | P50/P80/P90 effort estimate |
+| `/bootstrap` | Interactive project discovery → generates `project-manifest.yaml` |
+| `/validate-manifest` | Validate manifest against JSON Schema + 8 governance rules |
+| `/generate-repo` | Full repository scaffold from manifest (9-step) |
+| `/generate-agent --blueprint <type>` | Generate project-specific agent from 8 blueprints |
+| `/analyze-project` | Scan existing repo → infer stack → suggest packs |
+| `/estimate "feature"` | P50/P80/P90 effort estimate using 6.4h/day formula |
 | `/review` | Full PR review: correctness, security, performance, quality |
-| `/incident "severity: P1, service: X, symptom: Y"` | Declare and coordinate an incident |
+| `/adr "decision title"` | Scaffold Architecture Decision Record |
+| `/create-adr "title"` | Full ADR with context, decision, consequences, alternatives |
+| `/create-rfc "title"` | RFC for significant decisions requiring team review |
+| `/rca "symptoms"` | Blameless 5-Whys root cause analysis |
+| `/incident "P1, service: X"` | Declare and coordinate an incident |
+| `/capture-incident "title"` | Capture incident learnings into memory |
+| `/capture-lesson "lesson"` | Capture pattern or lesson into memory |
 | `/security-scan [path]` | OWASP Top 10 review + secrets scan |
-| `/deploy-check "env: X, service: Y"` | Pre-deployment readiness checklist |
+| `/deploy-check "env: X"` | Pre-deployment readiness checklist (24-point) |
+| `/coverage-report [path]` | JaCoCo/Istanbul gap analysis + targeted test stubs |
 | `/memory-update "what changed"` | Update `.claude/memory/` persistent context |
-| `/coverage-report [path]` | JaCoCo/Istanbul gap analysis + targeted tests |
 | `/sync-docs [path]` | Validate API docs against OpenAPI spec |
 
 ---
@@ -526,15 +554,16 @@ All estimates use:
 
 Before using this bootstrap in a production project:
 
-- [ ] `copilot-instructions.md` customised (program context, stack, dependency policy)
-- [ ] `.claude/memory/project-context.md` filled in (services, environments, auth)
-- [ ] `applyTo` glob patterns updated to match project source layout
-- [ ] Unused domain files removed (e.g., no mainframe → remove mainframe agents/instructions)
-- [ ] At least one Copilot agent invoked and responding in correct persona
+- [ ] `templates/PROJECT-CLAUDE.md` copied as `CLAUDE.md` (**not** EEIK's root `CLAUDE.md`)
+- [ ] `.claude/memory/project-context.md` filled in (services, environments, auth, AWS resources)
+- [ ] `applyTo` glob patterns in `.github/instructions/` updated to match project source layout
+- [ ] Unused domain files removed (no mainframe → delete mainframe agents/instructions)
+- [ ] `python3 scripts/validate_manifest.py project-manifest.yaml` passes
+- [ ] `python3 scripts/generate_adapters.py --apply` run to generate all 6 tool adapters
 - [ ] At least one Claude Code slash command tested (`/estimate "hello world feature"`)
-- [ ] `.gitignore` includes `.copilot-*.log` and `.claude/memory/session-log.md`
-- [ ] Recommended VS Code extensions installed (`.vscode/extensions.json`)
-- [ ] Golden Rules from `CLAUDE.md` understood by the team
+- [ ] At least one GitHub Copilot agent invoked (`@java-architect` or `@aws-architect`)
+- [ ] Claude Code opened from **inside the project directory**, not from EEIK
+- [ ] Golden Rules understood by the team (constructor injection, no secrets, jakarta.*, etc.)
 
 ---
 
