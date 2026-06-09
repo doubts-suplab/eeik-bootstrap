@@ -45,12 +45,8 @@ bootstrap/
 │   ├── governance.yaml
 │   └── delivery.yaml
 │
-├── workflows/
-│   ├── bootstrap-workflow.yaml
-│   ├── modernization-workflow.yaml
-│   ├── greenfield-workflow.yaml
-│   ├── ai-platform-workflow.yaml
-│   └── enterprise-platform-workflow.yaml
+├── schemas/
+│   └── manifest-schema.yaml
 │
 ├── manifests/
 │   ├── manifest-template.yaml

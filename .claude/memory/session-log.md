@@ -1,3 +1,21 @@
+## 2026-06-07 18:17 UTC
+
+**Last commit:** 1d6a6bd docs: fix inner README gaps identified in review
+
+**Changed files:**
+```
+   M .claude/memory/session-log.md
+```
+
+## 2026-06-07 18:13 UTC
+
+**Last commit:** ac3bb54 feat: implement extensive knowledge management structure with pattern/anti-pattern libraries, ADR/incident/lesson repositories, and supporting Claude CLI commands.
+
+**Changed files:**
+```
+  (no git changes this session)
+```
+
 ## 2026-06-06 15:32 UTC
 
 **Last commit:** 6670284 docs(core): fill stub docs and update root files to reflect complete state

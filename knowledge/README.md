@@ -25,12 +25,10 @@ knowledge/
 ├── patterns/               ← Approved implementation patterns with examples
 ├── anti-patterns/          ← Known failure modes to avoid
 ├── event-catalog/          ← Canonical domain event definitions
-├── api-catalog/            ← Internal API contracts and standards
 ├── reference-architectures/← Proven architectural blueprints
 ├── adr-repository/         ← Cross-project ADR library
 ├── lessons-learned/        ← Project retrospective learnings
-├── incident-repository/    ← Post-mortem learnings and runbooks
-└── business-rules/         ← Domain business rule library
+└── incident-repository/    ← Post-mortem learnings and runbooks
 ```
 
 ## Commands

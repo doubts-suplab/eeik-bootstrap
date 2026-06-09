@@ -8,7 +8,7 @@ EEIK uses three Claude models with distinct trade-offs:
 
 | Model                  | String                       | Use For                                              |
 |------------------------|------------------------------|------------------------------------------------------|
-| Claude Opus 4.6        | `claude-opus-4-6`            | Complex reasoning, high-stakes decisions, compliance |
+| Claude Opus 4.8        | `claude-opus-4-8`            | Complex reasoning, high-stakes decisions, compliance |
 | Claude Sonnet 4.6      | `claude-sonnet-4-6`          | Balanced — most engineering and review tasks         |
 | Claude Haiku 4.5       | `claude-haiku-4-5-20251001`  | High-throughput, classification, templated output    |
 
