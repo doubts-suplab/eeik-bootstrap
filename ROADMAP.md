@@ -9,16 +9,16 @@ This document tracks planned enhancements to the framework. Items are grouped by
 The v1.x line is the current stable baseline. It covers:
 
 - **Core capability packs:** Java, Angular, AWS, Architecture, Core, Governance
-- **46 agents** spanning Java, Angular, AWS, AI/ML, agentic frameworks, operations, and modernisation
-- **23 slash commands** covering the full development lifecycle
-- **20+ standards** for all primary technology stacks
+- **48 agents** spanning Java, Angular, AWS, Python, Data Engineering, Kubernetes, AI/ML, agentic frameworks, operations, and modernisation
+- **24 slash commands** covering the full development lifecycle
+- **27 standards** for all primary technology stacks
 - **4 safety hooks** (pre-bash-guard, pre-write-guard, post-edit-check, on-stop)
 - **Dual-tool support:** Claude Code (`.claude/`) + GitHub Copilot (`.github/`)
 - **Cursor and Kiro** configuration stubs
 
 ---
 
-## v1.1 — Framework Completion (In Progress)
+## v1.1 — Framework Completion (Complete)
 
 Closing identified gaps across standards, agents, commands, and workflows.
 
@@ -65,6 +65,18 @@ Closing identified gaps across standards, agents, commands, and workflows.
 
 ### Memory Layer (IMPROVED)
 - [x] `project-context.md` — First-steps checklist + example entries
+
+### GitHub Copilot Parity (NEW)
+- [x] `.github/agents/python-developer.agent.md` — GitHub Copilot agent for Python/FastAPI
+- [x] `.github/agents/data-engineer.agent.md` — GitHub Copilot agent for data pipelines
+- [x] `.github/agents/kubernetes-engineer.agent.md` — GitHub Copilot agent for K8s/Helm
+- [x] `.github/agents/dba-advisor.agent.md` — GitHub Copilot agent for DBA tasks
+- [x] `.github/instructions/python.instructions.md` — Python coding standards
+- [x] `.github/instructions/fastapi.instructions.md` — FastAPI patterns and rules
+- [x] `.github/instructions/data-engineering.instructions.md` — Pipeline standards
+- [x] `.github/instructions/graphql.instructions.md` — GraphQL schema and resolver rules
+- [x] `.github/instructions/event-driven.instructions.md` — Event-driven messaging patterns
+- [x] `.github/instructions/modernization-patterns.instructions.md` — Legacy migration rules
 
 ---
 
