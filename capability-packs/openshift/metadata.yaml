@@ -1,0 +1,22 @@
+name: openshift-pack
+version: "1.1"
+status: built
+description: >
+  Red Hat OpenShift and Kubernetes engineering capability pack. Helm chart authoring,
+  RBAC, NetworkPolicy, HPA, PodDisruptionBudget, OpenShift Routes, SCC, ImageStreams,
+  and Tekton/ArgoCD GitOps pipelines.
+tags: [openshift, kubernetes, helm, rbac, tekton, argocd, gitops, ocp, k8s]
+manifest_triggers:
+  - field: platform.container_platform
+    values: [openshift, kubernetes, ocp, k8s]
+  - field: infrastructure.orchestration
+    values: [openshift, kubernetes]
+agents_provided:
+  - openshift-engineer
+  - kubernetes-engineer
+commands_provided: []
+standards_provided:
+  - openshift-standard
+dependencies:
+  - core-pack
+  - containers-pack

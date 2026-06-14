@@ -324,12 +324,12 @@
     <p class="section-desc">A ready-to-fork seed repository that gives <strong style="color:var(--text)">6 AI coding tools</strong> — Claude Code, GitHub Copilot, Kiro, Codex CLI, Cursor, and Gemini — the enterprise context they need to act as specialist engineers from day one.</p>
 
     <div class="stats-row">
-      <div class="stat"><div class="stat-value">44</div><div class="stat-label">Agents per AI tool (Claude / Copilot)</div></div>
+      <div class="stat"><div class="stat-value">48</div><div class="stat-label">Agents per AI tool (Claude / Copilot)</div></div>
       <div class="stat"><div class="stat-value">18</div><div class="stat-label">Capability Packs</div></div>
       <div class="stat"><div class="stat-value">8</div><div class="stat-label">Generators</div></div>
-      <div class="stat"><div class="stat-value">19</div><div class="stat-label">Slash Commands (Claude Code)</div></div>
+      <div class="stat"><div class="stat-value">24</div><div class="stat-label">Slash Commands (Claude Code)</div></div>
       <div class="stat"><div class="stat-value">6</div><div class="stat-label">AI Tools Supported</div></div>
-      <div class="stat"><div class="stat-value">1,166</div><div class="stat-label">Total Files</div></div>
+      <div class="stat"><div class="stat-value">1,189</div><div class="stat-label">Total Files</div></div>
     </div>
 
     <div class="grid-3">
@@ -841,12 +841,12 @@
         <div class="tl-dot done">S1</div>
         <div class="tl-body">
           <h3>Stage 1 — Repository Bootstrap Platform <span style="color:var(--green); font-size:13px;">✅ Complete</span></h3>
-          <p>The AI configuration layer is complete. 44 agents, 29 instructions, 12 skills, 19 slash commands, 14 workflows, hooks, memory, and standards — all wired for Claude Code and GitHub Copilot.</p>
+          <p>The AI configuration layer is complete. 48 agents, 29 instructions, 12 skills, 24 slash commands, 14 workflows, hooks, memory, and standards — all wired for Claude Code and GitHub Copilot.</p>
           <div class="tl-tags">
-            <span class="tag done">44 Claude Agents ✓</span>
+            <span class="tag done">48 Claude Agents ✓</span>
             <span class="tag done">44 Copilot Agents ✓</span>
             <span class="tag done">29 Instructions ✓</span>
-            <span class="tag done">19 Slash Commands ✓</span>
+            <span class="tag done">24 Slash Commands ✓</span>
             <span class="tag done">14 Workflows ✓</span>
             <span class="tag done">8 Standards ✓</span>
             <span class="tag done">13 Capability Packs ✓</span>
@@ -945,8 +945,8 @@
   <!-- AGENTS -->
   <section id="agents">
     <div class="section-label">Agent Catalogue</div>
-    <h2>44 Specialist Agents</h2>
-    <p class="section-desc">The same 44 specialists are available in both Claude Code (auto-selected by task context) and GitHub Copilot (selected via @). Invoke explicitly: <span class="mono">"Using the java-developer agent, implement the OrderService"</span></p>
+    <h2>48 Specialist Agents</h2>
+    <p class="section-desc">The same 48 specialists are available in both Claude Code (auto-selected by task context) and GitHub Copilot (selected via @). Invoke explicitly: <span class="mono">"Using the java-developer agent, implement the OrderService"</span></p>
 
     <div class="agent-grid">
       <div class="agent-card">
@@ -971,10 +971,15 @@
         <div class="agent-name">aws-architect</div>
       </div>
       <div class="agent-card">
+        <div class="domain">Python</div>
+        <div class="agent-name">python-developer</div>
+      </div>
+      <div class="agent-card">
         <div class="domain">Cloud / Infra</div>
         <div class="agent-name">cdk-terraform-helper</div>
         <div class="agent-name">aws-deploy-helper</div>
         <div class="agent-name">containerisation-helper</div>
+        <div class="agent-name">kubernetes-engineer</div>
         <div class="agent-name">ci-engineer</div>
         <div class="agent-name">devsecops-engineer</div>
         <div class="agent-name">local-deploy-helper</div>
@@ -990,11 +995,16 @@
       </div>
       <div class="agent-card">
         <div class="domain">Data / ML / AI</div>
+        <div class="agent-name">data-engineer</div>
         <div class="agent-name">data-scientist</div>
         <div class="agent-name">ml-engineer</div>
         <div class="agent-name">ai-engineer</div>
         <div class="agent-name">mlops-engineer</div>
         <div class="agent-name">ai-governance-officer</div>
+      </div>
+      <div class="agent-card">
+        <div class="domain">Database</div>
+        <div class="agent-name">dba-advisor</div>
       </div>
       <div class="agent-card">
         <div class="domain">Agentic AI</div>
@@ -1026,7 +1036,7 @@
   <!-- COMMANDS -->
   <section id="commands">
     <div class="section-label">Slash Commands</div>
-    <h2>19 Slash Commands</h2>
+    <h2>24 Slash Commands</h2>
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
       <p class="section-desc" style="margin-bottom:0;">Type in Claude Code to activate specialist workflows instantly.</p>
       <span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;background:rgba(91,141,238,.12);border:1px solid rgba(91,141,238,.3);color:var(--accent);white-space:nowrap;">Claude Code only</span>
@@ -1043,6 +1053,7 @@
           </tr>
         </thead>
         <tbody>
+          <tr><td class="mono">/setup-memory</td><td>Interactive interview → populate all .claude/memory/ files with project context</td><td style="color:var(--text-muted);font-size:12px;">all agents</td></tr>
           <tr><td class="mono">/bootstrap</td><td>Interactive project discovery interview → generates project-manifest.yaml</td><td style="color:var(--text-muted);font-size:12px;">architect</td></tr>
           <tr><td class="mono">/validate-manifest</td><td>Validate project-manifest.yaml against JSON Schema + 8 governance rules</td><td style="color:var(--text-muted);font-size:12px;">governance</td></tr>
           <tr><td class="mono">/generate-repo</td><td>Full repository scaffold from validated manifest (9-step workflow)</td><td style="color:var(--text-muted);font-size:12px;">architect</td></tr>
@@ -1062,6 +1073,10 @@
           <tr><td class="mono">/coverage-report [path]</td><td>JaCoCo / Istanbul gap analysis + targeted test stubs</td><td style="color:var(--text-muted);font-size:12px;">java-test-engineer</td></tr>
           <tr><td class="mono">/memory-update "what changed"</td><td>Update persistent .claude/memory/ context files</td><td style="color:var(--text-muted);font-size:12px;">all agents</td></tr>
           <tr><td class="mono">/sync-docs [path]</td><td>Validate API docs against OpenAPI spec</td><td style="color:var(--text-muted);font-size:12px;">technical-writer</td></tr>
+          <tr><td class="mono">/threat-model "service desc"</td><td>STRIDE threat model — trust boundaries, rated threats, mitigation backlog</td><td style="color:var(--text-muted);font-size:12px;">security-auditor</td></tr>
+          <tr><td class="mono">/migrate-db "description"</td><td>Flyway/Liquibase migration + rollback script with risk assessment (Low/Medium/High)</td><td style="color:var(--text-muted);font-size:12px;">dba-advisor</td></tr>
+          <tr><td class="mono">/api-contract "resource"</td><td>Contract-first API design — OpenAPI 3.1 stub + Pact consumer test skeleton</td><td style="color:var(--text-muted);font-size:12px;">architect</td></tr>
+          <tr><td class="mono">/tech-debt add "description"</td><td>Register a new debt item to .claude/memory/tech-debt.md with priority and effort</td><td style="color:var(--text-muted);font-size:12px;">java-tech-lead</td></tr>
         </tbody>
       </table>
     </div>
@@ -1154,8 +1169,8 @@ cp    $EEIK/templates/PROJECT-CLAUDE.md ./CLAUDE.md</div>
           <p>One script generates adapters for every tool you enabled in the manifest. Each adapter reads from the same shared capability packs — intelligence defined once, delivered everywhere.</p>
           <div class="code-block">python3 scripts/generate_adapters.py --apply
 # Generates (based on manifest adapter flags):
-#   .claude/          → Claude Code (44 agents, 19 commands, hooks, memory)
-#   .github/          → GitHub Copilot (44 agents, instructions, prompts)
+#   .claude/          → Claude Code (48 agents, 24 commands, hooks, memory)
+#   .github/          → GitHub Copilot (48 agents, instructions, prompts)
 #   .kiro/steering/   → Kiro (always-on tech/product/structure steering docs)
 #   AGENTS.md         → Codex CLI (root context + 5 subdirectory templates)
 #   .cursor/rules/    → Cursor (glob-matched .mdc rules)
@@ -1420,7 +1435,7 @@ codex "add OpenTelemetry tracing to the order service"
           <div style="font-size:11px; color:var(--text-muted);">slash commands</div>
         </div>
         <div style="background:rgba(52,211,153,.08); border:1px solid rgba(52,211,153,.3); border-radius:6px; padding:10px; text-align:center;">
-          <div style="font-size:20px; font-weight:700; color:var(--green);">1,166</div>
+          <div style="font-size:20px; font-weight:700; color:var(--green);">1,189</div>
           <div style="font-size:11px; color:var(--text-muted);">total files</div>
         </div>
       </div>
@@ -1593,7 +1608,7 @@ codex "add OpenTelemetry tracing to the order service"
 <footer>
   <strong><span>EEIK</span> — Enterprise Engineering Intelligence Kit</strong><br>
   <span style="color:var(--text-muted);font-size:12px;margin-top:6px;display:block;">
-    Stages 1–5 Complete · 18 Capability Packs · 6 AI Tools · 44 Agents · 19 Commands · 1,166 files · Last updated 2026-06-09
+    Stages 1–5 Complete · 18 Capability Packs · 6 AI Tools · 48 Agents · 24 Commands · 1,189 files · Last updated 2026-06-14
   </span>
 </footer>
 

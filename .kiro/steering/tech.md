@@ -7,6 +7,58 @@
 
 - (no manifest — generic enterprise defaults apply)
 
+## Supported Technology Stacks
+
+### Java / Spring Boot (Modern)
+- Spring Boot 3.x, Java 17/21, `jakarta.*` exclusively
+- Spring Data JPA, Spring Security 6.x, Flyway migrations
+- JUnit 5, AssertJ, Mockito 5, Testcontainers, Pact
+
+### Python
+- Python 3.11+, type annotations required (`mypy --strict`)
+- FastAPI + Pydantic v2, SQLAlchemy async, Alembic
+- pytest + pytest-asyncio + pytest-cov (≥ 80% coverage)
+- Ruff for formatting and linting; `logging` not `print()`
+
+### Angular
+- Angular 15+ standalone components, Signals API, NgRx
+- Jasmine / Karma / Istanbul; strict TypeScript
+
+### Data Engineering
+- Apache Kafka with Schema Registry (Avro/Protobuf)
+- Apache Spark (PySpark DataFrame API only; no RDD)
+- dbt (staging → intermediate → mart layers)
+- Idempotency: every pipeline step safe to re-run
+
+### GraphQL
+- Schema-first (SDL files before resolvers)
+- DataLoader for N+1 prevention; cursor-based pagination
+- Depth limit: 10; complexity limit: 1000
+
+### AWS
+- CDK TypeScript (L2/L3 constructs), Terraform HCL
+- ECS Fargate, EKS, Lambda, API Gateway, RDS Aurora
+
+### Kubernetes / OpenShift
+- Helm charts; never `latest` image tag
+- `runAsNonRoot`, `readOnlyRootFilesystem`, `capabilities.drop: ALL`
+- NetworkPolicy deny-all baseline; HPA + PodDisruptionBudget required
+
+## Standards Files
+
+See `.claude/standards/` for the full standard for each technology:
+- `java.md`, `spring-standard.md` — Java/Spring Boot
+- `python.md`, `fastapi.md` — Python
+- `angular.md` — Angular
+- `data-engineering.md` — Kafka, Spark, dbt
+- `graphql.md` — GraphQL
+- `aws.md` — AWS cloud
+- `containers.md` — Docker / Kubernetes
+- `security-baseline.md` — OWASP Top 10
+- `api-standard.md` — REST API design
+- `event-driven.md` — Async / event-driven patterns
+- `ai-governance.md` — AI/ML governance
+
 ## Governance
 
 - Profile: standard

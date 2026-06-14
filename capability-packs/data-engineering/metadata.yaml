@@ -1,0 +1,23 @@
+name: data-engineering-pack
+version: "1.1"
+status: built
+description: >
+  Data pipeline engineering capability pack. Kafka stream processing, Apache Spark batch jobs,
+  dbt model authoring, Airflow/Step Functions orchestration, data quality, and idempotent ETL/ELT.
+tags: [data-engineering, kafka, spark, dbt, airflow, etl, elt, streaming, batch]
+manifest_triggers:
+  - field: technology.data.streaming
+    value: kafka
+  - field: technology.data.batch
+    values: [spark, glue, databricks]
+  - field: technology.data.transformation
+    values: [dbt, glue]
+agents_provided:
+  - data-engineer
+commands_provided: []
+standards_provided:
+  - data-engineering-standard
+  - data-pipeline-standard
+dependencies:
+  - core-pack
+  - aws-pack

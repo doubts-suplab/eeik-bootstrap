@@ -9,7 +9,13 @@ Complete index of all agents, skills, and workflows in the EEIK Bootstrap reposi
 
 ---
 
-## GitHub Copilot Agents (44 total)
+## GitHub Copilot Agents (48 total)
+
+### Python
+
+| Agent File | Name | Use When |
+|-----------|------|---------|
+| `python-developer.agent.md` | Python Developer | FastAPI/Django/Flask implementation, Pydantic models, pytest, type annotations |
 
 ### Java / Spring Boot
 
@@ -57,6 +63,7 @@ Complete index of all agents, skills, and workflows in the EEIK Bootstrap reposi
 | `aws-deploy-helper.agent.md` | AWS Deploy Helper | Deploy commands, pre-deploy checklists, rollback runbooks |
 | `local-deploy-helper.agent.md` | Local Deploy Helper | Docker Compose, local env setup, seed data |
 | `containerisation-helper.agent.md` | Containerisation Helper | Dockerfiles, K8s manifests, container security hardening |
+| `kubernetes-engineer.agent.md` | Kubernetes Engineer | Helm charts, RBAC, NetworkPolicy, HPA, OpenShift resources |
 | `ci-engineer.agent.md` | CI Engineer | GitHub Actions pipelines, quality gates, build optimisation |
 | `devsecops-engineer.agent.md` | DevSecOps Engineer | SAST/DAST/secrets scanning, security pipeline gates |
 
@@ -64,6 +71,7 @@ Complete index of all agents, skills, and workflows in the EEIK Bootstrap reposi
 
 | Agent File | Name | Use When |
 |-----------|------|---------|
+| `data-engineer.agent.md` | Data Engineer | Kafka pipelines, Spark jobs, dbt models, idempotent ETL/ELT |
 | `data-scientist-aws.agent.md` | Data Scientist | SageMaker experiments, EDA, feature engineering, model evaluation |
 | `ml-engineer-aws.agent.md` | ML Engineer | SageMaker training pipelines, model serving, MLOps |
 | `ai-engineer-aws.agent.md` | AI Engineer | Bedrock LLM integration, RAG pipelines, prompt engineering |
@@ -98,6 +106,12 @@ Complete index of all agents, skills, and workflows in the EEIK Bootstrap reposi
 | `incident-handler.agent.md` | Incident Handler | P1/P2 incident coordination and stakeholder communication |
 | `rca-agent.agent.md` | RCA Agent | Post-incident 5-Whys analysis and corrective actions |
 
+### Database
+
+| Agent File | Name | Use When |
+|-----------|------|---------|
+| `dba-advisor.agent.md` | DBA Advisor | Migration authoring, query plan analysis, index design, connection pool sizing |
+
 ### Governance & Documentation
 
 | Agent File | Name | Use When |
@@ -108,9 +122,12 @@ Complete index of all agents, skills, and workflows in the EEIK Bootstrap reposi
 
 ---
 
-## Claude Code Agents (44 total)
+## Claude Code Agents (48 total)
 
 Claude Code auto-selects the most relevant agent from `.claude/agents/` based on your task. You can also invoke explicitly: *"Using the `java-developer` agent, implement the OrderService"*.
+
+### Python
+`python-developer`
 
 ### Java / Spring Boot
 `java-developer` · `java-tech-lead` · `java-tester` · `jacoco-coverage-tester` · `senior-developer`
@@ -122,10 +139,13 @@ Claude Code auto-selects the most relevant agent from `.claude/agents/` based on
 `architect` · `enterprise-architect` · `arb-reviewer`
 
 ### Cloud & Infrastructure
-`aws-architect` · `cdk-terraform-helper` · `aws-deploy-helper` · `ci-engineer` · `containerisation-helper` · `devsecops-engineer` · `local-deploy-helper`
+`aws-architect` · `cdk-terraform-helper` · `aws-deploy-helper` · `ci-engineer` · `containerisation-helper` · `kubernetes-engineer` · `devsecops-engineer` · `local-deploy-helper`
 
 ### Data, ML & AI
-`ai-engineer` · `data-scientist` · `ml-engineer` · `mlops-engineer` · `ai-governance-officer`
+`data-engineer` · `ai-engineer` · `data-scientist` · `ml-engineer` · `mlops-engineer` · `ai-governance-officer`
+
+### Database
+`dba-advisor`
 
 ### Agentic AI
 `langraph-engineer` · `crewai-engineer` · `autogen-engineer` · `mcp-engineer` · `a2a-engineer`
@@ -191,13 +211,27 @@ Located in `.claude/commands/`. Type `/command-name` in Claude Code.
 
 | Command | Description |
 |---------|-------------|
-| `/adr "decision title"` | Scaffold a new Architecture Decision Record |
-| `/rca "symptoms"` | Open a blameless RCA workflow |
+| `/setup-memory` | Interactive interview to populate all `.claude/memory/` files |
+| `/bootstrap` | Interactive project discovery → generates `project-manifest.yaml` |
+| `/validate-manifest` | Validate manifest against schema and governance rules |
+| `/generate-repo` | Full repository scaffold from validated manifest |
+| `/generate-agent --blueprint <type>` | Generate a project-specific agent from a blueprint |
+| `/analyze-project` | Scan existing repo → infer stack → draft `project-context.md` |
 | `/estimate "feature description"` | Produce P50/P80/P90 effort estimate |
 | `/review` | Run full PR review checklist |
+| `/adr "decision title"` | Scaffold a new Architecture Decision Record |
+| `/create-adr "title"` | Full ADR with context, decision, consequences, alternatives |
+| `/create-rfc "title"` | RFC document for significant technical decisions |
+| `/rca "symptoms"` | Open a blameless RCA workflow |
 | `/incident "severity: P1, service: name, symptom: ..."` | Declare and coordinate an incident |
+| `/capture-incident "title"` | Capture incident learnings into `rca-tracker.md` |
+| `/capture-lesson "lesson"` | Capture pattern or lesson into `patterns.md` |
 | `/security-scan [path]` | OWASP Top 10 review and secrets scan |
+| `/threat-model "service description"` | STRIDE threat model with risk register |
 | `/deploy-check "env: X, service: Y"` | Pre-deployment readiness checklist |
+| `/migrate-db "description"` | Flyway/Liquibase migration + rollback with risk assessment |
+| `/api-contract "resource"` | Contract-first API design — OpenAPI stub + Pact test |
+| `/tech-debt add "description"` | Register tech debt item to `tech-debt.md` |
 | `/memory-update "what changed"` | Update `.claude/memory/` files |
 | `/coverage-report [path]` | Coverage gap analysis with targeted test stubs |
 | `/sync-docs [path]` | Sync API documentation against OpenAPI specs |
