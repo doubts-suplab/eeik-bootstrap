@@ -127,9 +127,9 @@ SECURITY.md        Vulnerability reporting
 .cursor/           Cursor       — .mdc rules (golden-rules, architecture, security)
 
 ── Intelligence Layer (tool-agnostic) ────────────────────────────────────────
-capability-packs/  18 packs — core, architecture, java, aws, ai-engineering,
-                   governance, angular, react, data-engineering, python,
-                   openshift, containers, delivery, modernization,
+capability-packs/  19 packs — core, architecture, java, aws, ai-engineering,
+                   agent-harness, governance, angular, react, data-engineering,
+                   python, openshift, containers, delivery, modernization,
                    insurance, banking, belgium-insurance, healthcare
 templates/         PROJECT-CLAUDE.md  ← use this as CLAUDE.md in target projects
                    Code templates per technology domain
@@ -219,12 +219,13 @@ EEIK separates reusable engineering intelligence into capability packs.
 
 Examples:
 ```
-capability-packs/       (18 packs)
+capability-packs/       (19 packs)
 ├── core/               foundational agents, golden rules, security/observability baselines
 ├── architecture/       enterprise-architect, arb-reviewer, reference architectures
 ├── java/               java-architect, spring-security-engineer, testcontainers patterns
 ├── aws/                cdk-engineer, bedrock-rag-patterns, eventbridge-patterns
 ├── ai-engineering/     ai-architect, rag-specialist, llm-evaluation-patterns, vector-db-selection
+├── agent-harness/      agent-harness-protocol conformance → runtime doubts-suplab/agent-harness
 ├── governance/         compliance-reviewer, production-readiness-reviewer, GDPR/SOC2/PCI
 ├── angular/            angular-developer, signals migration guide
 ├── react/              react-developer (Next.js 14, Server Components, TanStack Query)

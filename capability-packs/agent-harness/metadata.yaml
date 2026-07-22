@@ -1,0 +1,24 @@
+name: agent-harness-pack
+version: 1.0
+owner: eeik
+category: core
+description: >
+  Generic, enterprise-grade agent runtime conformance. Activates the agent-harness protocol —
+  typed decision envelope, centralized non-disableable confidence gate, runtime-enforced default-deny
+  tool registry, supervisor+workers orchestration, and pluggable ports — for any AI/agent project.
+  Reference runtime: doubts-suplab/agent-harness.
+tags: [ai, agents, agentic, runtime, harness, governance, core]
+manifest_triggers:
+  - field: ai.enabled
+    values: [true]
+  - field: ai.pattern
+    values: [single-agent, multi-agent, enterprise-agent-platform, agent]
+  - field: project.project_type
+    values: [agent-platform]
+agents_provided: []
+commands_provided: []
+standards_provided: [agent-harness-protocol]
+reference_runtime:
+  repo: doubts-suplab/agent-harness
+  spec: docs/spec/harness-protocol.md
+  contract_schema: docs/spec/agent-contract.schema.json

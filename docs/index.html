@@ -490,13 +490,14 @@
 
     <!-- CAPABILITIES TAB -->
     <div id="tab-capabilities" class="tab-panel">
-      <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px;">18 capability packs — tool-agnostic intelligence bundles. Each pack contains agents, standards, and knowledge. Select a pack to explore its contents.</p>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px;">19 capability packs — tool-agnostic intelligence bundles. Each pack contains agents, standards, and knowledge. Select a pack to explore its contents.</p>
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;" id="pack-pills">
         <span class="pack-pill sel" onclick="showPack('core')">core</span>
         <span class="pack-pill" onclick="showPack('architecture')">architecture</span>
         <span class="pack-pill" onclick="showPack('java')">java</span>
         <span class="pack-pill" onclick="showPack('aws')">aws</span>
         <span class="pack-pill" onclick="showPack('ai-engineering')">ai-engineering</span>
+        <span class="pack-pill" onclick="showPack('agent-harness')">agent-harness</span>
         <span class="pack-pill" onclick="showPack('governance')">governance</span>
         <span class="pack-pill" onclick="showPack('angular')">angular</span>
         <span class="pack-pill" onclick="showPack('react')">react</span>
@@ -577,6 +578,15 @@
           <div class="explorer-item"><div class="ei-label">Knowledge</div><div class="ei-name">llm-evaluation-patterns</div><div class="ei-desc">RAGAS, LangSmith LLM-as-judge, CI gate YAML, MLflow model registry on pass/fail.</div></div>
           <div class="explorer-item"><div class="ei-label">Knowledge</div><div class="ei-name">vector-db-selection</div><div class="ei-desc">pgvector vs OpenSearch vs Pinecone vs Weaviate vs Chroma — decision matrix + IVFFlat/HNSW code.</div></div>
           <div class="explorer-item"><div class="ei-label">Knowledge</div><div class="ei-name">agentic-patterns</div><div class="ei-desc">Tool use, reflection, multi-agent orchestration, A2A protocol, MCP server integration.</div></div>
+        </div>
+      </div>
+
+      <div id="pack-agent-harness" class="pack-detail">
+        <div class="explorer-grid">
+          <div class="explorer-item"><div class="ei-label">Standard</div><div class="ei-name">agent-harness-protocol</div><div class="ei-desc">Conformance summary for the generic agent runtime — envelope, confidence gate, tool registry, orchestration, ports. Full spec in doubts-suplab/agent-harness.</div></div>
+          <div class="explorer-item"><div class="ei-label">Knowledge</div><div class="ei-name">harness-positioning</div><div class="ei-desc">Where the runtime sits: aether-iel (spec) → eeik-bootstrap (activation) → agent-harness (runtime) → products.</div></div>
+          <div class="explorer-item"><div class="ei-label">Runtime</div><div class="ei-name">doubts-suplab/agent-harness</div><div class="ei-desc">Reference runtime: typed decision envelope, centralized non-disableable confidence gate, default-deny tool registry, supervisor+workers, pluggable ports.</div></div>
+          <div class="explorer-item"><div class="ei-label">Depends on</div><div class="ei-name">ai-engineering + governance</div><div class="ei-desc">Agent/prompt/eval design standards and confidence-gate/audit/human-in-the-loop controls the harness enforces.</div></div>
         </div>
       </div>
 
@@ -1188,7 +1198,7 @@ cp    $EEIK/templates/PROJECT-CLAUDE.md ./CLAUDE.md</div>
 # aws   → if technology.cloud = aws
 # angular → if technology.frontend = angular
 # belgium-insurance → if capability_packs includes it
-# ... 18 packs, resolved from manifest
+# ... 19 packs, resolved from manifest
 
 # Or /analyze-project for existing repos:
 /analyze-project</div>
@@ -1322,7 +1332,7 @@ codex "add OpenTelemetry tracing to the order service"
           <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:100%; background: linear-gradient(90deg, var(--green), #34d399);"></div></div>
         </div>
         <div class="progress-item">
-          <div class="progress-header"><span>Capability Packs (18 packs)</span><span style="color:var(--green)">100%</span></div>
+          <div class="progress-header"><span>Capability Packs (19 packs)</span><span style="color:var(--green)">100%</span></div>
           <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:100%; background: linear-gradient(90deg, var(--green), #34d399);"></div></div>
         </div>
         <div class="progress-item">
@@ -1350,7 +1360,7 @@ codex "add OpenTelemetry tracing to the order service"
         <div class="card" style="padding:14px 18px;">
           <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">Capability Packs</div>
           <div style="font-size:28px;font-weight:800;color:var(--green)">18 / 18</div>
-          <div style="font-size:12px;color:var(--text-muted);">All 18 packs built — core, architecture, java, aws, ai-engineering, governance, angular, react, data-engineering, python, openshift, containers, delivery, modernization, insurance, banking, belgium-insurance, healthcare.</div>
+          <div style="font-size:12px;color:var(--text-muted);">All 19 packs built — core, architecture, java, aws, ai-engineering, agent-harness, governance, angular, react, data-engineering, python, openshift, containers, delivery, modernization, insurance, banking, belgium-insurance, healthcare.</div>
         </div>
         <div class="card" style="padding:14px 18px;">
           <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">AI Tools</div>
@@ -1471,7 +1481,7 @@ codex "add OpenTelemetry tracing to the order service"
         <span class="gap-badge done" style="color:var(--green); border-color:rgba(52,211,153,.4); background:rgba(52,211,153,.08);">✅ RESOLVED — Phase 2–5</span>
         <span class="gap-title">All 18 Capability Packs Built + 6 AI Tools Configured</span>
       </div>
-      <p class="gap-desc">All 18 packs built: core, architecture, java, aws, ai-engineering, governance, angular, react, data-engineering, python, openshift, containers, delivery, modernization, insurance, banking, belgium-insurance, healthcare. All 6 AI tool adapters generated: <span class="mono">Claude Code · GitHub Copilot · Kiro · Codex CLI · Cursor · Gemini CLI</span>. Python CLI scripts enable headless CI generation without a human present.</p>
+      <p class="gap-desc">All 19 packs built: core, architecture, java, aws, ai-engineering, agent-harness, governance, angular, react, data-engineering, python, openshift, containers, delivery, modernization, insurance, banking, belgium-insurance, healthcare. All 6 AI tool adapters generated: <span class="mono">Claude Code · GitHub Copilot · Kiro · Codex CLI · Cursor · Gemini CLI</span>. Python CLI scripts enable headless CI generation without a human present.</p>
     </div>
 
     <div class="gap-item high">
@@ -1540,7 +1550,7 @@ codex "add OpenTelemetry tracing to the order service"
         <div class="card" style="margin-bottom:12px; border-left: 3px solid var(--orange);">
           <h3 style="margin-bottom:8px;">🟠 Short-term (Next)</h3>
           <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--text-muted);">
-            <li style="color:var(--green);">✅ All 18 capability packs built</li>
+            <li style="color:var(--green);">✅ All 19 capability packs built</li>
             <li style="color:var(--green);">✅ All 6 AI tool adapters generated</li>
             <li style="color:var(--green);">✅ Python CLI scripts for headless CI generation</li>
             <li>→ Build test harness for agent persona validation</li>
@@ -1553,7 +1563,7 @@ codex "add OpenTelemetry tracing to the order service"
         <div class="card" style="margin-bottom:12px; border-left: 3px solid var(--yellow);">
           <h3 style="margin-bottom:8px;">🟡 Medium-term</h3>
           <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--text-muted);">
-            <li style="color:var(--green);">✅ All 18 capability packs — built</li>
+            <li style="color:var(--green);">✅ All 19 capability packs — built</li>
             <li style="color:var(--green);">✅ All 8 generators — built</li>
             <li style="color:var(--green);">✅ All 6 AI tool adapters — generated</li>
             <li style="color:var(--green);">✅ Python scripts for CI automation — built</li>
