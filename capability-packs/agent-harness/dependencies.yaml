@@ -1,0 +1,5 @@
+dependencies:
+  - name: ai-engineering-pack
+    reason: Agent design, prompt, and evaluation standards that the harness runtime executes against
+  - name: governance-pack
+    reason: Confidence gate, audit, and human-in-the-loop governance controls the harness enforces

@@ -73,6 +73,7 @@ architecture:
     packs:
       - architecture-pack    # ✅ built
       - ai-engineering-pack  # ✅ built
+      - agent-harness-pack   # ✅ built
 
 ai:
   rag:
@@ -81,12 +82,15 @@ ai:
   single-agent:
     packs:
       - ai-engineering-pack  # ✅ built
+      - agent-harness-pack   # ✅ built
   multi-agent:
     packs:
       - ai-engineering-pack  # ✅ built
+      - agent-harness-pack   # ✅ built
   enterprise-agent-platform:
     packs:
       - ai-engineering-pack  # ✅ built
+      - agent-harness-pack   # ✅ built
   none:
     packs: []
 
@@ -212,6 +216,7 @@ project_type:
     extra_packs:
       - ai-engineering-pack  # ✅ built
       - governance-pack      # ✅ built
+      - agent-harness-pack   # ✅ built
 
 # ─────────────────────────────────────────────
 # AI governance auto-trigger rules
@@ -233,11 +238,12 @@ resolution_order:
   5: azure-pack
   6: gcp-pack
   7: ai-engineering-pack
-  8: governance-pack
-  9: react-pack
-  10: angular-pack
-  11: modernization-pack
-  12: insurance-pack
-  13: banking-pack
-  14: healthcare-pack
-  15: retail-pack
+  8: agent-harness-pack
+  9: governance-pack
+  10: react-pack
+  11: angular-pack
+  12: modernization-pack
+  13: insurance-pack
+  14: banking-pack
+  15: healthcare-pack
+  16: retail-pack
