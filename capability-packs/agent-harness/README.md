@@ -36,6 +36,31 @@ come from `ai-engineering-pack`; governance controls from `governance-pack` (bot
 
 ---
 
+## Worked example — apex-sdlc
+
+[`apex-sdlc`](https://github.com/doubts-suplab/apex-sdlc) is the reference consumer of this pack. It maps its
+SDLC personas and phases directly onto the harness authority model — a concrete template for any project
+activating this pack:
+
+| SDLC phase | Persona | Phase agent | Harness authority | Governed outcome |
+|---|---|---|---|---|
+| Requirements | Business Analyst | `RequirementsAgent` | SUGGEST | always → human review |
+| Architecture | Architect | `ArchitectureAgent` | SUGGEST | always → human review |
+| Development | Developer | `PRReviewerAgent` | ALERT | auto-enforced advisory when confident |
+| Testing | QA Engineer | `QAAnalystAgent` | SUGGEST | always → human review |
+| CI/CD | Tech Lead | `ReleaseEngineerAgent` | RATE_LIMIT | auto-enforced release when green |
+| Docs | Developer | `TechWriterAgent` | SUGGEST | always → human review |
+| Governance | CISO | `ComplianceOfficerAgent` | BLOCK | auto-block only at ≥ 0.95; else human review |
+
+The key lesson for pack adopters: **make "AI drafts, humans approve" a property of the authority ladder, not a
+convention.** SUGGEST-authority agents can never auto-enforce (harness gate rule G-5), so those phases always
+route to a human — no app-level code re-implements that guarantee. See apex's
+[reference journey](https://github.com/doubts-suplab/apex-sdlc/blob/main/examples/reference-project/README.md)
+for a runnable end-to-end walk of one project through all seven phases, and its `docs/personas.md` for the
+persona↔phase↔agent catalog.
+
+---
+
 ## Conformance
 
 See [`standards/agent-harness-protocol.md`](standards/agent-harness-protocol.md) and the reference runtime's
