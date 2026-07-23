@@ -6,7 +6,7 @@
 
 ## Purpose
 
-Activates conformance to the **agent-harness protocol** — a generic, enterprise-grade agent runtime — for any
+Activates conformance to **HALO** (the **agent-harness protocol**) — a generic, enterprise-grade agent runtime — for any
 AI/agent project. Rather than re-implementing agent execution (typed envelope, confidence gate, tool registry,
 orchestration, audit) per product, projects conform to one protocol and consume one reference runtime.
 
