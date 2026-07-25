@@ -17,7 +17,7 @@ agents_provided:
   - data-engineer
 commands_provided: []
 standards_provided:
-  - data-engineering-standard
+  - data-engineering
   - data-pipeline-standard
 dependencies:
   - core-pack

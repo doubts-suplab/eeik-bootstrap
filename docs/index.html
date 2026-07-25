@@ -959,7 +959,7 @@
             <span class="tag done">Conformance gate (eeik verify) ✓</span>
             <span class="tag done">Multi-tool adapters ✓</span>
             <span class="tag done">CI: validate / adapt / engine-tests ✓</span>
-            <span class="tag missing">Reconcile pack metadata</span>
+            <span class="tag done">Pack metadata reconciled (verify --strict clean) ✓</span>
           </div>
         </div>
       </div>
@@ -989,7 +989,7 @@
       <div class="stat"><div class="stat-value">100%</div><div class="stat-label">generations gated &amp; audited</div></div>
       <div class="stat"><div class="stat-value">0</div><div class="stat-label">confidence-gate bypasses</div></div>
       <div class="stat"><div class="stat-value">19</div><div class="stat-label">packs, versioned &amp; catalogued</div></div>
-      <div class="stat"><div class="stat-value">29</div><div class="stat-label">engine tests (green)</div></div>
+      <div class="stat"><div class="stat-value">30</div><div class="stat-label">engine tests (green)</div></div>
     </div>
 
     <div class="grid-2" style="align-items:start;">
@@ -1719,9 +1719,10 @@ codex "add OpenTelemetry tracing to the order service"
             <li style="color:var(--green);">✅ Typed Python SDK — <span class="mono">import eeik</span> (ADR-007)</li>
             <li style="color:var(--green);">✅ Conformance gate — <span class="mono">eeik verify</span> (ADR-008)</li>
             <li style="color:var(--green);">✅ apex-sdlc onboarding consumes the engine (SDK + MCP)</li>
-            <li>→ Reconcile pack metadata (30 verify warnings → clean <span class="mono">--strict</span>)</li>
+            <li style="color:var(--green);">✅ Pack metadata reconciled — <span class="mono">verify --strict</span> clean</li>
             <li>→ Governed generation over MCP (staged, human-review draft)</li>
             <li>→ Closed-loop knowledge capture from HALO/APEX audit logs</li>
+            <li>→ Agent-generator emits HALO Agent Contracts by construction</li>
           </ul>
         </div>
       </div>

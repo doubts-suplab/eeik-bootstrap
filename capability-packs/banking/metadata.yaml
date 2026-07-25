@@ -9,10 +9,7 @@ manifest_triggers:
   - field: project.domain
     value: banking
 
-agents_provided:
-  - banking-domain-expert
-  - payments-specialist
-  - risk-specialist
+agents_provided: []
 
 standards_provided:
   - banking-compliance-standard

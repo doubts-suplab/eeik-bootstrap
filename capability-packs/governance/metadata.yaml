@@ -9,6 +9,9 @@ tags: [governance, review, compliance, security, prr, core]
 manifest_triggers:
   - field: governance.profile
     values: [basic, standard, regulated, enterprise]
-agents_provided: [architecture-reviewer, security-reviewer, production-readiness-reviewer, compliance-reviewer]
+agents_provided:
+  - architecture-reviewer
+  - production-readiness-reviewer
+  - compliance-reviewer
 commands_provided: [run-review, run-prr, run-ai-review, run-compliance-check]
 standards_provided: [governance-standard, review-standard, compliance-standard]

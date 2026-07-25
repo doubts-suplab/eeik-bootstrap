@@ -12,6 +12,14 @@ manifest_triggers:
   - field: technology.backend.language
     values: [java, mixed]
 
-agents_provided: [java-architect, spring-boot-engineer, java-code-reviewer, java-test-engineer]
+agents_provided:
+  - java-architect
+  - java-code-reviewer
+  - java-test-engineer
+  - spring-security-engineer
 commands_provided: [review-java, improve-coverage, analyze-performance]
-standards_provided: [java-standard, spring-standard, testing-standard, api-standard]
+standards_provided:
+  - java-standard
+  - spring-standard
+  - testing
+  - api-standard

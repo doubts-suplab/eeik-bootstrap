@@ -158,9 +158,11 @@ versioned, queryable engine. See ADR-003 (generators on HALO) and ADR-004 (pack 
       manifest validates, and the lock matches. Findings are fail/warn/pass; `--exit-code` / `--strict`
       gate CI. On all three surfaces (CLI, `eeik.verify()` SDK, `eeik_verify` MCP tool).
       See [ADR-008](docs/decisions/ADR-008-conformance-gate.md). (`eeik/verify.py`)
-- [ ] **Reconcile pack metadata with shipped files** — `eeik verify` surfaced **30** declarations that
-      resolve to no file (phantom agents/standards) + files shipped but not declared. Trim, declare, or
-      author them so `eeik verify --strict` is clean and the catalog is fully trustworthy.
+- [x] **Reconcile pack metadata with shipped files** — the 30 conformance gaps are resolved: phantom
+      declarations trimmed, `X-standard`→`X` renames aligned to real files, shipped-but-undeclared files
+      declared (e.g. `spring-security-engineer`, `cobol-standard`), and the genuinely-missing
+      `insurance-compliance-standard` authored (mirroring banking/healthcare). `eeik verify --strict`
+      is now clean (0 fail / 0 warn / 21 pass); the catalog/SDK advertise only agents/standards that exist.
 - [ ] **Agent-generator emits HALO Agent Contracts** — every generated agent is
       `agent-contract.schema.json`-conformant (authority ceiling, tool allowlist, threshold) by
       construction.

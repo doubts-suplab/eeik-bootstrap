@@ -37,4 +37,4 @@ standards_provided:
   - architecture-principles
   - nfr-standard
   - integration-standard
-  - event-driven-standard
+  - event-driven

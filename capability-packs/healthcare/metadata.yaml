@@ -9,9 +9,7 @@ manifest_triggers:
   - field: project.domain
     value: healthcare
 
-agents_provided:
-  - healthcare-domain-expert
-  - clinical-data-specialist
+agents_provided: []
 
 standards_provided:
   - healthcare-compliance-standard
