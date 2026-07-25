@@ -22,6 +22,7 @@ from typing import Any
 import yaml
 
 from eeik import catalog as _catalog
+from eeik import contract as _contract
 from eeik import lock as _lock
 from eeik import manifest as _manifest
 from eeik import packs as _packs
@@ -186,6 +187,20 @@ def write_lock(*, lockfile: str | Path | None = None) -> Path:
     return lock_p
 
 
+def agent_contract(blueprint: str, name: str, **params: str) -> dict:
+    """Build a HALO-conformant Agent Contract for an agent generated from ``blueprint`` (ADR-009).
+
+    Deterministic: the archetype fixes the authority ceiling, which fixes the permitted capabilities and
+    the gate threshold — so a generated agent is runtime-governed by construction.
+    """
+    return _contract.build_contract(blueprint, name=name, params=params or None)
+
+
+def validate_agent_contract(contract: dict) -> tuple[bool, str]:
+    """Validate a contract against HALO's schema + the §3.3 binding rule (best-effort). (ok, message)."""
+    return _contract.validate_contract(contract)
+
+
 __all__ = [
     "Pack",
     "Provider",
@@ -201,5 +216,7 @@ __all__ = [
     "pack_drift",
     "write_lock",
     "verify",
+    "agent_contract",
+    "validate_agent_contract",
     "__version__",
 ]

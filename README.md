@@ -154,7 +154,17 @@ generate → govern → **verify**):
 ```bash
 eeik verify                                     # fail / warn / pass report
 eeik verify --exit-code                         # CI gate: non-zero on hard failures
-eeik verify --strict --exit-code                # also fail on warnings (once metadata is reconciled)
+eeik verify --strict --exit-code                # also fail on warnings (clean today)
+```
+
+Emit a **HALO Agent Contract** for a generated agent — runtime-governed by construction (the archetype
+fixes the authority ceiling, capabilities, gate threshold, and tool allowlist; validated by HALO's own
+schema). Closes the chain: AIEL specifies → EEIK generates → HALO runs
+([ADR-009](docs/decisions/ADR-009-agent-generator-emits-halo-contracts.md)):
+
+```bash
+eeik contract --blueprint auditor  --name compliance-officer --validate   # → BLOCK authority, gate 0.95
+eeik contract --blueprint reviewer --name java-reviewer --param language=java --validate
 ```
 
 > **Repository layout:** see [ARCHITECTURE.md](ARCHITECTURE.md) for the four-layer taxonomy (engine /
