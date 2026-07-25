@@ -45,7 +45,7 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 | LLM-backed generators (repository/agent/knowledge/governance) | 🟡 | Prompts + governed harness exist; require the `claude` CLI / API key to produce real output |
 | **EEIK MCP server** | ✅ | `eeik mcp` — read model over MCP (`eeik_catalog`, `eeik_validate_manifest`, `eeik_resolve_packs`, `eeik_pack_drift`); read-only v1 (`eeik/mcp_server.py`, ADR-006) |
 | **Stable Python API / SDK** | ✅ | `import eeik` — typed `find_packs`/`providers_of`/`validate_manifest`/`resolve_packs`/`pack_drift`/`write_lock`; CLI + MCP delegate to it (`eeik/api.py`, ADR-007) |
-| apex-sdlc onboarding imports the SDK | ⬜ | Planned — cross-repo: replace CLI shell-outs with `import eeik` |
+| **apex-sdlc onboarding consumes the engine** | ✅ | Cross-repo: APEX validates + resolves via the real engine — SDK (`import eeik`) or MCP (`eeik mcp`), vendored fallback (apex `app/onboarding/eeik_engine.py`) |
 | Governed generation over MCP | ⬜ | Planned — a staged, human-review `generate` tool (not auto-applied) |
 | `eeik verify` (conformance gate) | ⬜ | Planned (Tier 3) |
 | Agent-generator emits HALO Agent Contracts | ⬜ | Planned (Tier 3) |
