@@ -65,4 +65,4 @@ flags it.
 ## Related
 
 - ADR-003 — EEIK generators run on HALO.
-- `scripts/pack_versions.py`, `scripts/eeik_lock.py`, `tests/test_engine.py`.
+- `eeik/versions.py`, `eeik/lock.py`, `tests/test_engine.py`.

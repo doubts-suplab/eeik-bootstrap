@@ -30,32 +30,37 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 
 | Capability | Status | Notes |
 |---|---|---|
-| **Governed generation on HALO** | ✅ | `generation_harness.py` — gate + audit + human-review routing; SUGGEST authority, never auto-enforces (G-5); fails safe without HALO |
+| **Governed generation on HALO** | ✅ | `eeik/generation.py` — gate + audit + human-review routing; SUGGEST authority, never auto-enforces (G-5); fails safe without HALO |
 | `eeik run <generator> --governed` | ✅ | Routes real generation through the harness; drafts staged, not applied |
 | `eeik demo` (offline governed showcase) | ✅ | Runs a generator on the real gate with no API key |
-| **Pack versioning** | ✅ | `pack_versions.py` — normalised versions + content digests |
+| **Pack versioning** | ✅ | `eeik/versions.py` — normalised versions + content digests |
 | **Lockfile + drift detection** | ✅ | `eeik lock` / `diff` / `upgrade`; `eeik.lock`; CI gate via `diff --exit-code` |
 | Engine test suite | ✅ | `tests/test_engine.py` — 8 tests (versioning, drift, HALO governance) |
+| **Installable engine package** | ✅ | `scripts/` → `eeik/` package + `pyproject.toml`; `eeik` console script / `python -m eeik`; back-compat `scripts/*.py` shims; CI installs the package |
+| **Single canonical manifest schema** | ✅ | `eeik/schemas/manifest.schema.json` replaces 3 divergent copies; fixed the stale-schema bug that rejected EEIK's own examples |
 | LLM-backed generators (repository/agent/knowledge/governance) | 🟡 | Prompts + governed harness exist; require the `claude` CLI / API key to produce real output |
-| Stable Python API / SDK for consumers | ⬜ | Planned (Tier 2) — APEX would import instead of shelling out |
+| Stable Python API / SDK for consumers | ⬜ | Planned (Tier 2) — APEX would import instead of shelling out (unblocked by the package) |
 | EEIK MCP server | ⬜ | Planned (Tier 2) |
 | Pack/agent registry + catalog | ⬜ | Planned (Tier 2) |
 | `eeik verify` (conformance gate) | ⬜ | Planned (Tier 3) |
 | Agent-generator emits HALO Agent Contracts | ⬜ | Planned (Tier 3) |
 | Closed-loop knowledge capture from audit logs | ⬜ | Planned (Tier 3) |
+| Directory-map ADR + `ARCHITECTURE.md` (taxonomy) | ⬜ | Planned (Tier 4) — document before moving content |
+| Clarify dual-purpose root adapters | ⬜ | Planned (Tier 4) |
 
 ---
 
 ## How to see it in action
 
 ```bash
+pip install -e ".[test]"     # installs the eeik engine + HALO (agent-harness) + pytest
+
 # Governed generation on the real HALO gate — no API key needed
-pip install agent-harness            # the HALO runtime EEIK now consumes
-python3 scripts/eeik_cli.py demo
+eeik demo
 
 # Versioned adoption + drift detection
-python3 scripts/eeik_cli.py lock     # pin adopted pack versions → eeik.lock
-python3 scripts/eeik_cli.py diff     # later: report drift from upstream
+eeik lock                    # pin adopted pack versions → eeik.lock
+eeik diff                    # later: report drift from upstream
 
 # Tests (versioning, drift, HALO governance)
 python3 -m pytest tests/ -q

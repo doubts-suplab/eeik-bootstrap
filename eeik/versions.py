@@ -8,7 +8,7 @@ it adopted in ``eeik.lock``, and drift detection compares that lock against the 
 packs. This module is the single place that reads, normalises, and digests pack versions
 so the lockfile and the drift detector agree on what a pack "is".
 
-Used by ``eeik_lock.py`` and by ``eeik_cli.py`` (the ``lock`` / ``diff`` / ``upgrade`` commands).
+Used by ``eeik.lock`` and by ``eeik.cli`` (the ``lock`` / ``diff`` / ``upgrade`` commands).
 """
 
 from __future__ import annotations

@@ -13,7 +13,7 @@ EEIK's generators run on the `agent-harness` runtime. Every generation passes th
 audited, and — as SUGGEST authority — routes drafts to human review (never auto-applied). Fails safe
 without HALO.
 
-`scripts/generation_harness.py` · `eeik run <gen> --governed` · `eeik demo`
+`eeik/generation.py` · `eeik run <gen> --governed` · `eeik demo`
 
 ---
 
@@ -22,7 +22,7 @@ without HALO.
 Capability packs are versioned dependencies. `eeik.lock` records adopted versions + content digests;
 drift (added/removed/version-changed/content-changed) is reported and CI-gateable.
 
-`scripts/pack_versions.py` · `scripts/eeik_lock.py` · `eeik lock | diff | upgrade`
+`eeik/versions.py` · `eeik/lock.py` · `eeik lock | diff | upgrade`
 
 ---
 

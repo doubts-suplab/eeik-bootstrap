@@ -452,24 +452,29 @@
           <div class="ei-desc">The single source of truth. Declares: stack, governance profile, capability packs, integrations, adapter flags for all 6 AI tools.</div>
         </div>
         <div class="explorer-item">
-          <div class="ei-label">Script</div>
-          <div class="ei-name">scripts/validate_manifest.py</div>
-          <div class="ei-desc">Standalone Python validator — no AI needed. Runs in CI, checks schema + governance rules, strict mode on main branch.</div>
+          <div class="ei-label">Engine</div>
+          <div class="ei-name">eeik/ (package)</div>
+          <div class="ei-desc">The installable engine — <span class="mono">pip install -e .</span> → the <span class="mono">eeik</span> console script (also <span class="mono">python -m eeik</span>). <span class="mono">scripts/*.py</span> remain as backward-compatible shims.</div>
         </div>
         <div class="explorer-item">
-          <div class="ei-label">Script</div>
-          <div class="ei-name">scripts/activate_packs.py</div>
+          <div class="ei-label">Module</div>
+          <div class="ei-name">eeik/manifest.py</div>
+          <div class="ei-desc">Standalone validator — no AI needed. Enforces the one canonical schema (<span class="mono">eeik/schemas/manifest.schema.json</span>) + governance rules. Runs in CI, strict on main.</div>
+        </div>
+        <div class="explorer-item">
+          <div class="ei-label">Module</div>
+          <div class="ei-name">eeik/packs.py</div>
           <div class="ei-desc">Reads manifest, resolves capability packs, materialises agent + standard files into .claude/. Dry-run safe, idempotent.</div>
         </div>
         <div class="explorer-item">
-          <div class="ei-label">Script</div>
-          <div class="ei-name">scripts/generate_adapters.py</div>
-          <div class="ei-desc">Generates all 6 AI tool adapters (Kiro steering, Codex AGENTS.md, Cursor rules, Gemini.md) from shared capability packs.</div>
+          <div class="ei-label">Module</div>
+          <div class="ei-name">eeik/generation.py</div>
+          <div class="ei-desc">HALO-governed generation seam — every generator runs on the agent-harness gate: audited, human-reviewed, fail-safe. Never auto-applies (SUGGEST authority).</div>
         </div>
         <div class="explorer-item">
-          <div class="ei-label">Script</div>
-          <div class="ei-name">scripts/claude_harness.py</div>
-          <div class="ei-desc">Headless Claude executor — calls claude --print with assembled prompt. Enables AI-powered generation in CI without a human present.</div>
+          <div class="ei-label">Module</div>
+          <div class="ei-name">eeik/lock.py + versions.py</div>
+          <div class="ei-desc">Pack versioning + <span class="mono">eeik.lock</span> + drift detection (lock / diff / upgrade). Turns copy-once adoption into versioned, upgradeable dependencies.</div>
         </div>
         <div class="explorer-item">
           <div class="ei-label">CI Workflow</div>
@@ -923,14 +928,13 @@
           <h3>Stage 5 — Multi-Tool + Code Layer <span style="color:var(--accent); font-size:13px;">⬤ In Progress</span></h3>
           <p>Executable Python CLI, multi-tool AI adapter generation (Kiro, Codex, Cursor, Gemini), and GitHub Actions CI — turning 474 markdown files into runnable automation.</p>
           <div class="tl-tags">
-            <span class="tag done">eeik_cli.py ✓</span>
-            <span class="tag done">validate_manifest.py ✓</span>
-            <span class="tag done">activate_packs.py ✓</span>
-            <span class="tag done">claude_harness.py ✓</span>
-            <span class="tag done">generation_harness.py (HALO) ✓</span>
-            <span class="tag done">eeik_lock.py — versioning + drift ✓</span>
+            <span class="tag done">Installable eeik package + pyproject ✓</span>
+            <span class="tag done">eeik console script / python -m eeik ✓</span>
+            <span class="tag done">Single canonical manifest schema ✓</span>
+            <span class="tag done">Governed generation (HALO) ✓</span>
+            <span class="tag done">Versioning + lockfile + drift ✓</span>
             <span class="tag done">Multi-tool adapters ✓</span>
-            <span class="tag done">CI: eeik-validate / eeik-adapt ✓</span>
+            <span class="tag done">CI: validate / adapt / engine-tests ✓</span>
             <span class="tag missing">EEIK MCP server</span>
             <span class="tag missing">Pack registry / catalog</span>
           </div>
@@ -968,7 +972,7 @@
     <div class="grid-2" style="align-items:start;">
       <div>
         <h3 style="font-size:15px;font-weight:700;margin-bottom:8px;">Governed generation — <span class="mono">eeik demo</span></h3>
-        <div class="code-block">$ python3 scripts/eeik_cli.py demo
+        <div class="code-block">$ eeik demo
 
 EEIK Governed Generation · generator: agent-generator
   authority SUGGEST   action SUGGEST   confidence 0.72
@@ -993,7 +997,7 @@ EEIK Governed Generation · generator: agent-generator
     <div class="grid-2" style="align-items:start;margin-top:20px;">
       <div>
         <h3 style="font-size:15px;font-weight:700;margin-bottom:8px;">Versioned adoption — <span class="mono">eeik lock · diff</span></h3>
-        <div class="code-block">$ python3 scripts/eeik_cli.py diff --exit-code
+        <div class="code-block">$ eeik diff --exit-code
 
 EEIK Drift Report
   Locked at : 2026-07-25T11:00  (eeik 1.4.0)
@@ -1237,7 +1241,7 @@ cp    $EEIK/templates/PROJECT-CLAUDE.md ./CLAUDE.md</div>
         <div class="step-body">
           <h3>Validate the Manifest</h3>
           <p>Run the standalone validator (no AI needed) to catch schema errors and governance rule violations before generating anything.</p>
-          <div class="code-block">python3 scripts/validate_manifest.py project-manifest.yaml
+          <div class="code-block">eeik validate project-manifest.yaml
 # → passes 8 governance rules (G001–G004, T001–T003, P001–P002)
 # → --strict flag for CI gates on main branch
 
@@ -1250,7 +1254,7 @@ cp    $EEIK/templates/PROJECT-CLAUDE.md ./CLAUDE.md</div>
         <div class="step-body">
           <h3>Generate All 6 AI Tool Adapters</h3>
           <p>One script generates adapters for every tool you enabled in the manifest. Each adapter reads from the same shared capability packs — intelligence defined once, delivered everywhere.</p>
-          <div class="code-block">python3 scripts/generate_adapters.py --apply
+          <div class="code-block">eeik generate-adapters --apply
 # Generates (based on manifest adapter flags):
 #   .claude/          → Claude Code (48 agents, 24 commands, hooks, memory)
 #   .github/          → GitHub Copilot (48 agents, instructions, prompts)
@@ -1265,7 +1269,7 @@ cp    $EEIK/templates/PROJECT-CLAUDE.md ./CLAUDE.md</div>
         <div class="step-body">
           <h3>Activate Capability Packs</h3>
           <p>The pack activator resolves which packs your manifest needs and materialises agent + standard files into <span class="mono">.claude/</span>. Core pack always activates; others resolve from your tech stack.</p>
-          <div class="code-block">python3 scripts/activate_packs.py --apply
+          <div class="code-block">eeik activate --apply
 # core always
 # java  → if technology.backend = java
 # aws   → if technology.cloud = aws
@@ -1340,7 +1344,7 @@ codex "add OpenTelemetry tracing to the order service"
     <div class="card" style="margin-top: 32px; background: rgba(91,141,238,.05); border-color: rgba(91,141,238,.3);">
       <h3 style="margin-bottom: 16px;">Pre-Production Adoption Checklist</h3>
       <ul class="checklist">
-        <li><span class="check">☐</span> <span>project-manifest.yaml created and validated (python3 scripts/validate_manifest.py --strict)</span></li>
+        <li><span class="check">☐</span> <span>project-manifest.yaml created and validated (eeik validate --strict)</span></li>
         <li><span class="check">☐</span> <span>.claude/ generated and project-context.md filled in (services, environments, auth)</span></li>
         <li><span class="check">☐</span> <span>.github/ generated and applyTo glob patterns updated to match project source layout</span></li>
         <li><span class="check">☐</span> <span>.kiro/steering/ generated; .kiro/settings.json paths verified</span></li>
@@ -1652,7 +1656,8 @@ codex "add OpenTelemetry tracing to the order service"
             <li>→ <span class="mono">eeik verify</span>: conformance gate, not just generation</li>
             <li>→ Agent-generator emits HALO Agent Contracts by construction</li>
             <li>→ Closed-loop knowledge capture from HALO/APEX audit logs</li>
-            <li>→ Self-improving: standards upgrades from usage patterns</li>
+            <li>→ ARCHITECTURE.md + directory-taxonomy ADR (document before moving)</li>
+            <li>→ Clarify dual-purpose root adapters (EEIK's own vs. the copy seed)</li>
           </ul>
         </div>
       </div>
@@ -1679,6 +1684,8 @@ codex "add OpenTelemetry tracing to the order service"
         <span class="tag done">Governed Generation (HALO) ✓</span>
         <span class="tag done">Pack Versioning + Lockfile ✓</span>
         <span class="tag done">Engine Tests ✓</span>
+        <span class="tag done">Installable eeik Package ✓</span>
+        <span class="tag done">Canonical Manifest Schema ✓</span>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <span class="tag missing">EEIK MCP Server (next)</span>

@@ -32,7 +32,7 @@ projects to adopt it. EEIK was not dogfooding its own recommendation.
 ## Decision
 
 **EEIK's generators run on HALO.** Every LLM-driven generation flows through
-`Harness().invoke(agent, input)` (`scripts/generation_harness.py`):
+`Harness().invoke(agent, input)` (`eeik/generation.py`):
 
 - Each generator is modelled as a HALO **`Agent`** with a static **`SUGGEST`** authority ceiling.
 - Generation therefore **can never auto-enforce** (gate rule G-5: OBSERVE/SUGGEST-authority agents

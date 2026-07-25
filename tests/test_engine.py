@@ -5,16 +5,10 @@ Run:  python3 -m pytest tests/ -q      (needs: pyyaml; agent-harness for the gov
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
 import pytest
 
-SCRIPTS = Path(__file__).parent.parent / "scripts"
-sys.path.insert(0, str(SCRIPTS))
-
-import eeik_lock  # noqa: E402
-import pack_versions  # noqa: E402
+from eeik import lock as eeik_lock
+from eeik import versions as pack_versions
 
 
 # ── pack_versions ────────────────────────────────────────────────────────────────
@@ -81,7 +75,7 @@ def test_generation_is_never_auto_enforced_and_routes_to_review():
     from agent_harness import AgentInput, Harness
     from agent_harness.adapters.inmemory import InMemoryHumanReview, InMemoryObservability
 
-    import generation_harness
+    from eeik import generation as generation_harness
 
     review = InMemoryHumanReview()
     obs = InMemoryObservability()
