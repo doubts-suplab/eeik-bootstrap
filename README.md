@@ -136,8 +136,48 @@ Versioned adoption + drift detection (the fix for copy-once rot):
 ```bash
 eeik lock                                       # pin adopted pack versions → eeik.lock
 eeik diff --exit-code                           # later: report drift from upstream (CI gate, exits 2)
-python3 -m pytest tests/ -q                     # 8 tests: versioning, drift, HALO governance
+python3 -m pytest tests/ -q                     # 11 tests: versioning, drift, catalog, HALO governance
 ```
+
+Query the capability catalog — a machine-readable registry of every pack, agent, and standard:
+
+```bash
+eeik catalog --tag regulated                    # packs tagged 'regulated' (banking, healthcare, …)
+eeik catalog --query fhir                       # free-text match across name / description / tags
+eeik catalog --provides java-architect          # which pack provides that agent
+eeik catalog --json                             # the read model the planned EEIK MCP server exposes
+```
+
+> **Repository layout:** see [ARCHITECTURE.md](ARCHITECTURE.md) for the four-layer taxonomy (engine /
+> content / adapters / docs) and the "where does a new X go?" placement rule ([ADR-005](docs/decisions/ADR-005-layered-directory-taxonomy.md)).
+
+Serve the engine's read model over **MCP** — any MCP host (Claude Code, an APEX agent, an IDE) can then
+call EEIK live instead of copying static adapter files ([ADR-006](docs/decisions/ADR-006-eeik-mcp-server.md)):
+
+```bash
+pip install -e ".[mcp]"     # the MCP SDK is an optional extra
+eeik mcp                    # tools: eeik_catalog, eeik_validate_manifest, eeik_resolve_packs, eeik_pack_drift
+```
+
+Register it with a host — e.g. Claude Code `.mcp.json`:
+
+```json
+{ "mcpServers": { "eeik": { "command": "eeik", "args": ["mcp"] } } }
+```
+
+Or consume EEIK **in-process** as a library — the typed SDK, the same read model without a subprocess
+or a protocol ([ADR-007](docs/decisions/ADR-007-eeik-public-python-sdk.md)):
+
+```python
+import eeik
+
+result = eeik.validate_manifest(path="project-manifest.yaml")   # ValidationResult(valid, errors, warnings)
+packs  = eeik.resolve_packs(manifest=doc)                        # ["core", "architecture", "java", ...]
+banking = eeik.find_packs(tag="banking")                         # [Pack(...), ...]
+who    = eeik.providers_of("java-architect")                     # [Provider(pack="java", kind="agent")]
+```
+
+The CLI, the MCP server, and this SDK are three surfaces over **one** implementation — they cannot drift.
 
 This is the same runtime, gate, and audit that APEX uses for its SDLC phase agents — EEIK now dogfoods
 the `agent-harness` capability pack it ships to everyone else.

@@ -21,6 +21,11 @@ engine other tools consume, *not* a product platform competing with APEX). Two t
   (`pip install -e .` → the `eeik` console script, or `python -m eeik`). `scripts/*.py` are thin
   backward-compatible shims. The repo's *content* layers (`capability-packs/`, `knowledge/`,
   `templates/`, `generators/`, `bootstrap/`) are data the engine reads — not code.
+- **Three surfaces, one implementation.** The CLI, the MCP server (`eeik mcp`, ADR-006), and the typed
+  Python SDK (`import eeik`, ADR-007) are all adapters over `eeik/api.py`. Add behaviour to the SDK
+  (`eeik/api.py`) and let the CLI/MCP delegate — do NOT duplicate logic per surface. The public API is
+  `eeik.__all__`; the catalog accessor is `eeik.find_packs()` (not `catalog`, to avoid shadowing the
+  submodule).
 - **One canonical manifest schema.** `eeik/schemas/manifest.schema.json` is the single source of truth
   (`eeik/manifest.py` enforces it). Do NOT reintroduce a second schema copy.
 - **Generators run on HALO.** EEIK's generators are agents; they flow through the `agent-harness`
@@ -32,7 +37,8 @@ engine other tools consume, *not* a product platform competing with APEX). Two t
   `eeik lock` pins adopted versions + content digests to `eeik.lock`; `eeik diff` reports drift;
   `eeik upgrade` re-pins. See [ADR-004](docs/decisions/ADR-004-capability-pack-versioning-and-lockfile.md).
 
-CLI: `eeik demo` (offline governed showcase), `eeik lock|diff|upgrade`, `eeik run <gen> --governed`.
+CLI: `eeik demo` (offline governed showcase), `eeik lock|diff|upgrade`, `eeik catalog` (queryable pack
+index), `eeik mcp` (read-model MCP server, ADR-006), `eeik run <gen> --governed`.
 Tests: `python3 -m pytest tests/ -q`. Keep `docs/progress.md`, `ROADMAP.md`, `README.md`, and
 `docs/index.html` in sync when this layer changes.
 

@@ -1,6 +1,9 @@
 name: insurance-pack
 version: "1.0"
 status: built
+category: domain
+description: "Insurance domain — claims, underwriting, and Solvency II / GDPR compliance."
+tags: [insurance, claims, underwriting, solvency-ii, gdpr, regulated, domain]
 
 manifest_triggers:
   - field: project.domain

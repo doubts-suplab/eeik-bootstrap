@@ -18,10 +18,13 @@ dependencies = [
 [project.optional-dependencies]
 # Governed generation: EEIK's generators run on the HALO agent-harness runtime (ADR-003).
 governance = ["agent-harness>=0.1.0"]
-test = ["pytest>=7.0", "agent-harness>=0.1.0"]
+# MCP server: expose the EEIK read model over the Model Context Protocol (ADR-006).
+mcp = ["mcp>=1.0"]
+test = ["pytest>=7.0", "agent-harness>=0.1.0", "mcp>=1.0"]
 
 [project.scripts]
 eeik = "eeik.cli:main"
+eeik-mcp = "eeik.mcp_server:main"
 
 [tool.setuptools]
 # The engine is the `eeik` package. The repository's content layers (capability-packs/, knowledge/,

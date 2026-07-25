@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import pytest
 
+from eeik import catalog as eeik_catalog
 from eeik import lock as eeik_lock
 from eeik import versions as pack_versions
 
@@ -63,6 +64,35 @@ def test_drift_detects_content_change_without_version_bump():
 def test_no_drift_when_identical():
     fp = {"core": {"version": "1.0", "digest": "aaaa000000000000"}}
     assert eeik_lock.compute_drift({"packs": fp}, dict(fp)) == []
+
+
+# ── catalog ───────────────────────────────────────────────────────────────────────
+
+def test_catalog_covers_every_pack_and_is_categorised():
+    cat = eeik_catalog.build_catalog()
+    assert cat["packCount"] == len(cat["packs"]) >= 19
+    # Every pack has a version, a resolved category, and a digest.
+    for e in cat["packs"]:
+        assert e["version"] and e["digest"]
+        assert e["category"] and e["category"] != "uncategorised"
+
+
+def test_catalog_filter_by_tag_and_query():
+    entries = eeik_catalog.build_catalog()["packs"]
+    banking = eeik_catalog.filter_by_tag(entries, "banking")
+    assert [e["pack"] for e in banking] == ["banking"]
+    # 'regulated' spans multiple domain packs.
+    regulated = {e["pack"] for e in eeik_catalog.filter_by_tag(entries, "regulated")}
+    assert {"banking", "healthcare", "insurance"} <= regulated
+    # free-text query matches description/tags.
+    assert any(e["pack"] == "healthcare" for e in eeik_catalog.filter_by_query(entries, "fhir"))
+
+
+def test_catalog_find_providers():
+    entries = eeik_catalog.build_catalog()["packs"]
+    providers = eeik_catalog.find_providers(entries, "java-architect")
+    assert ("java", "agent") in providers
+    assert eeik_catalog.find_providers(entries, "no-such-agent") == []
 
 
 # ── HALO governance ───────────────────────────────────────────────────────────────

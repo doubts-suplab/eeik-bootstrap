@@ -16,6 +16,8 @@ Commands:
     lock                Pin adopted pack versions → eeik.lock
     diff                Report capability-pack drift vs eeik.lock
     upgrade             Re-pin eeik.lock to current pack versions
+    catalog             Query the capability-pack / agent / standard index
+    mcp                 Start the EEIK MCP server (read model over MCP)
     run <generator>     Run a generator via the HALO-governed harness
     demo                Offline governed-generation showcase (EEIK in action)
 
@@ -126,6 +128,8 @@ COMMANDS = {
     "lock":              _mod("lock", "lock"),
     "diff":              _mod("lock", "diff"),
     "upgrade":           _mod("lock", "upgrade"),
+    "catalog":           _mod("catalog"),
+    "mcp":               _mod("mcp_server"),
     "run":               _mod("runner"),
     "demo":              _mod("generation", "demo"),
 }
@@ -144,6 +148,8 @@ HELP = """
   lock                Pin pack versions → eeik.lock    [--file path]
   diff                Report pack drift vs eeik.lock   [--exit-code]
   upgrade             Re-pin eeik.lock to current      [--file path]
+  catalog             Query the pack/agent index       [--tag t] [--query x] [--provides n] [--json]
+  mcp                 Start the EEIK MCP server        (read model over Model Context Protocol)
   run <generator>     Run generator on HALO harness    [--governed] [--dry-run]
   demo                Governed-generation showcase     (offline, no API key)
 

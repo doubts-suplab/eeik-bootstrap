@@ -26,6 +26,38 @@ drift (added/removed/version-changed/content-changed) is reported and CI-gateabl
 
 ---
 
+### Capability Catalog (registry)
+
+A queryable, machine-readable index of every pack, agent, command, and standard, with version +
+content-digest provenance. Query by tag, free-text, or "which pack provides `<name>`?". The `--json`
+output is the read model the EEIK MCP server exposes.
+
+`eeik/catalog.py` · `eeik catalog [--tag | --query | --provides | --json]`
+
+---
+
+### MCP Server (live read model)
+
+Exposes the engine's read model over the Model Context Protocol so any MCP host can query EEIK live —
+replacing drift-prone static adapter files for *queryable* context. Read-only in v1; generation stays
+governed/staged (ADR-003).
+
+`eeik/mcp_server.py` · `eeik mcp` · tools: `eeik_catalog`, `eeik_validate_manifest`,
+`eeik_resolve_packs`, `eeik_pack_drift`
+
+---
+
+### Python SDK (in-process)
+
+The typed, stable `import eeik` surface — the in-process counterpart to the MCP server. Consumers
+(e.g. apex-sdlc) call the engine as a library instead of shelling out. The CLI and MCP are adapters
+over this one implementation.
+
+`eeik/api.py` · `import eeik` → `find_packs` · `providers_of` · `validate_manifest` · `resolve_packs`
+· `pack_drift` · `write_lock`
+
+---
+
 ## Core Platform
 
 ### Bootstrap Engine

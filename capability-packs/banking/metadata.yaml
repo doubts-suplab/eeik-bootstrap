@@ -1,6 +1,9 @@
 name: banking-pack
 version: "1.0"
 status: built
+category: domain
+description: "Banking domain — payments, risk, and PSD2 / Basel III / PCI-DSS compliance."
+tags: [banking, payments, risk, pci-dss, psd2, basel-iii, regulated, domain]
 
 manifest_triggers:
   - field: project.domain

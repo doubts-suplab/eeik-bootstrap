@@ -166,6 +166,30 @@ def check_pack_overrides(manifest: dict) -> list[str]:
     return warnings
 
 
+# ── structured API (used by the CLI, the MCP server, and the SDK) ─────────────
+
+def validate_document(manifest: dict) -> tuple[list[str], list[str]]:
+    """Validate a parsed manifest and return (errors, warnings) — no printing.
+
+    Combines JSON Schema validation (the one canonical schema) with EEIK's governance rules and
+    capability-pack existence checks. This is the reusable core; ``main`` renders it for the terminal.
+    """
+    errors: list[str] = []
+    if not isinstance(manifest, dict):
+        return (["Manifest is not a YAML mapping (dict at root level)"], [])
+
+    with open(SCHEMA_FILE) as fh:
+        schema = json.load(fh)
+    for e in sorted(Draft7Validator(schema).iter_errors(manifest), key=lambda e: e.path):
+        path = ".".join(str(p) for p in e.absolute_path) or "(root)"
+        errors.append(f"[{path}] {e.message}")
+
+    gov_errors, gov_warnings = check_governance_rules(manifest)
+    warnings = gov_warnings + check_pack_overrides(manifest)
+    errors.extend(gov_errors)
+    return (errors, warnings)
+
+
 # ── main ──────────────────────────────────────────────────────────────────────
 
 def main() -> int:

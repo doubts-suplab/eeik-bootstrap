@@ -1,6 +1,9 @@
 name: modernization-pack
 version: "1.0"
 status: built
+category: modernization
+description: "Legacy modernization — COBOL / RPG / IBM i analysis and strangler-fig migration."
+tags: [modernization, cobol, ibmi, rpg, legacy, strangler-fig, migration]
 
 manifest_triggers:
   - field: modernization.enabled

@@ -5,6 +5,7 @@ description: >
   Red Hat OpenShift and Kubernetes engineering capability pack. Helm chart authoring,
   RBAC, NetworkPolicy, HPA, PodDisruptionBudget, OpenShift Routes, SCC, ImageStreams,
   and Tekton/ArgoCD GitOps pipelines.
+category: platform
 tags: [openshift, kubernetes, helm, rbac, tekton, argocd, gitops, ocp, k8s]
 manifest_triggers:
   - field: platform.container_platform
