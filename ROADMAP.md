@@ -130,12 +130,15 @@ versioned, queryable engine. See ADR-003 (generators on HALO) and ADR-004 (pack 
       `eeik/schemas/manifest.schema.json`. This also fixed a latent bug: the validator had been enforcing
       a stale schema that rejected EEIK's own example manifests.
 
-### Tier 2 — Engine surface (Planned)
+### Tier 2 — Engine surface
+- [x] **Pack/agent registry + catalog** — `eeik catalog` builds a machine-readable, queryable index of
+      packs, agents, commands, and standards with version + content-digest provenance. Query by `--tag`,
+      free-text `--query`, or `--provides <name>` ("which pack provides `java-architect`?"); `--json` is
+      the read model the MCP server will expose. All 19 packs are now tagged + categorised.
+      (`eeik/catalog.py`)
 - [ ] **Stable Python API / SDK** — so APEX onboarding imports EEIK instead of shelling out to scripts.
-- [ ] **EEIK MCP server** — expose `validate-manifest`, `resolve-packs`, `generate-agent`,
-      `query-catalog` as MCP tools; one live server replaces six drifting static tool-adapter formats.
-- [ ] **Pack/agent registry + catalog** — a machine-readable, queryable index of packs, agents, and
-      standards with provenance ("which packs support banking + FHIR?").
+- [ ] **EEIK MCP server** — expose `validate-manifest`, `resolve-packs`, `generate-agent`, and the
+      `catalog` read model as MCP tools; one live server replaces six drifting static tool-adapter formats.
 
 ### Tier 3 — Closing the loop (Planned)
 - [ ] **`eeik verify`** — assert a repo actually complies with the packs it adopted (conformance gate,
@@ -150,15 +153,15 @@ versioned, queryable engine. See ADR-003 (generators on HALO) and ADR-004 (pack 
 
 Staged directory maturation. Stages 1–2 (engine package + single canonical schema) are **done** above;
 the remaining stages are tracked here so the framework's layout keeps pace with its scope.
-- [ ] **Directory-map ADR + `ARCHITECTURE.md`** — document the layer taxonomy (authoring *content*:
-      `capability-packs/`, `knowledge/`, `templates/`, `generators/`, `bootstrap/` · the *engine*:
-      `eeik/` · the *adapters*: `.claude/`, `.github/`, `.kiro/`, `.cursor/`, root `*.md`) so new
-      additions land in the right layer. *Document before moving anything.*
+- [x] **Directory-map ADR + `ARCHITECTURE.md`** — the layer taxonomy (engine / content / adapters /
+      docs) is documented with a "where does a new X go?" placement rule.
+      See [ADR-005](docs/decisions/ADR-005-layered-directory-taxonomy.md) and
+      [ARCHITECTURE.md](ARCHITECTURE.md). *Documented before moving any content, by design.*
 - [ ] **Clarify the dual-purpose adapters** — the root `.claude/`/`.github/`/`.kiro/`/`.cursor/` are both
       EEIK's own dogfood config *and* the seed users copy (a documented footgun). Make the copy-target
       explicit without breaking the `cp -r` adoption ergonomics.
 - [ ] **Consolidate the resolver overlap** — `generators/capability-selector` vs `bootstrap/resolvers`
-      cover overlapping ground; unify once the taxonomy ADR lands.
+      cover overlapping ground; unify now that the taxonomy ADR has landed.
 
 ---
 

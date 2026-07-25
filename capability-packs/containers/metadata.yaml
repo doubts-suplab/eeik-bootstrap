@@ -1,6 +1,9 @@
 name: containers-pack
 version: "1.0"
 status: built
+category: platform
+description: "Containerisation — Dockerfiles, ECS Fargate, and container runtime standards."
+tags: [containers, docker, ecs, fargate, kubernetes, platform]
 
 manifest_triggers:
   - field: architecture.patterns

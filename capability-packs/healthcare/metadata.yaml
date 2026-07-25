@@ -1,6 +1,9 @@
 name: healthcare-pack
 version: "1.0"
 status: built
+category: domain
+description: "Healthcare domain — FHIR / HL7, HIPAA / GDPR health-data compliance, clinical data."
+tags: [healthcare, fhir, hl7, hipaa, gdpr, clinical, regulated, domain]
 
 manifest_triggers:
   - field: project.domain

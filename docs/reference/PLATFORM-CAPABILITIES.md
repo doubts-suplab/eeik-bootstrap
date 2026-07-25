@@ -26,6 +26,16 @@ drift (added/removed/version-changed/content-changed) is reported and CI-gateabl
 
 ---
 
+### Capability Catalog (registry)
+
+A queryable, machine-readable index of every pack, agent, command, and standard, with version +
+content-digest provenance. Query by tag, free-text, or "which pack provides `<name>`?". The `--json`
+output is the read model the planned EEIK MCP server exposes.
+
+`eeik/catalog.py` · `eeik catalog [--tag | --query | --provides | --json]`
+
+---
+
 ## Core Platform
 
 ### Bootstrap Engine

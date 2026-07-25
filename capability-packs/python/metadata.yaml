@@ -1,6 +1,9 @@
 name: python-pack
 version: "1.0"
 status: built
+category: backend
+description: "Python engineering — FastAPI, Pydantic, pytest, and type-annotated services."
+tags: [python, fastapi, backend, pytest, mypy, pydantic]
 
 manifest_triggers:
   - field: technology.backend.language

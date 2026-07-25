@@ -4,6 +4,7 @@ status: built
 description: >
   Data pipeline engineering capability pack. Kafka stream processing, Apache Spark batch jobs,
   dbt model authoring, Airflow/Step Functions orchestration, data quality, and idempotent ETL/ELT.
+category: data
 tags: [data-engineering, kafka, spark, dbt, airflow, etl, elt, streaming, batch]
 manifest_triggers:
   - field: technology.data.streaming

@@ -1,7 +1,9 @@
 name: core-pack
 version: "1.0"
 status: built
+category: core
 description: "Foundational capability pack — cross-cutting agents, standards, and workflows for all projects"
+tags: [core, foundational, architecture, security, review, delivery, always-active]
 
 always_active: true
 

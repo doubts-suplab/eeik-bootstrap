@@ -136,8 +136,20 @@ Versioned adoption + drift detection (the fix for copy-once rot):
 ```bash
 eeik lock                                       # pin adopted pack versions → eeik.lock
 eeik diff --exit-code                           # later: report drift from upstream (CI gate, exits 2)
-python3 -m pytest tests/ -q                     # 8 tests: versioning, drift, HALO governance
+python3 -m pytest tests/ -q                     # 11 tests: versioning, drift, catalog, HALO governance
 ```
+
+Query the capability catalog — a machine-readable registry of every pack, agent, and standard:
+
+```bash
+eeik catalog --tag regulated                    # packs tagged 'regulated' (banking, healthcare, …)
+eeik catalog --query fhir                       # free-text match across name / description / tags
+eeik catalog --provides java-architect          # which pack provides that agent
+eeik catalog --json                             # the read model the planned EEIK MCP server exposes
+```
+
+> **Repository layout:** see [ARCHITECTURE.md](ARCHITECTURE.md) for the four-layer taxonomy (engine /
+> content / adapters / docs) and the "where does a new X go?" placement rule ([ADR-005](docs/decisions/ADR-005-layered-directory-taxonomy.md)).
 
 This is the same runtime, gate, and audit that APEX uses for its SDLC phase agents — EEIK now dogfoods
 the `agent-harness` capability pack it ships to everyone else.

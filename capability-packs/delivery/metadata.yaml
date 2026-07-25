@@ -1,6 +1,9 @@
 name: delivery-pack
 version: "1.0"
 status: built
+category: delivery
+description: "Delivery — sprint planning, release management, and branching / CI-CD standards."
+tags: [delivery, agile, cicd, branching, release, sprint, always-active]
 
 manifest_triggers:
   always: true   # delivery context applies to every project
