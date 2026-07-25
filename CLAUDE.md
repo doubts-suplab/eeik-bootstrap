@@ -38,7 +38,8 @@ engine other tools consume, *not* a product platform competing with APEX). Two t
   `eeik upgrade` re-pins. See [ADR-004](docs/decisions/ADR-004-capability-pack-versioning-and-lockfile.md).
 
 CLI: `eeik demo` (offline governed showcase), `eeik lock|diff|upgrade`, `eeik catalog` (queryable pack
-index), `eeik mcp` (read-model MCP server, ADR-006), `eeik run <gen> --governed`.
+index), `eeik verify` (conformance gate, ADR-008), `eeik mcp` (read-model MCP server, ADR-006),
+`eeik run <gen> --governed`.
 Tests: `python3 -m pytest tests/ -q`. Keep `docs/progress.md`, `ROADMAP.md`, `README.md`, and
 `docs/index.html` in sync when this layer changes.
 

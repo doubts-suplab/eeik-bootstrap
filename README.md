@@ -145,7 +145,16 @@ Query the capability catalog — a machine-readable registry of every pack, agen
 eeik catalog --tag regulated                    # packs tagged 'regulated' (banking, healthcare, …)
 eeik catalog --query fhir                       # free-text match across name / description / tags
 eeik catalog --provides java-architect          # which pack provides that agent
-eeik catalog --json                             # the read model the planned EEIK MCP server exposes
+eeik catalog --json                             # the read model the EEIK MCP server exposes
+```
+
+Run the conformance gate — do packs actually deliver what they declare? (closes the loop:
+generate → govern → **verify**):
+
+```bash
+eeik verify                                     # fail / warn / pass report
+eeik verify --exit-code                         # CI gate: non-zero on hard failures
+eeik verify --strict --exit-code                # also fail on warnings (once metadata is reconciled)
 ```
 
 > **Repository layout:** see [ARCHITECTURE.md](ARCHITECTURE.md) for the four-layer taxonomy (engine /

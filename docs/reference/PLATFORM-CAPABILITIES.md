@@ -54,7 +54,17 @@ The typed, stable `import eeik` surface — the in-process counterpart to the MC
 over this one implementation.
 
 `eeik/api.py` · `import eeik` → `find_packs` · `providers_of` · `validate_manifest` · `resolve_packs`
-· `pack_drift` · `write_lock`
+· `pack_drift` · `verify` · `write_lock`
+
+---
+
+### Conformance Gate (`eeik verify`)
+
+Closes the loop — generate → govern → **verify**. Asserts that every agent/standard a pack declares
+resolves to a real file, that the manifest validates, and that the lock matches. Findings are
+fail/warn/pass; `--exit-code`/`--strict` gate CI. Available on all three surfaces.
+
+`eeik/verify.py` · `eeik verify [--strict --exit-code --json]` · `eeik.verify()` · MCP `eeik_verify`
 
 ---
 

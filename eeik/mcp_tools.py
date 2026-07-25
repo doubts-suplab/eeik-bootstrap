@@ -44,6 +44,11 @@ def pack_drift(lockfile: str | None = None) -> dict:
     return _api.pack_drift(lockfile=lockfile).to_dict()
 
 
+def verify() -> dict:
+    """Run the conformance gate: do packs deliver what they declare; is the manifest/lock consistent."""
+    return _api.verify().to_dict()
+
+
 # ── MCP tool declarations ─────────────────────────────────────────────────────
 
 _STR = {"type": "string"}
@@ -100,6 +105,14 @@ TOOLS: list[dict[str, Any]] = [
                 "lockfile": {**_STR, "description": "Path to a lockfile (default: eeik.lock)."},
             },
         },
+    },
+    {
+        "name": "eeik_verify",
+        "description": "Run the EEIK conformance gate: whether packs deliver the agents/standards they "
+                       "declare, and whether the manifest and lockfile are consistent. Returns "
+                       "{ok, counts, findings}.",
+        "handler": verify,
+        "inputSchema": {"type": "object", "properties": {}},
     },
 ]
 
