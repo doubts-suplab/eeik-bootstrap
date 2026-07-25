@@ -1,0 +1,17 @@
+name: react-pack
+version: "1.0"
+owner: eeik
+category: frontend
+description: >
+  React engineering capability pack — Next.js 14 App Router, Server Components, TanStack Query,
+  and strict TypeScript. Enforces EEIK frontend golden rules and component testing standards.
+
+tags: [react, nextjs, typescript, frontend]
+
+manifest_triggers:
+  - field: technology.frontend.framework
+    values: [react]
+
+agents_provided: [react-developer]
+commands_provided: []
+standards_provided: [react-standard]

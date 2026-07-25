@@ -38,6 +38,9 @@ npm-debug.log*
 coverage/
 target/site/jacoco/
 
+# EEIK governed-generation staging area (drafts pending human approval; transient)
+.eeik-staging/
+
 # Python
 __pycache__/
 *.pyc

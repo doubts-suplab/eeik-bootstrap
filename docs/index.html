@@ -290,6 +290,7 @@
   <a href="#explorer">Explorer</a>
   <a href="#vision">Vision</a>
   <a href="#stages">Stages</a>
+  <a href="#engine">Engine</a>
   <a href="#agents">Agents</a>
   <a href="#commands">Commands</a>
   <a href="#onboarding">Onboarding</a>
@@ -903,14 +904,15 @@
         <div class="tl-dot wip">S4</div>
         <div class="tl-body">
           <h3>Stage 4 — Agent Platform <span style="color:var(--accent); font-size:13px;">⬤ In Progress</span></h3>
-          <p>Agent Factory foundation built — 8 archetypal blueprints, manifest-parameterised generation, /generate-agent command. Agent marketplace, telemetry, and evolution engine are next.</p>
+          <p>Agent Factory foundation built — 8 archetypal blueprints, manifest-parameterised generation, /generate-agent command. Generation now runs <strong style="color:var(--text)">on HALO</strong>: gated, audited, human-reviewed (v1.4). Agent marketplace, telemetry, and evolution engine are next.</p>
           <div class="tl-tags">
             <span class="tag done">Agent Factory (8 blueprints) ✓</span>
             <span class="tag done">/generate-agent command ✓</span>
             <span class="tag done">Model Router ✓</span>
+            <span class="tag done">Governed Generation on HALO ✓</span>
+            <span class="tag missing">Agents as HALO Contracts</span>
             <span class="tag missing">Agent Marketplace</span>
             <span class="tag missing">Agent Telemetry</span>
-            <span class="tag missing">Agent Evolution Engine</span>
           </div>
         </div>
       </div>
@@ -925,14 +927,12 @@
             <span class="tag done">validate_manifest.py ✓</span>
             <span class="tag done">activate_packs.py ✓</span>
             <span class="tag done">claude_harness.py ✓</span>
-            <span class="tag done">Kiro Adapter ✓</span>
-            <span class="tag done">Codex AGENTS.md ✓</span>
-            <span class="tag done">Cursor Rules ✓</span>
-            <span class="tag done">Gemini CLI ✓</span>
-            <span class="tag done">CI: eeik-validate ✓</span>
-            <span class="tag done">CI: eeik-adapt ✓</span>
-            <span class="tag missing">Windsurf Adapter</span>
-            <span class="tag missing">Adapter Marketplace</span>
+            <span class="tag done">generation_harness.py (HALO) ✓</span>
+            <span class="tag done">eeik_lock.py — versioning + drift ✓</span>
+            <span class="tag done">Multi-tool adapters ✓</span>
+            <span class="tag done">CI: eeik-validate / eeik-adapt ✓</span>
+            <span class="tag missing">EEIK MCP server</span>
+            <span class="tag missing">Pack registry / catalog</span>
           </div>
         </div>
       </div>
@@ -949,6 +949,79 @@
           </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ENGINE — EEIK IN ACTION -->
+  <section id="engine">
+    <div class="section-label">v1.4 · EEIK in Action</div>
+    <h2>The Governed Generation Engine</h2>
+    <p class="section-desc">EEIK's generators are agents. As of v1.4 they run <strong style="color:var(--text)">on HALO</strong> — the same governed runtime APEX uses for its SDLC phase agents — not ungoverned <span class="mono">claude --print</span>. Generation is <strong style="color:var(--text)">SUGGEST authority</strong>, so it can never auto-enforce: every draft is gated, audited, and routed to a human. EEIK now dogfoods the <span class="mono">agent-harness</span> pack it ships to everyone else.</p>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-value">100%</div><div class="stat-label">generations gated &amp; audited</div></div>
+      <div class="stat"><div class="stat-value">0</div><div class="stat-label">confidence-gate bypasses</div></div>
+      <div class="stat"><div class="stat-value">19</div><div class="stat-label">packs, now version-pinned</div></div>
+      <div class="stat"><div class="stat-value">8</div><div class="stat-label">engine tests (green)</div></div>
+    </div>
+
+    <div class="grid-2" style="align-items:start;">
+      <div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:8px;">Governed generation — <span class="mono">eeik demo</span></h3>
+        <div class="code-block">$ python3 scripts/eeik_cli.py demo
+
+EEIK Governed Generation · generator: agent-generator
+  authority SUGGEST   action SUGGEST   confidence 0.72
+  gate → auto_enforced: False  (G-5: SUGGEST never auto-enforces)
+  bypass counter: 0  (must be 0)
+  → routed to human review  reason=suggest  sla=14400s
+  audit: human-review  "produced a draft artifact for review."
+  ✓ Draft staged for approval: .eeik-staging/…/artifact.md</div>
+      </div>
+      <div class="card">
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:10px;color:var(--accent3);">What the harness guarantees</h3>
+        <ul class="checklist">
+          <li><span class="check">✓</span><span><strong>Confidence gate</strong> runs on every generation — a low-confidence draft is never treated as final.</span></li>
+          <li><span class="check">✓</span><span><strong>Never auto-applied</strong> — SUGGEST authority (gate rule G-5) forces every draft to human review + staging.</span></li>
+          <li><span class="check">✓</span><span><strong>Append-only audit</strong>, PII-redacted, with the bypass counter held at 0.</span></li>
+          <li><span class="check">✓</span><span><strong>Fails safe</strong> — with HALO absent, drafts are staged and never touch live config.</span></li>
+        </ul>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:12px;">See <span class="mono">ADR-003</span> — EEIK generators run on HALO.</p>
+      </div>
+    </div>
+
+    <div class="grid-2" style="align-items:start;margin-top:20px;">
+      <div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:8px;">Versioned adoption — <span class="mono">eeik lock · diff</span></h3>
+        <div class="code-block">$ python3 scripts/eeik_cli.py diff --exit-code
+
+EEIK Drift Report
+  Locked at : 2026-07-25T11:00  (eeik 1.4.0)
+
+  2 pack(s) drifted from eeik.lock:
+    ! content drift  core     1.0 → 1.0
+    ~ version bump   java     1.0 → 1.2
+  exit 2   ← CI gate fails on drift</div>
+      </div>
+      <div class="card">
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:10px;color:var(--accent3);">The fix for copy-once rot</h3>
+        <p style="font-size:13px;color:var(--text-muted);">Adopting a pack used to mean <span class="mono">cp -r</span> and silent divergence forever. Now packs are <strong style="color:var(--text)">versioned dependencies</strong>: <span class="mono">eeik.lock</span> pins each adopted pack's version + content digest, <span class="mono">eeik diff</span> reports drift (added / removed / version-changed / content-changed), and <span class="mono">eeik upgrade</span> re-pins. Standards stop rotting.</p>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:12px;">See <span class="mono">ADR-004</span> — pack versioning &amp; lockfile.</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;background:var(--surface2);">
+      <div class="section-label" style="margin-bottom:12px;">Posture — engine, not product</div>
+      <div class="hero-flow" style="margin-top:0;justify-content:flex-start;">
+        <div class="node accent">EEIK — governs generation</div>
+        <div class="arr">·</div>
+        <div class="node">HALO — governs execution</div>
+        <div class="arr">·</div>
+        <div class="node">APEX — the SDLC product</div>
+        <div class="arr">·</div>
+        <div class="node">AIEL — the spec</div>
+      </div>
+      <p style="font-size:13px;color:var(--text-muted);margin-top:14px;">EEIK does not become a product platform competing with APEX — APEX already consumes EEIK for onboarding. EEIK's "platform" energy goes into being a governed engine the others call.</p>
     </div>
   </section>
 
@@ -1484,12 +1557,12 @@ codex "add OpenTelemetry tracing to the order service"
       <p class="gap-desc">All 19 packs built: core, architecture, java, aws, ai-engineering, agent-harness, governance, angular, react, data-engineering, python, openshift, containers, delivery, modernization, insurance, banking, belgium-insurance, healthcare. All 6 AI tool adapters generated: <span class="mono">Claude Code · GitHub Copilot · Kiro · Codex CLI · Cursor · Gemini CLI</span>. Python CLI scripts enable headless CI generation without a human present.</p>
     </div>
 
-    <div class="gap-item high">
+    <div class="gap-item medium">
       <div class="gap-header">
-        <span class="gap-badge high">HIGH</span>
-        <span class="gap-title">No Test Suite</span>
+        <span class="gap-badge medium">PARTIAL</span>
+        <span class="gap-title">Test Suite — engine covered, personas pending</span>
       </div>
-      <p class="gap-desc">The quick-start guide describes a fully working bootstrap flow, but there are no tests validating agent personas, that instructions apply correctly, that slash commands produce expected output, or that memory files load properly. Without tests, regressions are invisible.</p>
+      <p class="gap-desc">The v1.4 generation engine now has tests: <span class="mono">tests/test_engine.py</span> (8 tests) covers pack versioning, lockfile drift, and the HALO governance guarantee (generation never auto-enforces; bypass counter stays 0). Still pending: validating agent <em>personas</em>, that instructions apply correctly, and that slash commands produce expected output.</p>
     </div>
 
     <div class="gap-item" style="border-left-color: var(--green); opacity: 0.7;">
@@ -1565,21 +1638,21 @@ codex "add OpenTelemetry tracing to the order service"
           <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--text-muted);">
             <li style="color:var(--green);">✅ All 19 capability packs — built</li>
             <li style="color:var(--green);">✅ All 8 generators — built</li>
-            <li style="color:var(--green);">✅ All 6 AI tool adapters — generated</li>
-            <li style="color:var(--green);">✅ Python scripts for CI automation — built</li>
-            <li>→ Test harness: agent persona validation + regression suite</li>
-            <li>→ Pack versioning: semantic versioning for capability packs</li>
+            <li style="color:var(--green);">✅ Governed generation on HALO (v1.4)</li>
+            <li style="color:var(--green);">✅ Pack versioning + lockfile + drift (v1.4)</li>
+            <li style="color:var(--green);">✅ Engine test suite — tests/test_engine.py</li>
+            <li>→ Stable Python API/SDK so APEX imports EEIK (Tier 2)</li>
           </ul>
         </div>
         <div class="card" style="border-left: 3px solid var(--accent);">
           <h3 style="margin-bottom:8px;">🔵 Long-term (Quarters)</h3>
           <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--text-muted);">
-            <li>→ Self-improving: knowledge recommendations from usage patterns</li>
-            <li>→ EEIK marketplace: share packs across teams and organisations</li>
-            <li>→ Pack analytics: which agents are used most, quality metrics</li>
-            <li>→ Agent Swarms: multi-agent orchestration for complex workflows</li>
-            <li>→ Live adapter sync: auto-regenerate adapters on pack change</li>
-            <li>→ VS Code extension: EEIK sidebar for pack management</li>
+            <li>→ EEIK MCP server: one live server replaces 6 static tool-adapter formats</li>
+            <li>→ Pack/agent registry + catalog: queryable, provenance-tracked</li>
+            <li>→ <span class="mono">eeik verify</span>: conformance gate, not just generation</li>
+            <li>→ Agent-generator emits HALO Agent Contracts by construction</li>
+            <li>→ Closed-loop knowledge capture from HALO/APEX audit logs</li>
+            <li>→ Self-improving: standards upgrades from usage patterns</li>
           </ul>
         </div>
       </div>
@@ -1603,12 +1676,15 @@ codex "add OpenTelemetry tracing to the order service"
         <span class="tag done">CI Automation ✓</span>
         <span class="tag done">18 Knowledge Files ✓</span>
         <span class="tag done">32 Standards Files ✓</span>
+        <span class="tag done">Governed Generation (HALO) ✓</span>
+        <span class="tag done">Pack Versioning + Lockfile ✓</span>
+        <span class="tag done">Engine Tests ✓</span>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <span class="tag missing">Test Harness (next)</span>
-        <span class="tag missing">Agent Swarms (later)</span>
-        <span class="tag missing">EEIK Marketplace (later)</span>
-        <span class="tag missing">Self-improving Agents (later)</span>
+        <span class="tag missing">EEIK MCP Server (next)</span>
+        <span class="tag missing">Pack Registry / Catalog (next)</span>
+        <span class="tag missing">Persona Test Harness (next)</span>
+        <span class="tag missing">eeik verify (later)</span>
       </div>
     </div>
   </section>

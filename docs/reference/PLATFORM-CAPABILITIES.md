@@ -1,5 +1,31 @@
 # Platform Capabilities
 
+> **Posture (v1.4):** EEIK is a governed generation *engine*, not a product platform. It generates and
+> governs *generation*; HALO governs *execution*; APEX is the SDLC product that consumes both. See
+> [ADR-003](../decisions/ADR-003-eeik-generators-run-on-halo.md) and
+> [ADR-004](../decisions/ADR-004-capability-pack-versioning-and-lockfile.md).
+
+## Generation Engine (v1.4)
+
+### Governed Generation (HALO)
+
+EEIK's generators run on the `agent-harness` runtime. Every generation passes the confidence gate, is
+audited, and — as SUGGEST authority — routes drafts to human review (never auto-applied). Fails safe
+without HALO.
+
+`scripts/generation_harness.py` · `eeik run <gen> --governed` · `eeik demo`
+
+---
+
+### Pack Versioning & Drift Detection
+
+Capability packs are versioned dependencies. `eeik.lock` records adopted versions + content digests;
+drift (added/removed/version-changed/content-changed) is reported and CI-gateable.
+
+`scripts/pack_versions.py` · `scripts/eeik_lock.py` · `eeik lock | diff | upgrade`
+
+---
+
 ## Core Platform
 
 ### Bootstrap Engine

@@ -4,6 +4,28 @@ This document tracks planned enhancements to the framework. Items are grouped by
 
 ---
 
+## Platform Posture — engine, not product
+
+As the ecosystem matured, **APEX** grew from an augmentation *plan* into the runnable AI-SDLC
+*product*, and **HALO** (`agent-harness`) became the governed agent runtime both APEX and Aether
+consume. EEIK's transformation is deliberately **not** to become a competing product platform — APEX
+already owns that surface and *consumes EEIK's generators for onboarding*. Instead EEIK evolves from a
+passive pile of config + scripts into a **governed generation *engine*** with a stable, programmatic
+surface that APEX and CI consume.
+
+The boundaries the ecosystem is built on:
+
+| Concern | Owner |
+|---|---|
+| Governs **generation** (repo/agent/standard scaffolding) | **EEIK** |
+| Governs **execution** (confidence gate, tool registry, audit) | **HALO** |
+| The **SDLC product** that orchestrates both | **APEX** |
+| The **methodology/spec** everything conforms to | **AIEL** |
+
+EEIK's "platform" energy goes into being the thing others call — not a new UI.
+
+---
+
 ## Current Release — v1.x (Stable)
 
 The v1.x line is the current stable baseline. It covers:
@@ -77,6 +99,42 @@ Closing identified gaps across standards, agents, commands, and workflows.
 - [x] `.github/instructions/graphql.instructions.md` — GraphQL schema and resolver rules
 - [x] `.github/instructions/event-driven.instructions.md` — Event-driven messaging patterns
 - [x] `.github/instructions/modernization-patterns.instructions.md` — Legacy migration rules
+
+---
+
+## v1.4 — Governed Generation Engine (In Progress)
+
+The platform-transformation track: EEIK stops being copy-once static config and becomes a governed,
+versioned, queryable engine. See ADR-003 (generators on HALO) and ADR-004 (pack versioning + lockfile).
+
+### Tier 1 — Structural (Delivered)
+- [x] **Governed generation on HALO** — every generator runs through `Harness().invoke(...)`; generation
+      is SUGGEST authority, so it can never auto-enforce (gate rule G-5), is audited, and routes drafts
+      to human review. Fails safe when HALO is absent. (`scripts/generation_harness.py`)
+- [x] **Pack versioning** — every capability pack declares a `version`; three previously un-versioned
+      packs (angular, react, belgium-insurance) now carry `metadata.yaml`.
+- [x] **Lockfile + drift detection** — `eeik lock` pins adopted pack versions + content digests to
+      `eeik.lock`; `eeik diff` reports drift (added/removed/version-changed/content-changed) and gates
+      CI with `--exit-code`; `eeik upgrade` re-pins. (`scripts/eeik_lock.py`, `scripts/pack_versions.py`)
+- [x] **Engine test suite** — `tests/test_engine.py` covers versioning, drift, and the HALO governance
+      guarantee (generation never auto-enforces; bypass counter stays 0).
+- [x] **Offline showcase** — `eeik demo` runs a generator on the real HALO gate with no API key.
+
+### Tier 2 — Engine surface (Planned)
+- [ ] **Stable Python API / SDK** — so APEX onboarding imports EEIK instead of shelling out to scripts.
+- [ ] **EEIK MCP server** — expose `validate-manifest`, `resolve-packs`, `generate-agent`,
+      `query-catalog` as MCP tools; one live server replaces six drifting static tool-adapter formats.
+- [ ] **Pack/agent registry + catalog** — a machine-readable, queryable index of packs, agents, and
+      standards with provenance ("which packs support banking + FHIR?").
+
+### Tier 3 — Closing the loop (Planned)
+- [ ] **`eeik verify`** — assert a repo actually complies with the packs it adopted (conformance gate,
+      not just generation).
+- [ ] **Agent-generator emits HALO Agent Contracts** — every generated agent is
+      `agent-contract.schema.json`-conformant (authority ceiling, tool allowlist, threshold) by
+      construction.
+- [ ] **Closed-loop knowledge capture** — HALO/APEX audit logs → lessons → back into EEIK knowledge
+      packs, making "every project leaves the org smarter" real.
 
 ---
 

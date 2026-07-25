@@ -12,14 +12,19 @@ Commands:
     activate            Activate capability packs into .claude/
     generate-adapters   Generate .kiro/, AGENTS.md, .cursor/, GEMINI.md
     analyze             Scan repo and generate a draft manifest
-    run <generator>     Run a generator via Claude harness (requires claude CLI)
+    lock                Pin adopted pack versions → eeik.lock
+    diff                Report capability-pack drift vs eeik.lock
+    upgrade             Re-pin eeik.lock to current pack versions
+    run <generator>     Run a generator via the HALO-governed harness
+    demo                Offline governed-generation showcase (EEIK in action)
 
 Examples:
     python3 scripts/eeik_cli.py status
     python3 scripts/eeik_cli.py validate --strict
     python3 scripts/eeik_cli.py activate --apply
-    python3 scripts/eeik_cli.py generate-adapters --apply
-    python3 scripts/eeik_cli.py run repository-generator
+    python3 scripts/eeik_cli.py lock
+    python3 scripts/eeik_cli.py diff --exit-code
+    python3 scripts/eeik_cli.py demo
 """
 
 import sys
@@ -110,7 +115,11 @@ COMMANDS = {
     "activate":          lambda a: _run([sys.executable, str(SCRIPTS / "activate_packs.py")] + a),
     "generate-adapters": lambda a: _run([sys.executable, str(SCRIPTS / "generate_adapters.py")] + a),
     "analyze":           lambda a: _run([sys.executable, str(SCRIPTS / "analyze_project.py")] + a),
+    "lock":              lambda a: _run([sys.executable, str(SCRIPTS / "eeik_lock.py"), "lock"] + a),
+    "diff":              lambda a: _run([sys.executable, str(SCRIPTS / "eeik_lock.py"), "diff"] + a),
+    "upgrade":           lambda a: _run([sys.executable, str(SCRIPTS / "eeik_lock.py"), "upgrade"] + a),
     "run":               lambda a: _run([sys.executable, str(SCRIPTS / "claude_harness.py")] + a),
+    "demo":              lambda a: _run([sys.executable, str(SCRIPTS / "generation_harness.py"), "demo"] + a),
 }
 
 HELP = """
@@ -125,13 +134,19 @@ HELP = """
   activate            Activate capability packs        [--apply] [--clean] [--list]
   generate-adapters   Generate multi-tool adapters     [--apply] [--tools kiro,codex,cursor,gemini]
   analyze             Scan repo → draft manifest       [--output path]
-  run <generator>     Run generator via Claude harness [--dry-run]
+  lock                Pin pack versions → eeik.lock    [--file path]
+  diff                Report pack drift vs eeik.lock   [--exit-code]
+  upgrade             Re-pin eeik.lock to current      [--file path]
+  run <generator>     Run generator on HALO harness    [--governed] [--dry-run]
+  demo                Governed-generation showcase     (offline, no API key)
 
 {bold}Quick start:{reset}
   1. python3 scripts/eeik_cli.py analyze --output project-manifest.yaml
   2. python3 scripts/eeik_cli.py validate
   3. python3 scripts/eeik_cli.py activate --apply
   4. python3 scripts/eeik_cli.py generate-adapters --apply
+  5. python3 scripts/eeik_cli.py lock          # pin adopted pack versions
+  6. python3 scripts/eeik_cli.py diff          # later: detect drift from upstream
 """.format(bold=ANSI_BOLD, reset=ANSI_RESET)
 
 

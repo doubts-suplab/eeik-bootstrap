@@ -1,0 +1,17 @@
+name: belgium-insurance-pack
+version: "1.0"
+owner: eeik
+category: domain
+description: >
+  Belgium insurance domain capability pack — Branch 21/23/26 product rules, FSMA/NBB regulatory
+  controls, and TOB (tax on stock-exchange transactions) handling for Belgian insurers.
+
+tags: [insurance, belgium, fsma, nbb, domain, regulated]
+
+manifest_triggers:
+  - field: project.domain
+    values: [belgium-insurance]
+
+agents_provided: [belgium-insurance-expert]
+commands_provided: []
+standards_provided: [belgium-insurance-compliance-standard]

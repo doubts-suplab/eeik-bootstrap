@@ -100,12 +100,47 @@ Built-in:
 - AI reviews
 - Production readiness reviews
 
-### Generation Layer
-Future platform capabilities:
-- Repository Generator
-- Agent Factory
-- Capability Resolver
-- Knowledge Platform
+### Generation Layer — a governed engine (v1.4)
+EEIK's generators are agents. As of v1.4 they run **on HALO** (`agent-harness`), the ecosystem's
+governed agent runtime — not ungoverned `claude --print`:
+- Repository Generator, Agent Factory, Capability Resolver, Knowledge Platform
+- Every generation flows through the **confidence gate**, is **audited**, and — because generation is
+  **SUGGEST authority** — is **routed to human review**, never auto-applied (gate rule G-5). It **fails
+  safe** when HALO is absent. See [ADR-003](docs/decisions/ADR-003-eeik-generators-run-on-halo.md).
+- Capability packs are **versioned dependencies**: `eeik lock` pins them to `eeik.lock`, `eeik diff`
+  detects drift, `eeik upgrade` re-pins. See [ADR-004](docs/decisions/ADR-004-capability-pack-versioning-and-lockfile.md).
+
+> **Posture:** EEIK becomes a governed generation *engine*, not a competing product platform — APEX is
+> the runnable AI-SDLC product and *consumes* EEIK for onboarding. See [ROADMAP.md](ROADMAP.md#platform-posture--engine-not-product).
+
+---
+
+## EEIK in Action — the Governed Generation Engine
+
+```bash
+pip install agent-harness                       # the HALO runtime EEIK consumes
+python3 scripts/eeik_cli.py demo                # generate an agent on the REAL HALO gate — no API key
+```
+```text
+EEIK Governed Generation  ·  generator: agent-generator
+  authority SUGGEST   action SUGGEST   confidence 0.72
+  gate → auto_enforced: False  (G-5: SUGGEST never auto-enforces)
+  bypass counter: 0  (must be 0)
+  → routed to human review  reason=suggest  sla=14400s
+  audit: human-review  "eeik-agent-generator produced a draft artifact (307 chars) for human review."
+  ✓ Draft staged for approval: .eeik-staging/agent-generator/artifact.md
+```
+
+Versioned adoption + drift detection (the fix for copy-once rot):
+
+```bash
+python3 scripts/eeik_cli.py lock                # pin adopted pack versions → eeik.lock
+python3 scripts/eeik_cli.py diff --exit-code    # later: report drift from upstream (CI gate, exits 2)
+python3 -m pytest tests/ -q                     # 8 tests: versioning, drift, HALO governance
+```
+
+This is the same runtime, gate, and audit that APEX uses for its SDLC phase agents — EEIK now dogfoods
+the `agent-harness` capability pack it ships to everyone else.
 
 ---
 
@@ -147,7 +182,11 @@ scripts/           eeik_cli.py          — central CLI entry point
                    validate_manifest.py — JSON Schema + 8 governance rules (no AI needed)
                    activate_packs.py    — manifest → .claude/ materialisation
                    generate_adapters.py — generate all 6 AI tool adapters
-                   claude_harness.py    — run generators via claude --print (CI)
+                   claude_harness.py    — run generators (add --governed for the HALO gate)
+                   generation_harness.py— HALO-governed generation seam (gate + audit + review)
+                   pack_versions.py     — pack versions + content digests
+                   eeik_lock.py         — eeik.lock lockfile + drift detection (lock/diff/upgrade)
+tests/             test_engine.py       — versioning, drift, and HALO-governance tests
 
 ── CI/CD ─────────────────────────────────────────────────────────────────────
 .github/workflows/ eeik-validate.yml   — manifest + agent lint on PR

@@ -12,6 +12,26 @@ When adopting this seed into a real project, replace all placeholder values (e.g
 
 ---
 
+## Generation Engine (v1.4) — governed, versioned
+
+EEIK is evolving from copy-once static config into a **governed generation engine** (posture: an
+engine other tools consume, *not* a product platform competing with APEX). Two things follow from that:
+
+- **Generators run on HALO.** EEIK's generators are agents; they now flow through the
+  `agent-harness` runtime (`scripts/generation_harness.py`). Generation is **SUGGEST authority**, so
+  it can never auto-enforce — drafts are gated, audited, and staged for human review, and it **fails
+  safe** when HALO is absent. Do NOT re-implement a confidence gate inside EEIK — consume HALO's.
+  See [ADR-003](docs/decisions/ADR-003-eeik-generators-run-on-halo.md).
+- **Packs are versioned dependencies.** Every pack declares a `version` in `metadata.yaml`.
+  `eeik lock` pins adopted versions + content digests to `eeik.lock`; `eeik diff` reports drift;
+  `eeik upgrade` re-pins. See [ADR-004](docs/decisions/ADR-004-capability-pack-versioning-and-lockfile.md).
+
+CLI: `eeik demo` (offline governed showcase), `eeik lock|diff|upgrade`, `eeik run <gen> --governed`.
+Tests: `python3 -m pytest tests/ -q`. Keep `docs/progress.md`, `ROADMAP.md`, `README.md`, and
+`docs/index.html` in sync when this layer changes.
+
+---
+
 ## How to Use Claude Code Agents
 
 Agents live in `.claude/agents/`. Claude Code automatically selects the most relevant agent based on the `description` field in each agent's frontmatter. You can also invoke agents explicitly by mentioning their name.

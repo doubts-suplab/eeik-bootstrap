@@ -187,6 +187,10 @@ def main() -> int:
     parser.add_argument("--manifest", metavar="PATH",      help="Explicit manifest.yaml path")
     parser.add_argument("--extra",    metavar="TEXT",      help="Append extra instructions")
     parser.add_argument("--list",     action="store_true", help="List available generators")
+    parser.add_argument("--governed", action="store_true",
+                        help="Route generation through the HALO harness (gate + audit + human review)")
+    parser.add_argument("--confidence", type=float, default=0.7, metavar="0..1",
+                        help="Confidence to attach to the governed generation (default: 0.7)")
     args = parser.parse_args()
 
     if args.list or not args.generator:
@@ -207,6 +211,24 @@ def main() -> int:
         if len(prompt) > 3000:
             print(f"\n{ANSI_YELLOW}... (truncated, full prompt is {len(prompt)} chars){ANSI_RESET}")
         return 0
+
+    if args.governed:
+        # Governed path: the raw claude output is a *draft* proposed at SUGGEST authority. The HALO
+        # harness (not this script) decides enforcement — SUGGEST can never auto-enforce, so the
+        # draft is staged for human approval. See scripts/generation_harness.py / ADR-003.
+        from generation_harness import govern_generation
+
+        def _producer() -> tuple[str, float]:
+            if not check_claude_available():
+                print(f"{ANSI_YELLOW}claude CLI unavailable — staging the assembled prompt as the "
+                      f"draft artifact.{ANSI_RESET}", file=sys.stderr)
+                return prompt, args.confidence
+            result = subprocess.run(
+                ["claude", "--print"], input=prompt, capture_output=True, text=True, cwd=str(REPO_ROOT)
+            )
+            return (result.stdout or prompt), args.confidence
+
+        return govern_generation(args.generator, _producer)
 
     return run_claude(prompt, args.output)
 
