@@ -30,9 +30,20 @@ drift (added/removed/version-changed/content-changed) is reported and CI-gateabl
 
 A queryable, machine-readable index of every pack, agent, command, and standard, with version +
 content-digest provenance. Query by tag, free-text, or "which pack provides `<name>`?". The `--json`
-output is the read model the planned EEIK MCP server exposes.
+output is the read model the EEIK MCP server exposes.
 
 `eeik/catalog.py` · `eeik catalog [--tag | --query | --provides | --json]`
+
+---
+
+### MCP Server (live read model)
+
+Exposes the engine's read model over the Model Context Protocol so any MCP host can query EEIK live —
+replacing drift-prone static adapter files for *queryable* context. Read-only in v1; generation stays
+governed/staged (ADR-003).
+
+`eeik/mcp_server.py` · `eeik mcp` · tools: `eeik_catalog`, `eeik_validate_manifest`,
+`eeik_resolve_packs`, `eeik_pack_drift`
 
 ---
 

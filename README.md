@@ -151,6 +151,20 @@ eeik catalog --json                             # the read model the planned EEI
 > **Repository layout:** see [ARCHITECTURE.md](ARCHITECTURE.md) for the four-layer taxonomy (engine /
 > content / adapters / docs) and the "where does a new X go?" placement rule ([ADR-005](docs/decisions/ADR-005-layered-directory-taxonomy.md)).
 
+Serve the engine's read model over **MCP** — any MCP host (Claude Code, an APEX agent, an IDE) can then
+call EEIK live instead of copying static adapter files ([ADR-006](docs/decisions/ADR-006-eeik-mcp-server.md)):
+
+```bash
+pip install -e ".[mcp]"     # the MCP SDK is an optional extra
+eeik mcp                    # tools: eeik_catalog, eeik_validate_manifest, eeik_resolve_packs, eeik_pack_drift
+```
+
+Register it with a host — e.g. Claude Code `.mcp.json`:
+
+```json
+{ "mcpServers": { "eeik": { "command": "eeik", "args": ["mcp"] } } }
+```
+
 This is the same runtime, gate, and audit that APEX uses for its SDLC phase agents — EEIK now dogfoods
 the `agent-harness` capability pack it ships to everyone else.
 

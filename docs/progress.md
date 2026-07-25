@@ -35,14 +35,15 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 | `eeik demo` (offline governed showcase) | ✅ | Runs a generator on the real gate with no API key |
 | **Pack versioning** | ✅ | `eeik/versions.py` — normalised versions + content digests |
 | **Lockfile + drift detection** | ✅ | `eeik lock` / `diff` / `upgrade`; `eeik.lock`; CI gate via `diff --exit-code` |
-| Engine test suite | ✅ | `tests/test_engine.py` — 11 tests (versioning, drift, catalog, HALO governance) |
+| Engine test suite | ✅ | 16 tests — `test_engine.py` (versioning, drift, catalog, HALO governance) + `test_mcp.py` (tools + real client↔server round-trip) |
 | **Installable engine package** | ✅ | `scripts/` → `eeik/` package + `pyproject.toml`; `eeik` console script / `python -m eeik`; back-compat `scripts/*.py` shims; CI installs the package |
 | **Single canonical manifest schema** | ✅ | `eeik/schemas/manifest.schema.json` replaces 3 divergent copies; fixed the stale-schema bug that rejected EEIK's own examples |
 | **Pack/agent registry + catalog** | ✅ | `eeik catalog` — queryable index (`--tag` / `--query` / `--provides` / `--json`); all 19 packs tagged + categorised (`eeik/catalog.py`) |
 | **Directory taxonomy documented** | ✅ | ADR-005 + `ARCHITECTURE.md` — engine / content / adapters / docs layers + placement rule |
 | LLM-backed generators (repository/agent/knowledge/governance) | 🟡 | Prompts + governed harness exist; require the `claude` CLI / API key to produce real output |
+| **EEIK MCP server** | ✅ | `eeik mcp` — read model over MCP (`eeik_catalog`, `eeik_validate_manifest`, `eeik_resolve_packs`, `eeik_pack_drift`); read-only v1 (`eeik/mcp_server.py`, ADR-006) |
 | Stable Python API / SDK for consumers | ⬜ | Planned (Tier 2) — APEX would import instead of shelling out (unblocked by the package) |
-| EEIK MCP server | ⬜ | Planned (Tier 2) — will expose the `catalog` read model + validate/resolve/generate |
+| Governed generation over MCP | ⬜ | Planned — a staged, human-review `generate` tool (not auto-applied) |
 | `eeik verify` (conformance gate) | ⬜ | Planned (Tier 3) |
 | Agent-generator emits HALO Agent Contracts | ⬜ | Planned (Tier 3) |
 | Closed-loop knowledge capture from audit logs | ⬜ | Planned (Tier 3) |
@@ -67,6 +68,9 @@ eeik catalog --tag regulated             # packs tagged 'regulated'
 eeik catalog --provides java-architect   # which pack provides that agent
 eeik catalog --json                      # machine-readable index (MCP read model)
 
-# Tests (versioning, drift, catalog, HALO governance)
+# Serve the read model over MCP (any MCP host can call it live)
+pip install -e ".[mcp]" && eeik mcp      # tools: catalog, validate_manifest, resolve_packs, pack_drift
+
+# Tests (versioning, drift, catalog, HALO governance, MCP round-trip)
 python3 -m pytest tests/ -q
 ```

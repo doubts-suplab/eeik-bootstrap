@@ -136,9 +136,14 @@ versioned, queryable engine. See ADR-003 (generators on HALO) and ADR-004 (pack 
       free-text `--query`, or `--provides <name>` ("which pack provides `java-architect`?"); `--json` is
       the read model the MCP server will expose. All 19 packs are now tagged + categorised.
       (`eeik/catalog.py`)
+- [x] **EEIK MCP server** — `eeik mcp` exposes the engine's read model over the Model Context Protocol:
+      `eeik_catalog`, `eeik_validate_manifest`, `eeik_resolve_packs`, `eeik_pack_drift`. One live server
+      any MCP host calls, replacing drift-prone static adapter files for *queryable* context. Read-only
+      in v1 (generation stays governed/staged, ADR-003); testable core + real client↔server round-trip.
+      See [ADR-006](docs/decisions/ADR-006-eeik-mcp-server.md). (`eeik/mcp_server.py`, `eeik/mcp_tools.py`)
 - [ ] **Stable Python API / SDK** — so APEX onboarding imports EEIK instead of shelling out to scripts.
-- [ ] **EEIK MCP server** — expose `validate-manifest`, `resolve-packs`, `generate-agent`, and the
-      `catalog` read model as MCP tools; one live server replaces six drifting static tool-adapter formats.
+- [ ] **Governed generation over MCP** — an MCP `generate` tool that returns a staged, human-review draft
+      (not an auto-applied artifact), once the review handoff over MCP is designed.
 
 ### Tier 3 — Closing the loop (Planned)
 - [ ] **`eeik verify`** — assert a repo actually complies with the packs it adopted (conformance gate,

@@ -479,7 +479,12 @@
         <div class="explorer-item">
           <div class="ei-label">Module</div>
           <div class="ei-name">eeik/catalog.py</div>
-          <div class="ei-desc">Queryable registry of every pack, agent, command &amp; standard — <span class="mono">--tag</span> / <span class="mono">--query</span> / <span class="mono">--provides</span> / <span class="mono">--json</span>. The read model the planned MCP server exposes.</div>
+          <div class="ei-desc">Queryable registry of every pack, agent, command &amp; standard — <span class="mono">--tag</span> / <span class="mono">--query</span> / <span class="mono">--provides</span> / <span class="mono">--json</span>. The read model the MCP server exposes.</div>
+        </div>
+        <div class="explorer-item">
+          <div class="ei-label">Module</div>
+          <div class="ei-name">eeik/mcp_server.py</div>
+          <div class="ei-desc">MCP server (<span class="mono">eeik mcp</span>) — serves the read model over the Model Context Protocol so any MCP host queries EEIK live. Tools: catalog, validate_manifest, resolve_packs, pack_drift.</div>
         </div>
         <div class="explorer-item">
           <div class="ei-label">CI Workflow</div>
@@ -939,9 +944,10 @@
             <span class="tag done">Governed generation (HALO) ✓</span>
             <span class="tag done">Versioning + lockfile + drift ✓</span>
             <span class="tag done">Capability catalog (queryable) ✓</span>
+            <span class="tag done">EEIK MCP server (read model) ✓</span>
             <span class="tag done">Multi-tool adapters ✓</span>
             <span class="tag done">CI: validate / adapt / engine-tests ✓</span>
-            <span class="tag missing">EEIK MCP server</span>
+            <span class="tag missing">Stable Python SDK</span>
           </div>
         </div>
       </div>
@@ -971,7 +977,7 @@
       <div class="stat"><div class="stat-value">100%</div><div class="stat-label">generations gated &amp; audited</div></div>
       <div class="stat"><div class="stat-value">0</div><div class="stat-label">confidence-gate bypasses</div></div>
       <div class="stat"><div class="stat-value">19</div><div class="stat-label">packs, versioned &amp; catalogued</div></div>
-      <div class="stat"><div class="stat-value">11</div><div class="stat-label">engine tests (green)</div></div>
+      <div class="stat"><div class="stat-value">16</div><div class="stat-label">engine tests (green)</div></div>
     </div>
 
     <div class="grid-2" style="align-items:start;">
@@ -1035,7 +1041,26 @@ $ eeik catalog --provides java-architect
       </div>
       <div class="card">
         <h3 style="font-size:15px;font-weight:700;margin-bottom:10px;color:var(--accent3);">A registry, not a folder</h3>
-        <p style="font-size:13px;color:var(--text-muted);">All 19 packs are tagged &amp; categorised into a machine-readable index of every pack, agent, command, and standard — with version + digest provenance. Query by <span class="mono">--tag</span>, free-text <span class="mono">--query</span>, or <span class="mono">--provides &lt;name&gt;</span>. The <span class="mono">--json</span> output is the read model the planned <strong style="color:var(--text)">EEIK MCP server</strong> will expose — so any MCP host can ask EEIK "which packs support banking + FHIR?" live.</p>
+        <p style="font-size:13px;color:var(--text-muted);">All 19 packs are tagged &amp; categorised into a machine-readable index of every pack, agent, command, and standard — with version + digest provenance. Query by <span class="mono">--tag</span>, free-text <span class="mono">--query</span>, or <span class="mono">--provides &lt;name&gt;</span>. The <span class="mono">--json</span> output is the read model the <strong style="color:var(--text)">EEIK MCP server</strong> exposes.</p>
+      </div>
+    </div>
+
+    <div class="grid-2" style="align-items:start;margin-top:20px;">
+      <div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:8px;">Live over MCP — <span class="mono">eeik mcp</span></h3>
+        <div class="code-block">// .mcp.json — register EEIK with any MCP host
+{ "mcpServers": {
+    "eeik": { "command": "eeik", "args": ["mcp"] }
+} }
+
+// tools the host can now call, live:
+  eeik_catalog · eeik_validate_manifest
+  eeik_resolve_packs · eeik_pack_drift</div>
+      </div>
+      <div class="card">
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:10px;color:var(--accent3);">Consume, don't copy</h3>
+        <p style="font-size:13px;color:var(--text-muted);">Instead of copying six static adapter files that drift, a host connects once and <strong style="color:var(--text)">asks EEIK questions live</strong>: "which packs support banking + FHIR?", "does this manifest validate?", "what would it activate?". Read-only in v1 — generation stays governed and staged (never auto-applied). The tool logic is dependency-free and exercised by a real client↔server round-trip test.</p>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:12px;">See <span class="mono">ADR-006</span> — EEIK MCP server.</p>
       </div>
     </div>
 
@@ -1678,9 +1703,10 @@ codex "add OpenTelemetry tracing to the order service"
           <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--text-muted);">
             <li style="color:var(--green);">✅ Pack/agent registry + catalog (queryable, provenance-tracked)</li>
             <li style="color:var(--green);">✅ ARCHITECTURE.md + directory-taxonomy ADR (ADR-005)</li>
-            <li>→ EEIK MCP server: expose the catalog read model + validate/resolve/generate</li>
+            <li style="color:var(--green);">✅ EEIK MCP server — read model over MCP (ADR-006)</li>
+            <li>→ Stable Python SDK: APEX imports EEIK instead of shelling out</li>
             <li>→ <span class="mono">eeik verify</span>: conformance gate, not just generation</li>
-            <li>→ Agent-generator emits HALO Agent Contracts by construction</li>
+            <li>→ Governed generation over MCP (staged, human-review draft)</li>
             <li>→ Closed-loop knowledge capture from HALO/APEX audit logs</li>
             <li>→ Clarify dual-purpose root adapters (EEIK's own vs. the copy seed)</li>
           </ul>
@@ -1713,6 +1739,7 @@ codex "add OpenTelemetry tracing to the order service"
         <span class="tag done">Canonical Manifest Schema ✓</span>
         <span class="tag done">Capability Catalog ✓</span>
         <span class="tag done">Directory Taxonomy (ADR-005) ✓</span>
+        <span class="tag done">MCP Server (read model) ✓</span>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <span class="tag missing">EEIK MCP Server (next)</span>
