@@ -25,6 +25,7 @@ from eeik import catalog as _catalog
 from eeik import lock as _lock
 from eeik import manifest as _manifest
 from eeik import packs as _packs
+from eeik.verify import Finding, VerifyReport, verify
 from eeik.versions import all_pack_fingerprints
 
 __version__ = "1.4.0"
@@ -191,11 +192,14 @@ __all__ = [
     "ValidationResult",
     "DriftEntry",
     "DriftReport",
+    "Finding",
+    "VerifyReport",
     "find_packs",
     "providers_of",
     "validate_manifest",
     "resolve_packs",
     "pack_drift",
     "write_lock",
+    "verify",
     "__version__",
 ]

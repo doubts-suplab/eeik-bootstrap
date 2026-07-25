@@ -35,7 +35,9 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 | `eeik demo` (offline governed showcase) | ✅ | Runs a generator on the real gate with no API key |
 | **Pack versioning** | ✅ | `eeik/versions.py` — normalised versions + content digests |
 | **Lockfile + drift detection** | ✅ | `eeik lock` / `diff` / `upgrade`; `eeik.lock`; CI gate via `diff --exit-code` |
-| Engine test suite | ✅ | 24 tests — `test_engine.py` (versioning, drift, catalog, HALO governance) + `test_mcp.py` (tools + client↔server round-trip) + `test_sdk.py` (public API) |
+| **Conformance gate (`eeik verify`)** | ✅ | Declared agents/standards resolve to files; manifest + lock consistent; fail/warn/pass + `--strict`; CLI/SDK/MCP (`eeik/verify.py`, ADR-008) |
+| Reconcile pack metadata (30 verify warnings) | ⬜ | Planned (Tier 3) — trim/declare/author the phantom + undeclared agents so `verify --strict` is clean |
+| Engine test suite | ✅ | 29 tests — engine (versioning, drift, catalog, HALO) + MCP (round-trip) + SDK + verify |
 | **Installable engine package** | ✅ | `scripts/` → `eeik/` package + `pyproject.toml`; `eeik` console script / `python -m eeik`; back-compat `scripts/*.py` shims; CI installs the package |
 | **Single canonical manifest schema** | ✅ | `eeik/schemas/manifest.schema.json` replaces 3 divergent copies; fixed the stale-schema bug that rejected EEIK's own examples |
 | **Pack/agent registry + catalog** | ✅ | `eeik catalog` — queryable index (`--tag` / `--query` / `--provides` / `--json`); all 19 packs tagged + categorised (`eeik/catalog.py`) |
@@ -69,8 +71,12 @@ eeik catalog --tag regulated             # packs tagged 'regulated'
 eeik catalog --provides java-architect   # which pack provides that agent
 eeik catalog --json                      # machine-readable index (MCP read model)
 
+# Conformance gate — do packs deliver what they declare?
+eeik verify                              # report (fail / warn / pass)
+eeik verify --exit-code                  # CI gate (non-zero on hard failures)
+
 # Serve the read model over MCP (any MCP host can call it live)
-pip install -e ".[mcp]" && eeik mcp      # tools: catalog, validate_manifest, resolve_packs, pack_drift
+pip install -e ".[mcp]" && eeik mcp      # tools: catalog, validate_manifest, resolve_packs, pack_drift, verify
 
 # Tests (versioning, drift, catalog, HALO governance, MCP round-trip)
 python3 -m pytest tests/ -q

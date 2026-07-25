@@ -17,14 +17,17 @@ __version__ = "1.4.0"
 from eeik.api import (
     DriftEntry,
     DriftReport,
+    Finding,
     Pack,
     Provider,
     ValidationResult,
+    VerifyReport,
     find_packs,
     pack_drift,
     providers_of,
     resolve_packs,
     validate_manifest,
+    verify,
     write_lock,
 )
 
@@ -35,10 +38,13 @@ __all__ = [
     "ValidationResult",
     "DriftEntry",
     "DriftReport",
+    "Finding",
+    "VerifyReport",
     "find_packs",
     "providers_of",
     "validate_manifest",
     "resolve_packs",
     "pack_drift",
     "write_lock",
+    "verify",
 ]

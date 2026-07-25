@@ -17,6 +17,7 @@ Commands:
     diff                Report capability-pack drift vs eeik.lock
     upgrade             Re-pin eeik.lock to current pack versions
     catalog             Query the capability-pack / agent / standard index
+    verify              Conformance gate — packs deliver what they declare
     mcp                 Start the EEIK MCP server (read model over MCP)
     run <generator>     Run a generator via the HALO-governed harness
     demo                Offline governed-generation showcase (EEIK in action)
@@ -129,6 +130,7 @@ COMMANDS = {
     "diff":              _mod("lock", "diff"),
     "upgrade":           _mod("lock", "upgrade"),
     "catalog":           _mod("catalog"),
+    "verify":            _mod("verify"),
     "mcp":               _mod("mcp_server"),
     "run":               _mod("runner"),
     "demo":              _mod("generation", "demo"),
@@ -149,6 +151,7 @@ HELP = """
   diff                Report pack drift vs eeik.lock   [--exit-code]
   upgrade             Re-pin eeik.lock to current      [--file path]
   catalog             Query the pack/agent index       [--tag t] [--query x] [--provides n] [--json]
+  verify              Conformance gate                 [--strict] [--exit-code] [--json]
   mcp                 Start the EEIK MCP server        (read model over Model Context Protocol)
   run <generator>     Run generator on HALO harness    [--governed] [--dry-run]
   demo                Governed-generation showcase     (offline, no API key)

@@ -489,7 +489,12 @@
         <div class="explorer-item">
           <div class="ei-label">SDK</div>
           <div class="ei-name">eeik/api.py</div>
-          <div class="ei-desc">The typed <span class="mono">import eeik</span> surface — <span class="mono">find_packs</span>, <span class="mono">validate_manifest</span>, <span class="mono">resolve_packs</span>, <span class="mono">providers_of</span>, <span class="mono">pack_drift</span>. CLI + MCP are adapters over it: one implementation, three surfaces.</div>
+          <div class="ei-desc">The typed <span class="mono">import eeik</span> surface — <span class="mono">find_packs</span>, <span class="mono">validate_manifest</span>, <span class="mono">resolve_packs</span>, <span class="mono">providers_of</span>, <span class="mono">pack_drift</span>, <span class="mono">verify</span>. CLI + MCP are adapters over it: one implementation, three surfaces.</div>
+        </div>
+        <div class="explorer-item">
+          <div class="ei-label">Module</div>
+          <div class="ei-name">eeik/verify.py</div>
+          <div class="ei-desc">Conformance gate (<span class="mono">eeik verify</span>) — every declared agent/standard resolves to a file, the manifest validates, the lock matches. Closes the loop: generate → govern → verify.</div>
         </div>
         <div class="explorer-item">
           <div class="ei-label">CI Workflow</div>
@@ -951,9 +956,10 @@
             <span class="tag done">Capability catalog (queryable) ✓</span>
             <span class="tag done">EEIK MCP server (read model) ✓</span>
             <span class="tag done">Typed Python SDK (import eeik) ✓</span>
+            <span class="tag done">Conformance gate (eeik verify) ✓</span>
             <span class="tag done">Multi-tool adapters ✓</span>
             <span class="tag done">CI: validate / adapt / engine-tests ✓</span>
-            <span class="tag missing">eeik verify (conformance)</span>
+            <span class="tag missing">Reconcile pack metadata</span>
           </div>
         </div>
       </div>
@@ -983,7 +989,7 @@
       <div class="stat"><div class="stat-value">100%</div><div class="stat-label">generations gated &amp; audited</div></div>
       <div class="stat"><div class="stat-value">0</div><div class="stat-label">confidence-gate bypasses</div></div>
       <div class="stat"><div class="stat-value">19</div><div class="stat-label">packs, versioned &amp; catalogued</div></div>
-      <div class="stat"><div class="stat-value">24</div><div class="stat-label">engine tests (green)</div></div>
+      <div class="stat"><div class="stat-value">29</div><div class="stat-label">engine tests (green)</div></div>
     </div>
 
     <div class="grid-2" style="align-items:start;">
@@ -1711,11 +1717,11 @@ codex "add OpenTelemetry tracing to the order service"
             <li style="color:var(--green);">✅ ARCHITECTURE.md + directory-taxonomy ADR (ADR-005)</li>
             <li style="color:var(--green);">✅ EEIK MCP server — read model over MCP (ADR-006)</li>
             <li style="color:var(--green);">✅ Typed Python SDK — <span class="mono">import eeik</span> (ADR-007)</li>
+            <li style="color:var(--green);">✅ Conformance gate — <span class="mono">eeik verify</span> (ADR-008)</li>
             <li>→ apex-sdlc onboarding imports the SDK (drop the shell-outs)</li>
-            <li>→ <span class="mono">eeik verify</span>: conformance gate, not just generation</li>
+            <li>→ Reconcile pack metadata (30 verify warnings → clean <span class="mono">--strict</span>)</li>
             <li>→ Governed generation over MCP (staged, human-review draft)</li>
             <li>→ Closed-loop knowledge capture from HALO/APEX audit logs</li>
-            <li>→ Clarify dual-purpose root adapters (EEIK's own vs. the copy seed)</li>
           </ul>
         </div>
       </div>
@@ -1748,6 +1754,7 @@ codex "add OpenTelemetry tracing to the order service"
         <span class="tag done">Directory Taxonomy (ADR-005) ✓</span>
         <span class="tag done">MCP Server (read model) ✓</span>
         <span class="tag done">Typed Python SDK ✓</span>
+        <span class="tag done">Conformance Gate (verify) ✓</span>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <span class="tag missing">EEIK MCP Server (next)</span>
