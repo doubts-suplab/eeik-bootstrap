@@ -1,6 +1,6 @@
 {
   "eeikVersion": "1.4.0",
-  "generatedAt": "2026-07-25T11:27:19+00:00",
+  "generatedAt": "2026-07-25T16:46:48+00:00",
   "packs": {
     "agent-harness": {
       "digest": "924a5809adb95e2b",
@@ -55,8 +55,8 @@
       "version": "1.0"
     },
     "insurance": {
-      "digest": "84e141a9cf614b65",
-      "version": "1.0"
+      "digest": "cc81950397eb2a97",
+      "version": "1.1"
     },
     "java": {
       "digest": "edf5ab42be615420",

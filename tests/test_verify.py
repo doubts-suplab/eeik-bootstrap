@@ -27,14 +27,31 @@ def test_verify_to_dict_shape():
     assert d["ok"] is True
 
 
-def test_pack_conformance_flags_undeclared_and_missing():
-    """A pack that ships a file it doesn't declare, or declares a file it doesn't ship, is flagged."""
+def test_pack_conformance_is_clean():
+    """Regression guard: after metadata reconciliation, every pack is conformant (no warn/fail)."""
     findings = check_pack_conformance()
-    warns = [f for f in findings if f.level == "warn"]
-    # java ships spring-security-engineer.md but its metadata doesn't declare it → flagged.
-    assert any("spring-security-engineer" in f.subject for f in warns)
-    # every warn names a concrete pack:subject and a message.
-    assert all(":" in f.subject and f.message for f in warns)
+    problems = [f for f in findings if f.level in {"warn", "fail"}]
+    assert problems == [], f"pack-conformance regressions: {[f.subject for f in problems]}"
+
+
+def test_pack_conformance_flags_a_bad_pack(tmp_path, monkeypatch):
+    """The mechanism still detects drift: a pack that declares a phantom agent + ships an undeclared file."""
+    import importlib
+
+    verify_mod = importlib.import_module("eeik.verify")  # the module (eeik.verify attr is the function)
+
+    pack = tmp_path / "fake-pack"
+    (pack / "agents").mkdir(parents=True)
+    (pack / "agents" / "real-agent.md").write_text("# real", encoding="utf-8")
+    (pack / "metadata.yaml").write_text(
+        "name: fake-pack\nversion: '1.0'\nagents_provided:\n  - ghost-agent\n", encoding="utf-8"
+    )
+    monkeypatch.setattr(verify_mod, "PACKS_DIR", tmp_path)
+
+    warns = [f for f in check_pack_conformance() if f.level == "warn"]
+    subjects = " ".join(f"{f.subject} {f.message}" for f in warns)
+    assert "ghost-agent" in subjects        # declared but no file
+    assert "real-agent" in subjects         # shipped but not declared
 
 
 def test_resolves_uses_pack_or_claude_layer(tmp_path):

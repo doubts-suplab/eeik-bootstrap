@@ -37,7 +37,6 @@ standards_provided:
   - golden-rules
   - security-baseline
   - observability-baseline
-  - commit-standard
   - estimation-standard
 
 dependencies: []   # none — foundational

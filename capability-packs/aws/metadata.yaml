@@ -9,4 +9,7 @@ manifest_triggers:
     values: [aws, hybrid]
 agents_provided: [aws-solutions-architect, cloud-security-reviewer, cdk-engineer]
 commands_provided: [design-aws, review-infrastructure, estimate-cloud-cost]
-standards_provided: [aws-standard, security-standard, tagging-standard, cost-standard]
+standards_provided:
+  - aws-standard
+  - tagging-standard
+  - cost-standard

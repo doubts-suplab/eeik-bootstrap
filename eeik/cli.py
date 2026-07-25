@@ -18,6 +18,7 @@ Commands:
     upgrade             Re-pin eeik.lock to current pack versions
     catalog             Query the capability-pack / agent / standard index
     verify              Conformance gate — packs deliver what they declare
+    contract            Emit a HALO Agent Contract from a blueprint (runtime-governed by construction)
     mcp                 Start the EEIK MCP server (read model over MCP)
     run <generator>     Run a generator via the HALO-governed harness
     demo                Offline governed-generation showcase (EEIK in action)
@@ -131,6 +132,7 @@ COMMANDS = {
     "upgrade":           _mod("lock", "upgrade"),
     "catalog":           _mod("catalog"),
     "verify":            _mod("verify"),
+    "contract":          _mod("contract"),
     "mcp":               _mod("mcp_server"),
     "run":               _mod("runner"),
     "demo":              _mod("generation", "demo"),
@@ -152,6 +154,7 @@ HELP = """
   upgrade             Re-pin eeik.lock to current      [--file path]
   catalog             Query the pack/agent index       [--tag t] [--query x] [--provides n] [--json]
   verify              Conformance gate                 [--strict] [--exit-code] [--json]
+  contract            Emit a HALO Agent Contract       --blueprint <t> --name <n> [--param k=v] [--validate]
   mcp                 Start the EEIK MCP server        (read model over Model Context Protocol)
   run <generator>     Run generator on HALO harness    [--governed] [--dry-run]
   demo                Governed-generation showcase     (offline, no API key)

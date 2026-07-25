@@ -11,8 +11,6 @@ manifest_triggers:
 
 agents_provided:
   - python-developer
-  - python-tech-lead
-  - python-tester
   - fastapi-engineer
 
 commands_provided:
@@ -21,8 +19,7 @@ commands_provided:
 
 standards_provided:
   - python-standard
-  - fastapi-standard
-  - python-testing-standard
+  - fastapi
 
 dependencies:
   - architecture-pack

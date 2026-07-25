@@ -158,12 +158,17 @@ versioned, queryable engine. See ADR-003 (generators on HALO) and ADR-004 (pack 
       manifest validates, and the lock matches. Findings are fail/warn/pass; `--exit-code` / `--strict`
       gate CI. On all three surfaces (CLI, `eeik.verify()` SDK, `eeik_verify` MCP tool).
       See [ADR-008](docs/decisions/ADR-008-conformance-gate.md). (`eeik/verify.py`)
-- [ ] **Reconcile pack metadata with shipped files** — `eeik verify` surfaced **30** declarations that
-      resolve to no file (phantom agents/standards) + files shipped but not declared. Trim, declare, or
-      author them so `eeik verify --strict` is clean and the catalog is fully trustworthy.
-- [ ] **Agent-generator emits HALO Agent Contracts** — every generated agent is
-      `agent-contract.schema.json`-conformant (authority ceiling, tool allowlist, threshold) by
-      construction.
+- [x] **Reconcile pack metadata with shipped files** — the 30 conformance gaps are resolved: phantom
+      declarations trimmed, `X-standard`→`X` renames aligned to real files, shipped-but-undeclared files
+      declared (e.g. `spring-security-engineer`, `cobol-standard`), and the genuinely-missing
+      `insurance-compliance-standard` authored (mirroring banking/healthcare). `eeik verify --strict`
+      is now clean (0 fail / 0 warn / 21 pass); the catalog/SDK advertise only agents/standards that exist.
+- [x] **Agent-generator emits HALO Agent Contracts** — `eeik contract` / `eeik.agent_contract()`
+      deterministically emit an `agent-contract.schema.json`-conformant contract from a blueprint:
+      the archetype fixes the authority ceiling, which fixes capabilities + gate threshold (never below
+      0.80), tool allowlist (supervisors hold none), and safe failure behaviour. All 8 blueprints validate
+      against HALO's own validator. Closes the chain AIEL specifies → EEIK generates → HALO runs.
+      See [ADR-009](docs/decisions/ADR-009-agent-generator-emits-halo-contracts.md). (`eeik/contract.py`)
 - [ ] **Closed-loop knowledge capture** — HALO/APEX audit logs → lessons → back into EEIK knowledge
       packs, making "every project leaves the org smarter" real.
 

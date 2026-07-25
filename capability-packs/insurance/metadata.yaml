@@ -1,5 +1,5 @@
 name: insurance-pack
-version: "1.0"
+version: "1.1"
 status: built
 category: domain
 description: "Insurance domain — claims, underwriting, and Solvency II / GDPR compliance."
@@ -11,8 +11,6 @@ manifest_triggers:
 
 agents_provided:
   - insurance-domain-expert
-  - claims-specialist
-  - underwriting-specialist
 
 standards_provided:
   - insurance-compliance-standard

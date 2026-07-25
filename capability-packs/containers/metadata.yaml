@@ -13,8 +13,7 @@ manifest_triggers:
     note: "Always relevant for AWS — ECS Fargate is primary container runtime"
 
 agents_provided:
-  - container-engineer
-  - ecs-specialist
+  - containerisation-helper
 
 commands_provided:
   - /review-dockerfile
@@ -22,7 +21,6 @@ commands_provided:
 
 standards_provided:
   - dockerfile-standard
-  - ecs-standard
 
 dependencies:
   - architecture-pack

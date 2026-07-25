@@ -13,9 +13,7 @@ manifest_triggers:
 
 agents_provided:
   - ibmi-modernization-expert
-  - cobol-analyzer
   - modernization-architect
-  - legacy-integration-engineer
 
 commands_provided:
   - /analyze-legacy
@@ -23,8 +21,9 @@ commands_provided:
   - /design-strangler
 
 standards_provided:
-  - modernization-standard
+  - modernization-patterns
   - strangler-fig-standard
+  - cobol-standard
 
 dependencies:
   - architecture-pack

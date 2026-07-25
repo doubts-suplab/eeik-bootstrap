@@ -36,8 +36,9 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 | **Pack versioning** | ✅ | `eeik/versions.py` — normalised versions + content digests |
 | **Lockfile + drift detection** | ✅ | `eeik lock` / `diff` / `upgrade`; `eeik.lock`; CI gate via `diff --exit-code` |
 | **Conformance gate (`eeik verify`)** | ✅ | Declared agents/standards resolve to files; manifest + lock consistent; fail/warn/pass + `--strict`; CLI/SDK/MCP (`eeik/verify.py`, ADR-008) |
-| Reconcile pack metadata (30 verify warnings) | ⬜ | Planned (Tier 3) — trim/declare/author the phantom + undeclared agents so `verify --strict` is clean |
-| Engine test suite | ✅ | 29 tests — engine (versioning, drift, catalog, HALO) + MCP (round-trip) + SDK + verify |
+| **Pack metadata reconciled** | ✅ | 30 gaps fixed (trim phantoms, `X-standard`→`X` renames, declare shipped files, author `insurance-compliance-standard`); `eeik verify --strict` clean (0/0/21); catalog advertises only real files |
+| **Agent Contracts by construction** | ✅ | `eeik contract` / `eeik.agent_contract()` emit `agent-contract.schema.json`-conformant contracts per blueprint; validated by HALO's own validator (`eeik/contract.py`, ADR-009) |
+| Engine test suite | ✅ | 44 tests — engine + MCP (round-trip) + SDK + verify + contracts (all 8 blueprints validate against HALO's schema) |
 | **Installable engine package** | ✅ | `scripts/` → `eeik/` package + `pyproject.toml`; `eeik` console script / `python -m eeik`; back-compat `scripts/*.py` shims; CI installs the package |
 | **Single canonical manifest schema** | ✅ | `eeik/schemas/manifest.schema.json` replaces 3 divergent copies; fixed the stale-schema bug that rejected EEIK's own examples |
 | **Pack/agent registry + catalog** | ✅ | `eeik catalog` — queryable index (`--tag` / `--query` / `--provides` / `--json`); all 19 packs tagged + categorised (`eeik/catalog.py`) |
