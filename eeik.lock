@@ -1,0 +1,83 @@
+{
+  "eeikVersion": "1.4.0",
+  "generatedAt": "2026-07-25T11:27:19+00:00",
+  "packs": {
+    "agent-harness": {
+      "digest": "924a5809adb95e2b",
+      "version": "1.0"
+    },
+    "ai-engineering": {
+      "digest": "bc47f37d7999469d",
+      "version": "1.0"
+    },
+    "angular": {
+      "digest": "24f663eb9334d2b0",
+      "version": "1.0"
+    },
+    "architecture": {
+      "digest": "e8839255a25c88ff",
+      "version": "1.0"
+    },
+    "aws": {
+      "digest": "fc878cc9df8c5817",
+      "version": "1.0"
+    },
+    "banking": {
+      "digest": "08c5d85e5271900a",
+      "version": "1.0"
+    },
+    "belgium-insurance": {
+      "digest": "cd0379ecc8dee701",
+      "version": "1.0"
+    },
+    "containers": {
+      "digest": "ef0ccd06fb6beaee",
+      "version": "1.0"
+    },
+    "core": {
+      "digest": "0fcd1e09fc5dac97",
+      "version": "1.0"
+    },
+    "data-engineering": {
+      "digest": "bb03f41184ae351d",
+      "version": "1.1"
+    },
+    "delivery": {
+      "digest": "5cc833be99ea2e44",
+      "version": "1.0"
+    },
+    "governance": {
+      "digest": "4219c71469d573e7",
+      "version": "1.0"
+    },
+    "healthcare": {
+      "digest": "ba7e270c603a729c",
+      "version": "1.0"
+    },
+    "insurance": {
+      "digest": "84e141a9cf614b65",
+      "version": "1.0"
+    },
+    "java": {
+      "digest": "edf5ab42be615420",
+      "version": "1.0"
+    },
+    "modernization": {
+      "digest": "b0317f460b117b22",
+      "version": "1.0"
+    },
+    "openshift": {
+      "digest": "7de701374ee36ea1",
+      "version": "1.1"
+    },
+    "python": {
+      "digest": "330e2c4ffa25e3fc",
+      "version": "1.0"
+    },
+    "react": {
+      "digest": "3d1223f69a8ae401",
+      "version": "1.0"
+    }
+  },
+  "schemaVersion": 1
+}

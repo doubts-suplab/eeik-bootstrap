@@ -100,12 +100,47 @@ Built-in:
 - AI reviews
 - Production readiness reviews
 
-### Generation Layer
-Future platform capabilities:
-- Repository Generator
-- Agent Factory
-- Capability Resolver
-- Knowledge Platform
+### Generation Layer — a governed engine (v1.4)
+EEIK's generators are agents. As of v1.4 they run **on HALO** (`agent-harness`), the ecosystem's
+governed agent runtime — not ungoverned `claude --print`:
+- Repository Generator, Agent Factory, Capability Resolver, Knowledge Platform
+- Every generation flows through the **confidence gate**, is **audited**, and — because generation is
+  **SUGGEST authority** — is **routed to human review**, never auto-applied (gate rule G-5). It **fails
+  safe** when HALO is absent. See [ADR-003](docs/decisions/ADR-003-eeik-generators-run-on-halo.md).
+- Capability packs are **versioned dependencies**: `eeik lock` pins them to `eeik.lock`, `eeik diff`
+  detects drift, `eeik upgrade` re-pins. See [ADR-004](docs/decisions/ADR-004-capability-pack-versioning-and-lockfile.md).
+
+> **Posture:** EEIK becomes a governed generation *engine*, not a competing product platform — APEX is
+> the runnable AI-SDLC product and *consumes* EEIK for onboarding. See [ROADMAP.md](ROADMAP.md#platform-posture--engine-not-product).
+
+---
+
+## EEIK in Action — the Governed Generation Engine
+
+```bash
+pip install -e ".[test]"                        # the eeik engine + HALO (agent-harness) + pytest
+eeik demo                                       # generate an agent on the REAL HALO gate — no API key
+```
+```text
+EEIK Governed Generation  ·  generator: agent-generator
+  authority SUGGEST   action SUGGEST   confidence 0.72
+  gate → auto_enforced: False  (G-5: SUGGEST never auto-enforces)
+  bypass counter: 0  (must be 0)
+  → routed to human review  reason=suggest  sla=14400s
+  audit: human-review  "eeik-agent-generator produced a draft artifact (307 chars) for human review."
+  ✓ Draft staged for approval: .eeik-staging/agent-generator/artifact.md
+```
+
+Versioned adoption + drift detection (the fix for copy-once rot):
+
+```bash
+eeik lock                                       # pin adopted pack versions → eeik.lock
+eeik diff --exit-code                           # later: report drift from upstream (CI gate, exits 2)
+python3 -m pytest tests/ -q                     # 8 tests: versioning, drift, HALO governance
+```
+
+This is the same runtime, gate, and audit that APEX uses for its SDLC phase agents — EEIK now dogfoods
+the `agent-harness` capability pack it ships to everyone else.
 
 ---
 
@@ -142,12 +177,19 @@ generators/        adapter-generator  — Kiro/Codex/Cursor/Gemini adapter templ
                    project-analyzer
 bootstrap/         /bootstrap command: manifests, schemas, validators, resolvers
 
-── Executable Scripts ────────────────────────────────────────────────────────
-scripts/           eeik_cli.py          — central CLI entry point
-                   validate_manifest.py — JSON Schema + 8 governance rules (no AI needed)
-                   activate_packs.py    — manifest → .claude/ materialisation
-                   generate_adapters.py — generate all 6 AI tool adapters
-                   claude_harness.py    — run generators via claude --print (CI)
+── Engine (installable Python package) ───────────────────────────────────────
+pyproject.toml     `pip install -e .` → the `eeik` console script (also `python -m eeik`)
+eeik/              cli.py       — CLI entry point
+                   manifest.py  — JSON Schema + 8 governance rules (no AI needed)
+                   packs.py     — manifest → .claude/ materialisation
+                   adapters.py  — generate all 6 AI tool adapters
+                   runner.py    — run generators (add --governed for the HALO gate)
+                   generation.py— HALO-governed generation seam (gate + audit + review)
+                   versions.py  — pack versions + content digests
+                   lock.py      — eeik.lock lockfile + drift detection (lock/diff/upgrade)
+                   schemas/manifest.schema.json — the single canonical manifest schema
+scripts/           *.py         — backward-compatible shims → the eeik package
+tests/             test_engine.py — versioning, drift, and HALO-governance tests
 
 ── CI/CD ─────────────────────────────────────────────────────────────────────
 .github/workflows/ eeik-validate.yml   — manifest + agent lint on PR
@@ -276,14 +318,16 @@ cp    $EEIK/templates/PROJECT-CLAUDE.md ./CLAUDE.md
 ### 2. Validate and generate adapters
 
 ```bash
+pip install -e $EEIK        # installs the `eeik` engine once
+
 # Validate your manifest (optional — create project-manifest.yaml from bootstrap/manifests/manifest-template.yaml first)
-python3 $EEIK/scripts/validate_manifest.py project-manifest.yaml
+eeik validate project-manifest.yaml
 
 # Regenerate all 6 AI tool adapters from your manifest
-python3 $EEIK/scripts/generate_adapters.py --apply
+eeik generate-adapters --apply
 
 # Materialise capability pack agents + standards into .claude/
-python3 $EEIK/scripts/activate_packs.py --apply
+eeik activate --apply
 ```
 
 ### 3. Fill in project context
@@ -559,8 +603,8 @@ Before using this bootstrap in a production project:
 - [ ] `.claude/memory/project-context.md` filled in (services, environments, auth, AWS resources)
 - [ ] `applyTo` glob patterns in `.github/instructions/` updated to match project source layout
 - [ ] Unused domain files removed (no mainframe → delete mainframe agents/instructions)
-- [ ] `python3 scripts/validate_manifest.py project-manifest.yaml` passes
-- [ ] `python3 scripts/generate_adapters.py --apply` run to generate all 6 tool adapters
+- [ ] `eeik validate project-manifest.yaml` passes (`pip install -e .` first)
+- [ ] `eeik generate-adapters --apply` run to generate all 6 tool adapters
 - [ ] At least one Claude Code slash command tested (`/estimate "hello world feature"`)
 - [ ] At least one GitHub Copilot agent invoked (`@java-architect` or `@aws-architect`)
 - [ ] Claude Code opened from **inside the project directory**, not from EEIK

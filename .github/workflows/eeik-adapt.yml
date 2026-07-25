@@ -6,6 +6,7 @@ on:
     paths:
       - 'project-manifest.yaml'
       - 'capability-packs/core/standards/**'
+      - 'eeik/adapters.py'
       - 'scripts/generate_adapters.py'
 
   workflow_dispatch:
@@ -39,18 +40,18 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: pip install pyyaml
+        run: pip install -e .
 
       - name: Generate adapters (dry-run)
         if: ${{ inputs.dry_run == true }}
         run: |
-          python3 scripts/generate_adapters.py \
+          python3 -m eeik adapters \
             --tools "${{ inputs.tools || 'kiro,codex,cursor,gemini' }}"
 
       - name: Generate adapters (apply)
         if: ${{ inputs.dry_run != true }}
         run: |
-          python3 scripts/generate_adapters.py \
+          python3 -m eeik adapters \
             --apply \
             --tools "${{ inputs.tools || 'kiro,codex,cursor,gemini' }}"
 
@@ -74,7 +75,7 @@ jobs:
 
           Triggered by manifest or standards change.
           Tools: ${{ inputs.tools || 'kiro,codex,cursor,gemini' }}
-          Run: python3 scripts/generate_adapters.py --apply"
+          Run: python3 -m eeik adapters --apply"
           git push
 
       - name: Summary

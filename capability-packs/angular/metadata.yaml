@@ -1,0 +1,18 @@
+name: angular-pack
+version: "1.0"
+owner: eeik
+category: frontend
+description: >
+  Angular engineering capability pack — Angular 17+ standalone components, Signals API,
+  OnPush change detection, reactive forms, and strict TypeScript. Enforces EEIK frontend
+  golden rules and Jasmine/Karma coverage thresholds.
+
+tags: [angular, typescript, frontend, signals]
+
+manifest_triggers:
+  - field: technology.frontend.framework
+    values: [angular]
+
+agents_provided: [angular-developer, angular-tester]
+commands_provided: []
+standards_provided: [angular-standard]

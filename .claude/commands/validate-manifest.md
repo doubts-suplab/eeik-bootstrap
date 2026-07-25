@@ -17,7 +17,7 @@ If no path is given, defaults to `project-manifest.yaml` in the current director
 
 1. Reads the manifest file
 2. Checks all required fields are present
-3. Validates all values against allowed enums in `bootstrap/schemas/manifest-schema.json`
+3. Validates all values against allowed enums in `eeik/schemas/manifest.schema.json`
 4. Applies governance rules (regulated domain → regulated+ profile)
 5. Checks for known incompatible combinations
 6. Checks for missing capability packs (📋 planned packs that are selected)
@@ -47,7 +47,7 @@ Check each required field is present and non-empty:
 
 ### Enum Validation
 
-Validate each field value is in the allowed set from `bootstrap/schemas/manifest-schema.json`. Key fields:
+Validate each field value is in the allowed set from `eeik/schemas/manifest.schema.json`. Key fields:
 
 | Field | Allowed Values |
 |-------|---------------|
