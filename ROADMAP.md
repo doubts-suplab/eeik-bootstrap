@@ -146,8 +146,10 @@ versioned, queryable engine. See ADR-003 (generators on HALO) and ADR-004 (pack 
       dataclasses. The CLI and MCP tools are now thin adapters over it — one source of truth. Consumers
       like apex-sdlc can import EEIK instead of shelling out.
       See [ADR-007](docs/decisions/ADR-007-eeik-public-python-sdk.md). (`eeik/api.py`)
-- [ ] **apex-sdlc onboarding imports the SDK** — the cross-repo payoff: replace shell-outs to the EEIK
-      CLI with `import eeik` calls during onboarding.
+- [x] **apex-sdlc onboarding consumes the engine** — the cross-repo payoff: APEX's onboarding front door
+      calls the real engine (manifest validation + pack resolution) via an `EeikEngine` with two backends
+      — **SDK** (`import eeik`, in-process) and **MCP** (`eeik mcp`) — falling back to its vendored copy
+      when eeik is absent. (apex-sdlc `app/onboarding/eeik_engine.py`, `service.onboard_with_eeik`.)
 - [ ] **Governed generation over MCP** — an MCP `generate` tool that returns a staged, human-review draft
       (not an auto-applied artifact), once the review handoff over MCP is designed.
 
