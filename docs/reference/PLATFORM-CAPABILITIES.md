@@ -47,6 +47,17 @@ governed/staged (ADR-003).
 
 ---
 
+### Python SDK (in-process)
+
+The typed, stable `import eeik` surface — the in-process counterpart to the MCP server. Consumers
+(e.g. apex-sdlc) call the engine as a library instead of shelling out. The CLI and MCP are adapters
+over this one implementation.
+
+`eeik/api.py` · `import eeik` → `find_packs` · `providers_of` · `validate_manifest` · `resolve_packs`
+· `pack_drift` · `write_lock`
+
+---
+
 ## Core Platform
 
 ### Bootstrap Engine

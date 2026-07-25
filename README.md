@@ -165,6 +165,20 @@ Register it with a host — e.g. Claude Code `.mcp.json`:
 { "mcpServers": { "eeik": { "command": "eeik", "args": ["mcp"] } } }
 ```
 
+Or consume EEIK **in-process** as a library — the typed SDK, the same read model without a subprocess
+or a protocol ([ADR-007](docs/decisions/ADR-007-eeik-public-python-sdk.md)):
+
+```python
+import eeik
+
+result = eeik.validate_manifest(path="project-manifest.yaml")   # ValidationResult(valid, errors, warnings)
+packs  = eeik.resolve_packs(manifest=doc)                        # ["core", "architecture", "java", ...]
+banking = eeik.find_packs(tag="banking")                         # [Pack(...), ...]
+who    = eeik.providers_of("java-architect")                     # [Provider(pack="java", kind="agent")]
+```
+
+The CLI, the MCP server, and this SDK are three surfaces over **one** implementation — they cannot drift.
+
 This is the same runtime, gate, and audit that APEX uses for its SDLC phase agents — EEIK now dogfoods
 the `agent-harness` capability pack it ships to everyone else.
 

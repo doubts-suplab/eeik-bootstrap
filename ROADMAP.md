@@ -141,7 +141,13 @@ versioned, queryable engine. See ADR-003 (generators on HALO) and ADR-004 (pack 
       any MCP host calls, replacing drift-prone static adapter files for *queryable* context. Read-only
       in v1 (generation stays governed/staged, ADR-003); testable core + real client↔server round-trip.
       See [ADR-006](docs/decisions/ADR-006-eeik-mcp-server.md). (`eeik/mcp_server.py`, `eeik/mcp_tools.py`)
-- [ ] **Stable Python API / SDK** — so APEX onboarding imports EEIK instead of shelling out to scripts.
+- [x] **Stable Python API / SDK** — `import eeik` exposes a curated, typed surface (`find_packs`,
+      `providers_of`, `validate_manifest`, `resolve_packs`, `pack_drift`, `write_lock`) returning frozen
+      dataclasses. The CLI and MCP tools are now thin adapters over it — one source of truth. Consumers
+      like apex-sdlc can import EEIK instead of shelling out.
+      See [ADR-007](docs/decisions/ADR-007-eeik-public-python-sdk.md). (`eeik/api.py`)
+- [ ] **apex-sdlc onboarding imports the SDK** — the cross-repo payoff: replace shell-outs to the EEIK
+      CLI with `import eeik` calls during onboarding.
 - [ ] **Governed generation over MCP** — an MCP `generate` tool that returns a staged, human-review draft
       (not an auto-applied artifact), once the review handoff over MCP is designed.
 
