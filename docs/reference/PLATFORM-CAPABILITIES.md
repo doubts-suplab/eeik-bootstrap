@@ -72,8 +72,8 @@ fail/warn/pass; `--exit-code`/`--strict` gate CI. Available on all three surface
 
 Emits a HALO-conformant Agent Contract for a generated agent, deterministically from the blueprint
 archetype: authority ceiling, capabilities (within the ceiling), gate threshold (≥ 0.80), tool allowlist
-(supervisors hold none), and safe failure behaviour. Validated by HALO's own validator. Closes the chain
-AIEL specifies → EEIK generates → HALO runs.
+(supervisors hold none), and safe failure behaviour. Validated by HALO's own validator. Closes the chain:
+EEIK generates against HALO's Agent Contract schema → HALO runs it.
 
 `eeik/contract.py` · `eeik contract --blueprint <t> --name <n> [--validate]` · `eeik.agent_contract()`
 

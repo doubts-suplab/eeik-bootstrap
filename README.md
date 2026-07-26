@@ -159,7 +159,7 @@ eeik verify --strict --exit-code                # also fail on warnings (clean t
 
 Emit a **HALO Agent Contract** for a generated agent — runtime-governed by construction (the archetype
 fixes the authority ceiling, capabilities, gate threshold, and tool allowlist; validated by HALO's own
-schema). Closes the chain: AIEL specifies → EEIK generates → HALO runs
+schema). Closes the chain: EEIK generates against **HALO's** Agent Contract schema → HALO runs it
 ([ADR-009](docs/decisions/ADR-009-agent-generator-emits-halo-contracts.md)):
 
 ```bash
