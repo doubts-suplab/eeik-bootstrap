@@ -14,8 +14,9 @@ Claude Code. But an agent's *governance* — its authority ceiling, the Decision
 confidence-gate threshold, its tool allowlist, its safe failure behaviour — lived nowhere machine-readable.
 HALO (`agent-harness`) defines exactly that as the **Agent Contract**
 (`docs/spec/agent-contract.schema.json`, spec §10): the static envelope a conformant runtime loads at
-startup. AIEL specifies the contract; HALO enforces it; but the chain broke in the middle — EEIK generated
-personas, not contracts. Nothing guaranteed a generated agent was *runtime-governable*.
+startup — a schema HALO derives from the upstream AIEL methodology (AIEL itself has no dependency on, or
+link to, EEIK). HALO owns and enforces the contract; but the chain broke at EEIK — it generated personas,
+not contracts. Nothing guaranteed a generated agent was *runtime-governable*.
 
 ## Decision
 
@@ -60,7 +61,8 @@ dependency. EEIK does **not** vendor a copy of the schema (that would drift); HA
 ## Consequences
 
 **Positive**
-- The chain closes: **AIEL specifies → EEIK generates a contract-conformant agent → HALO runs it.**
+- The chain closes at EEIK: **EEIK generates a contract conforming to HALO's schema → HALO runs it.**
+  (HALO's schema formalizes the AIEL contract template; AIEL is HALO's upstream, not a dependency of EEIK.)
 - Every generated agent is runtime-governable by construction; all 8 blueprints validate against HALO's
   real schema + binding rule (tested).
 - Reuses HALO's validator — one source of truth for what "conformant" means.

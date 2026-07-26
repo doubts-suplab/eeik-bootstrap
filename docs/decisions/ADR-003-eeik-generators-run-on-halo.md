@@ -65,7 +65,7 @@ the same guarantee APEX relies on for its SUGGEST-authority SDLC phases.
 - Generation is auditable, gated, and safe-by-default; drafts are never silently applied.
 - EEIK consumes HALO exactly as APEX and aether-grid do — a fourth first-class consumer of the runtime.
 - Agents EEIK generates can be emitted as HALO Agent Contracts (authority, tool allowlist, threshold),
-  closing the loop: AIEL specifies → EEIK generates a contract-conformant agent → HALO runs it.
+  closing the loop: EEIK generates a contract conforming to HALO's schema → HALO runs it.
 
 **Negative / trade-offs**
 - EEIK gains an optional dependency on `agent-harness` (Python). Mitigated by the fail-safe path when

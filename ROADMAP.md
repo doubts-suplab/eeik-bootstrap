@@ -167,7 +167,7 @@ versioned, queryable engine. See ADR-003 (generators on HALO) and ADR-004 (pack 
       deterministically emit an `agent-contract.schema.json`-conformant contract from a blueprint:
       the archetype fixes the authority ceiling, which fixes capabilities + gate threshold (never below
       0.80), tool allowlist (supervisors hold none), and safe failure behaviour. All 8 blueprints validate
-      against HALO's own validator. Closes the chain AIEL specifies → EEIK generates → HALO runs.
+      against HALO's own validator. Closes the chain: EEIK generates against HALO's contract schema → HALO runs it.
       See [ADR-009](docs/decisions/ADR-009-agent-generator-emits-halo-contracts.md). (`eeik/contract.py`)
 - [ ] **Closed-loop knowledge capture** — HALO/APEX audit logs → lessons → back into EEIK knowledge
       packs, making "every project leaves the org smarter" real.
