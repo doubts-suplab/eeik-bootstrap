@@ -49,6 +49,11 @@ def verify() -> dict:
     return _api.verify().to_dict()
 
 
+def reference_architectures() -> dict:
+    """List EEIK's proven reference architectures (blueprints with a schema-valid manifest)."""
+    return {"architectures": [a.to_dict() for a in _api.reference_architectures()]}
+
+
 # ── MCP tool declarations ─────────────────────────────────────────────────────
 
 _STR = {"type": "string"}
@@ -112,6 +117,13 @@ TOOLS: list[dict[str, Any]] = [
                        "declare, and whether the manifest and lockfile are consistent. Returns "
                        "{ok, counts, findings}.",
         "handler": verify,
+        "inputSchema": {"type": "object", "properties": {}},
+    },
+    {
+        "name": "eeik_reference_architectures",
+        "description": "List EEIK's proven reference architectures — engine-surfaced blueprints, each with "
+                       "a schema-valid manifest, stack, components, and the capability packs it activates.",
+        "handler": reference_architectures,
         "inputSchema": {"type": "object", "properties": {}},
     },
 ]

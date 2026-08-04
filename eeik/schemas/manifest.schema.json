@@ -118,8 +118,8 @@
             },
             "migration_tool": {
               "type": "string",
-              "enum": ["flyway", "liquibase", "none"],
-              "description": "Schema migration tool.",
+              "enum": ["flyway", "liquibase", "alembic", "none"],
+              "description": "Schema migration tool (alembic for Python/SQLAlchemy stacks).",
               "default": "flyway"
             },
             "orm": {
@@ -283,6 +283,17 @@
             "type": "string",
             "enum": ["gdpr", "pci-dss", "hipaa", "iso27001", "soc2", "eu-ai-act", "none"]
           }
+        },
+        "adr_required": {
+          "type": "boolean",
+          "description": "Whether Architecture Decision Records are mandatory (recommended for the enterprise profile).",
+          "default": false
+        },
+        "coverage_threshold": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Minimum test coverage percentage the governance gate enforces (regulated/enterprise target ≥ 80)."
         }
       }
     },

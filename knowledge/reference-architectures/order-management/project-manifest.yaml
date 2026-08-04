@@ -1,0 +1,66 @@
+# EEIK Reference Architecture — Order Management Microservice
+# A ready-to-adopt, schema-valid eeik manifest. Feed it to `eeik resolve-packs` / the
+# repository-generator, or copy it as the starting point for a real order-management service.
+
+schema_version: "1.0"
+
+project:
+  name: order-management
+  description: Order lifecycle service — capture, validate, reserve stock, price, and settle orders
+  owner: commerce-platform
+  domain: generic
+  project_type: greenfield
+
+technology:
+  backend:
+    language: java
+    version: 21
+    framework: spring-boot
+  frontend:
+    framework: none
+  database:
+    type: aurora-postgresql
+    migration_tool: flyway
+    orm: spring-data-jpa
+  messaging:
+    broker: kafka
+    pattern: event-driven
+
+architecture:
+  style: microservices
+  patterns:
+    - ddd
+    - outbox
+    - saga
+    - api-gateway
+    - cqrs
+  api_style: rest
+
+cloud:
+  provider: aws
+  infra_as_code: cdk
+  regions:
+    - eu-west-1
+  multi_account: true
+
+ai:
+  enabled: false
+
+governance:
+  profile: standard
+  reviews_required:
+    - architecture-review
+    - security-review
+
+delivery:
+  model: multi-team
+  methodology: agile
+  sprint_length_weeks: 2
+  cicd_platform: github-actions
+
+observability:
+  enabled: true
+  logging: cloudwatch
+  tracing: x-ray
+  metrics: cloudwatch
+  slo_required: true

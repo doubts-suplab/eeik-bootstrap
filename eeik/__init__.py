@@ -13,19 +13,24 @@ from __future__ import annotations
 __version__ = "1.4.0"
 
 # Public SDK surface (ADR-007) — `import eeik; eeik.validate_manifest(...)`. These names and their
-# return shapes are the supported contract; everything else in the package is internal.
+# return shapes are the supported contract; everything else in the package is internal. (The CLI
+# dispatches subcommands in-process — see cli.py — so this eager import does not trigger the
+# `python -m` re-execution warning.)
 from eeik.api import (
     DriftEntry,
     DriftReport,
     Finding,
     Pack,
     Provider,
+    ReferenceArchitecture,
     ValidationResult,
     VerifyReport,
     agent_contract,
     find_packs,
     pack_drift,
     providers_of,
+    reference_architecture,
+    reference_architectures,
     resolve_packs,
     validate_agent_contract,
     validate_manifest,
@@ -42,6 +47,7 @@ __all__ = [
     "DriftReport",
     "Finding",
     "VerifyReport",
+    "ReferenceArchitecture",
     "find_packs",
     "providers_of",
     "validate_manifest",
@@ -51,4 +57,6 @@ __all__ = [
     "verify",
     "agent_contract",
     "validate_agent_contract",
+    "reference_architectures",
+    "reference_architecture",
 ]

@@ -1,0 +1,48 @@
+name: ai-augmented-service
+title: AI-Augmented Service (RAG + governed agent on HALO)
+summary: >
+  Retrieval-augmented FastAPI service that answers over enterprise documents using Amazon Bedrock,
+  with every model decision governed by the HALO agent runtime (confidence gate, tool allowlist, audit,
+  human-review routing). Vector retrieval over Aurora pgvector; React front end; enterprise governance.
+maturity: staging             # poc | staging | production
+manifest: project-manifest.yaml
+
+stack:
+  - python-3.12
+  - fastapi
+  - bedrock
+  - aurora-pgvector
+  - halo-agent-harness
+  - react
+  - aws-cdk
+
+tags: [python, fastapi, rag, bedrock, ai, agent, halo, governance, aws, vector]
+
+# The capability packs `eeik resolve-packs` produces for this manifest (verify checks the match).
+expected_packs: [core, agent-harness, ai-engineering, architecture, aws, delivery, governance, python, react]
+
+components:
+  - name: Assistant API
+    tech: FastAPI (ECS Fargate)
+    responsibility: Chat/query endpoints; orchestrates retrieve → reason → answer through HALO
+  - name: HALO Runtime
+    tech: agent-harness (in-process)
+    responsibility: Governs every model call — confidence gate, tool allowlist, audit, human-review routing
+  - name: Retriever
+    tech: Aurora PostgreSQL + pgvector
+    responsibility: Embedding search over ingested documents; returns grounded passages with citations
+  - name: Ingestion Pipeline
+    tech: Python worker (SQS-driven)
+    responsibility: Chunk, embed (Bedrock Titan), and upsert documents into the vector store
+  - name: Foundation Model
+    tech: Amazon Bedrock (Claude)
+    responsibility: Generation over retrieved context; called only through the HALO LLM port
+  - name: Web UI
+    tech: React (Next.js)
+    responsibility: Chat surface; shows citations, confidence, and "pending human review" states
+
+key_decisions:
+  - "Every model decision runs on HALO — the confidence gate and audit are non-optional (ADR-003 alignment)."
+  - "RAG grounds answers in retrieved passages with citations; ungrounded answers are DEFERred."
+  - "Low-confidence or tool-denied responses route to human review rather than auto-answering."
+  - "pgvector over a separate vector DB: one datastore until scale/latency demands a dedicated index."

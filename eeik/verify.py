@@ -156,9 +156,44 @@ def check_lock_drift() -> list[Finding]:
     ]
 
 
+def check_reference_architectures() -> list[Finding]:
+    """Each reference architecture's manifest validates and resolves to the packs it declares."""
+    from eeik import api
+
+    findings: list[Finding] = []
+    archs = api.reference_architectures()
+    if not archs:
+        return [Finding("reference-architectures", "pass", "(none)", "no reference architectures — skipped")]
+    for arch in archs:
+        subject = f"ref-arch:{arch.name}"
+        if not arch.manifest_path:
+            findings.append(Finding("reference-architectures", "warn", subject, "no manifest declared"))
+            continue
+        manifest_file = REPO_ROOT / arch.manifest_path
+        result = api.validate_manifest(path=str(manifest_file))
+        if not result.valid:
+            findings.append(Finding("reference-architectures", "fail", subject,
+                                    f"manifest invalid: {result.errors[0] if result.errors else '?'}"))
+            continue
+        actual = api.resolve_packs(path=str(manifest_file))
+        if arch.expected_packs and actual != arch.expected_packs:
+            findings.append(Finding(
+                "reference-architectures", "warn", subject,
+                f"resolves to {actual} but declares expected_packs {arch.expected_packs}",
+            ))
+        else:
+            findings.append(Finding("reference-architectures", "pass", subject, "manifest valid; packs match"))
+    return findings
+
+
 def verify() -> VerifyReport:
     """Run every conformance check and aggregate the findings."""
-    findings = check_pack_conformance() + check_manifest() + check_lock_drift()
+    findings = (
+        check_pack_conformance()
+        + check_manifest()
+        + check_lock_drift()
+        + check_reference_architectures()
+    )
     return VerifyReport(findings=findings)
 
 

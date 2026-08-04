@@ -79,6 +79,17 @@ EEIK generates against HALO's Agent Contract schema → HALO runs it.
 
 ---
 
+### Reference Architectures (engine-surfaced blueprints)
+
+Proven architectural blueprints, each a machine-readable descriptor + a **schema-valid manifest** (feed
+it to `resolve-packs` / the repository-generator) + design + runbook. `eeik verify` checks each still
+validates and resolves to the packs it declares, so a blueprint can't rot out of conformance.
+
+`eeik/architectures.py` · `eeik architectures [<name>] [--json]` · `eeik.reference_architectures()` ·
+MCP `eeik_reference_architectures`
+
+---
+
 ## Core Platform
 
 ### Bootstrap Engine

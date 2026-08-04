@@ -21,11 +21,13 @@ from typing import Any
 
 import yaml
 
+from eeik import architectures as _architectures
 from eeik import catalog as _catalog
 from eeik import contract as _contract
 from eeik import lock as _lock
 from eeik import manifest as _manifest
 from eeik import packs as _packs
+from eeik.architectures import ReferenceArchitecture
 from eeik.verify import Finding, VerifyReport, verify
 from eeik.versions import all_pack_fingerprints
 
@@ -201,6 +203,16 @@ def validate_agent_contract(contract: dict) -> tuple[bool, str]:
     return _contract.validate_contract(contract)
 
 
+def reference_architectures() -> list[ReferenceArchitecture]:
+    """Every proven, engine-surfaced architectural blueprint (ADR-010)."""
+    return _architectures.load_all()
+
+
+def reference_architecture(name: str) -> ReferenceArchitecture | None:
+    """One reference architecture by name, or None."""
+    return _architectures.get(name)
+
+
 __all__ = [
     "Pack",
     "Provider",
@@ -218,5 +230,8 @@ __all__ = [
     "verify",
     "agent_contract",
     "validate_agent_contract",
+    "ReferenceArchitecture",
+    "reference_architectures",
+    "reference_architecture",
     "__version__",
 ]
