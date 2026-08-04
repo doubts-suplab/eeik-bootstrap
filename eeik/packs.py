@@ -92,7 +92,9 @@ def resolve_packs(manifest: dict, matrix: dict) -> list[str]:
     # ── Technology-driven selection ───────────────────────────────────────────
     backend  = tech.get("backend", {})
     frontend = tech.get("frontend", {})
-    cloud    = tech.get("cloud", {})
+    # `cloud` and `ai` are TOP-LEVEL in the canonical schema (not under `technology`).
+    cloud    = manifest.get("cloud", {})
+    ai       = manifest.get("ai", {})
     mf       = tech.get("mainframe", {})
 
     lang      = backend.get("language", "none")
@@ -126,9 +128,14 @@ def resolve_packs(manifest: dict, matrix: dict) -> list[str]:
     if profile in ("regulated", "enterprise"):
         selected.add("governance")
 
-    # ── Architecture / AI ─────────────────────────────────────────────────────
-    if "sagemaker" in str(cloud.get("services", [])).lower() or "bedrock" in str(cloud.get("services", [])).lower():
+    # ── AI selection (top-level `ai` in the canonical schema) ──────────────────
+    if ai.get("enabled"):
         selected.add("ai-engineering")
+        # Any governed agent/RAG workload activates the agent-harness (HALO) conformance pack.
+        if str(ai.get("pattern", "none")) not in ("none", ""):
+            selected.add("agent-harness")
+
+    # ── Architecture pack (always useful) ──────────────────────────────────────
     if (PACKS_DIR / "architecture").exists():
         selected.add("architecture")
 

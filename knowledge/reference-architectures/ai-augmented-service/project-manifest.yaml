@@ -1,0 +1,72 @@
+# EEIK Reference Architecture — AI-Augmented Service (RAG + governed agent on HALO)
+# A schema-valid eeik manifest. Feed it to `eeik resolve-packs` / the repository-generator, or copy it
+# as the starting point for a real retrieval-augmented, governed AI service.
+
+schema_version: "1.0"
+
+project:
+  name: knowledge-assistant
+  description: Retrieval-augmented assistant answering over enterprise documents, governed by HALO
+  owner: ai-platform
+  domain: generic
+  project_type: greenfield
+
+technology:
+  backend:
+    language: python
+    version: 3.12
+    framework: fastapi
+  frontend:
+    framework: react
+  database:
+    type: aurora-postgresql
+    migration_tool: alembic
+    orm: sqlalchemy
+  messaging:
+    broker: sqs
+    pattern: command-driven
+
+architecture:
+  style: microservices
+  patterns:
+    - ddd
+    - api-gateway
+    - bff
+  api_style: rest
+
+cloud:
+  provider: aws
+  infra_as_code: cdk
+  regions:
+    - eu-west-1
+  multi_account: true
+
+ai:
+  enabled: true
+  pattern: rag
+  framework: bedrock-agents
+  foundation_model: claude
+  governance_required: true
+  memory_pattern: vector-store
+
+governance:
+  profile: enterprise
+  adr_required: true
+  coverage_threshold: 85
+  reviews_required:
+    - architecture-review
+    - security-review
+    - ai-governance-review
+
+delivery:
+  model: multi-team
+  methodology: agile
+  sprint_length_weeks: 2
+  cicd_platform: github-actions
+
+observability:
+  enabled: true
+  logging: cloudwatch
+  tracing: x-ray
+  metrics: cloudwatch
+  slo_required: true

@@ -502,6 +502,11 @@
           <div class="ei-desc">Emits a HALO Agent Contract (<span class="mono">eeik contract</span>) per blueprint — authority ceiling, capabilities, gate threshold, tool allowlist — validated by HALO's own schema. Every generated agent is runtime-governed by construction.</div>
         </div>
         <div class="explorer-item">
+          <div class="ei-label">Module</div>
+          <div class="ei-name">eeik/architectures.py</div>
+          <div class="ei-desc">Engine-surfaced reference architectures (<span class="mono">eeik architectures</span>) — proven blueprints, each a schema-valid manifest + design + runbook. <span class="mono">eeik verify</span> checks each resolves to the packs it declares.</div>
+        </div>
+        <div class="explorer-item">
           <div class="ei-label">CI Workflow</div>
           <div class="ei-name">eeik-validate.yml</div>
           <div class="ei-desc">Triggers on PRs touching manifest or capability packs. Runs schema validation (strict on main), dry-run pack activation, agent lint.</div>
@@ -994,7 +999,7 @@
       <div class="stat"><div class="stat-value">100%</div><div class="stat-label">generations gated &amp; audited</div></div>
       <div class="stat"><div class="stat-value">0</div><div class="stat-label">confidence-gate bypasses</div></div>
       <div class="stat"><div class="stat-value">19</div><div class="stat-label">packs, versioned &amp; catalogued</div></div>
-      <div class="stat"><div class="stat-value">44</div><div class="stat-label">engine tests (green)</div></div>
+      <div class="stat"><div class="stat-value">50</div><div class="stat-label">engine tests (green)</div></div>
     </div>
 
     <div class="grid-2" style="align-items:start;">
@@ -1726,6 +1731,7 @@ codex "add OpenTelemetry tracing to the order service"
             <li style="color:var(--green);">✅ apex-sdlc onboarding consumes the engine (SDK + MCP)</li>
             <li style="color:var(--green);">✅ Pack metadata reconciled — <span class="mono">verify --strict</span> clean</li>
             <li style="color:var(--green);">✅ Agent-generator emits HALO Agent Contracts (ADR-009)</li>
+            <li style="color:var(--green);">✅ Reference architectures — engine-surfaced + verify-checked (ADR-010)</li>
             <li>→ Governed generation over MCP (staged, human-review draft)</li>
             <li>→ Closed-loop knowledge capture from HALO/APEX audit logs</li>
           </ul>
@@ -1762,6 +1768,7 @@ codex "add OpenTelemetry tracing to the order service"
         <span class="tag done">Typed Python SDK ✓</span>
         <span class="tag done">Conformance Gate (verify) ✓</span>
         <span class="tag done">Agent Contracts (HALO) ✓</span>
+        <span class="tag done">Reference Architectures ✓</span>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <span class="tag missing">EEIK MCP Server (next)</span>

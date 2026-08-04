@@ -38,7 +38,9 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 | **Conformance gate (`eeik verify`)** | ✅ | Declared agents/standards resolve to files; manifest + lock consistent; fail/warn/pass + `--strict`; CLI/SDK/MCP (`eeik/verify.py`, ADR-008) |
 | **Pack metadata reconciled** | ✅ | 30 gaps fixed (trim phantoms, `X-standard`→`X` renames, declare shipped files, author `insurance-compliance-standard`); `eeik verify --strict` clean (0/0/21); catalog advertises only real files |
 | **Agent Contracts by construction** | ✅ | `eeik contract` / `eeik.agent_contract()` emit `agent-contract.schema.json`-conformant contracts per blueprint; validated by HALO's own validator (`eeik/contract.py`, ADR-009) |
-| Engine test suite | ✅ | 44 tests — engine + MCP (round-trip) + SDK + verify + contracts (all 8 blueprints validate against HALO's schema) |
+| **Reference architectures (engine-surfaced)** | ✅ | order-management + ai-augmented-service — each a schema-valid manifest + design + runbook; `eeik architectures` (CLI/SDK/MCP); `eeik verify` checks manifest + pack match (`eeik/architectures.py`, ADR-010) |
+| Resolver + schema fixes (surfaced by ref-archs) | ✅ | `resolve_packs` reads top-level `cloud`/`ai` (aws/ai-engineering packs now resolve); schema gains `alembic`, `adr_required`, `coverage_threshold`; CLI dispatches in-process (no `-m` warning) |
+| Engine test suite | ✅ | 50 tests — engine + MCP (round-trip) + SDK + verify + contracts + reference architectures |
 | **Installable engine package** | ✅ | `scripts/` → `eeik/` package + `pyproject.toml`; `eeik` console script / `python -m eeik`; back-compat `scripts/*.py` shims; CI installs the package |
 | **Single canonical manifest schema** | ✅ | `eeik/schemas/manifest.schema.json` replaces 3 divergent copies; fixed the stale-schema bug that rejected EEIK's own examples |
 | **Pack/agent registry + catalog** | ✅ | `eeik catalog` — queryable index (`--tag` / `--query` / `--provides` / `--json`); all 19 packs tagged + categorised (`eeik/catalog.py`) |
@@ -75,6 +77,10 @@ eeik catalog --json                      # machine-readable index (MCP read mode
 # Conformance gate — do packs deliver what they declare?
 eeik verify                              # report (fail / warn / pass)
 eeik verify --exit-code                  # CI gate (non-zero on hard failures)
+
+# Proven, engine-surfaced reference architectures
+eeik architectures                       # list blueprints
+eeik architectures order-management      # detail: stack, components, resolved packs
 
 # Serve the read model over MCP (any MCP host can call it live)
 pip install -e ".[mcp]" && eeik mcp      # tools: catalog, validate_manifest, resolve_packs, pack_drift, verify

@@ -17,6 +17,7 @@ Commands:
     diff                Report capability-pack drift vs eeik.lock
     upgrade             Re-pin eeik.lock to current pack versions
     catalog             Query the capability-pack / agent / standard index
+    architectures       List / show proven reference architectures (engine-surfaced blueprints)
     verify              Conformance gate — packs deliver what they declare
     contract            Emit a HALO Agent Contract from a blueprint (runtime-governed by construction)
     mcp                 Start the EEIK MCP server (read model over MCP)
@@ -32,8 +33,8 @@ Examples:
     eeik demo
 """
 
+import importlib
 import sys
-import subprocess
 from pathlib import Path
 
 REPO_ROOT  = Path(__file__).parent.parent
@@ -46,17 +47,22 @@ ANSI_CYAN   = "\033[96m"
 ANSI_RESET  = "\033[0m"
 
 
-def _run(cmd: list[str]) -> int:
-    # cwd=REPO_ROOT so `python -m eeik.<module>` resolves the package even without an editable install.
-    return subprocess.call(cmd, cwd=str(REPO_ROOT))
-
-
 def _mod(module: str, *prefix: str):
-    """Dispatch to a package module's CLI (`python -m eeik.<module>`).
+    """Dispatch to a package module's ``main()`` in-process.
 
-    Run with cwd=REPO_ROOT so the ``eeik`` package is importable whether or not it is pip-installed.
+    In-process (vs. spawning ``python -m eeik.<module>``) avoids re-executing an already-imported
+    submodule — which Python warns about — and is faster. The submodule reads ``sys.argv``; we set it
+    for the call and restore it afterwards.
     """
-    return lambda a: _run([sys.executable, "-m", f"eeik.{module}", *prefix] + a)
+    def run(args: list[str]) -> int:
+        mod = importlib.import_module(f"eeik.{module}")
+        saved = sys.argv
+        sys.argv = [f"eeik-{module}", *prefix, *args]
+        try:
+            return mod.main()
+        finally:
+            sys.argv = saved
+    return run
 
 
 # ── status ────────────────────────────────────────────────────────────────────
@@ -131,6 +137,7 @@ COMMANDS = {
     "diff":              _mod("lock", "diff"),
     "upgrade":           _mod("lock", "upgrade"),
     "catalog":           _mod("catalog"),
+    "architectures":     _mod("architectures"),
     "verify":            _mod("verify"),
     "contract":          _mod("contract"),
     "mcp":               _mod("mcp_server"),
@@ -153,6 +160,7 @@ HELP = """
   diff                Report pack drift vs eeik.lock   [--exit-code]
   upgrade             Re-pin eeik.lock to current      [--file path]
   catalog             Query the pack/agent index       [--tag t] [--query x] [--provides n] [--json]
+  architectures       List/show reference architectures [<name>] [--json]
   verify              Conformance gate                 [--strict] [--exit-code] [--json]
   contract            Emit a HALO Agent Contract       --blueprint <t> --name <n> [--param k=v] [--validate]
   mcp                 Start the EEIK MCP server        (read model over Model Context Protocol)

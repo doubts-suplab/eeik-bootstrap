@@ -203,20 +203,23 @@ Expanding domain-specific packs that are currently stubs.
 
 ## v1.3 — Reference Architectures
 
-Provide complete, deployable reference architectures for common enterprise patterns.
+Complete, engine-surfaced reference architectures for common enterprise patterns. Each is a machine-
+readable blueprint (`reference.yaml`), a **schema-valid manifest** you can feed to `eeik resolve-packs` /
+the repository-generator, an `architecture.md`, and a `runbook.md`. `eeik architectures` lists them and
+`eeik verify` checks each one still validates and resolves to the packs it declares (ADR-010).
+
+### Delivered
+- [x] **Order Management Microservice** — event-driven Spring Boot 3 / Java 21 / Aurora / Kafka on AWS;
+      DDD, transactional outbox, choreographed saga, CQRS. (`knowledge/reference-architectures/order-management/`)
+- [x] **AI-Augmented Service** — RAG on FastAPI / Bedrock / pgvector, every model call governed by HALO
+      (gate, tool allowlist, audit, human review). (`knowledge/reference-architectures/ai-augmented-service/`)
+- [x] **Engine surfacing + conformance** — `eeik architectures` (CLI), `eeik.reference_architectures()`
+      (SDK), `eeik_reference_architectures` (MCP); `eeik verify` asserts manifest validity + pack match.
 
 ### Planned
-- [ ] **Order Management Microservice** — Full stack: Spring Boot + Angular + Aurora + Kafka + CDK
 - [ ] **Data Platform** — Kafka + Spark + dbt + Airflow + S3/Glue + Athena
-- [ ] **AI-Augmented Service** — Spring Boot + Bedrock + RAG pipeline + LangGraph orchestration
 - [ ] **Multi-Tenant SaaS** — Shared cluster, tenant isolation, billing integration, Cognito multi-tenancy
-
-Each reference architecture includes:
-- Architecture diagram (text-based)
-- CDK stack with all resources
-- ADR explaining key design choices
-- Operational runbook
-- Seed data and local development setup
+- [ ] Per-architecture CDK stacks + seed data / local dev setup (currently: manifest + design + runbook)
 
 ---
 

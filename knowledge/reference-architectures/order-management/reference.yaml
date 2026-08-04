@@ -1,0 +1,47 @@
+name: order-management
+title: Order Management Microservice
+summary: >
+  Event-driven order lifecycle service on Spring Boot 3 / Java 21, Aurora PostgreSQL, and Kafka,
+  deployed to AWS ECS Fargate via CDK. Demonstrates DDD bounded contexts, the transactional outbox,
+  a choreographed saga for stock reservation + payment, and CQRS read models.
+maturity: production          # poc | staging | production
+manifest: project-manifest.yaml
+
+stack:
+  - java-21
+  - spring-boot-3
+  - aurora-postgresql
+  - kafka
+  - ecs-fargate
+  - aws-cdk
+
+tags: [java, microservices, event-driven, ddd, outbox, saga, cqrs, aws, kafka]
+
+# The capability packs `eeik resolve-packs` produces for this manifest (verify checks the match).
+expected_packs: [core, architecture, aws, delivery, java]
+
+components:
+  - name: Order API
+    tech: Spring Boot 3 (ECS Fargate)
+    responsibility: Command endpoints (place / amend / cancel order); publishes domain events via outbox
+  - name: Order Read Model
+    tech: Spring Boot 3 + Aurora read replica
+    responsibility: CQRS query side — order status, history, projections consumed by clients
+  - name: Inventory Service
+    tech: Spring Boot 3 (ECS Fargate)
+    responsibility: Stock reservation saga participant; emits StockReserved / StockRejected
+  - name: Payment Service
+    tech: Spring Boot 3 (ECS Fargate)
+    responsibility: Settlement saga participant; idempotent charge; emits PaymentSettled / PaymentFailed
+  - name: Event Backbone
+    tech: Kafka (MSK)
+    responsibility: Domain event transport; topic-per-aggregate; schema registry for Avro contracts
+  - name: Order Store
+    tech: Aurora PostgreSQL
+    responsibility: Order aggregate + outbox table (single transaction); Flyway migrations
+
+key_decisions:
+  - "Transactional outbox over dual-write: order state + event enqueued in one DB transaction (ADR)."
+  - "Choreographed saga over an orchestrator: services react to events; compensations on failure."
+  - "CQRS read model on a replica: query load never contends with the write path."
+  - "Idempotency keys on payment: at-least-once delivery must not double-charge."

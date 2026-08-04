@@ -167,6 +167,15 @@ eeik contract --blueprint auditor  --name compliance-officer --validate   # → 
 eeik contract --blueprint reviewer --name java-reviewer --param language=java --validate
 ```
 
+Browse **reference architectures** — proven blueprints, each with a schema-valid manifest you can feed
+straight to `resolve-packs` / the repository-generator; `eeik verify` keeps them conformant
+([ADR-010](docs/decisions/ADR-010-reference-architectures-engine-surfaced.md)):
+
+```bash
+eeik architectures                       # order-management (Java/Kafka/AWS) · ai-augmented-service (RAG/Bedrock/HALO)
+eeik architectures order-management      # stack, components, and the packs it resolves to
+```
+
 > **Repository layout:** see [ARCHITECTURE.md](ARCHITECTURE.md) for the four-layer taxonomy (engine /
 > content / adapters / docs) and the "where does a new X go?" placement rule ([ADR-005](docs/decisions/ADR-005-layered-directory-taxonomy.md)).
 
