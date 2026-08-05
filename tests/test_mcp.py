@@ -56,7 +56,13 @@ def test_tool_generate_is_governed_and_staged_never_applied():
 def test_mcp_roundtrip():
     pytest.importorskip("mcp")
     import anyio
-    from mcp.shared.memory import create_connected_server_and_client_session as connect
+
+    # The in-memory client↔server helper's import path varies across mcp SDK versions; skip the
+    # round-trip cleanly if this SDK doesn't expose it (the pure tool layer above still covers logic).
+    try:
+        from mcp.shared.memory import create_connected_server_and_client_session as connect
+    except ImportError:
+        pytest.skip("installed mcp SDK lacks create_connected_server_and_client_session")
 
     from eeik.mcp_server import _make_server
 

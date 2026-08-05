@@ -97,7 +97,15 @@ def test_catalog_find_providers():
 
 # ── HALO governance ───────────────────────────────────────────────────────────────
 
+# Requires the real HALO runtime (doubts-suplab/agent-harness). importorskip alone isn't enough:
+# an unrelated/older `agent-harness` may be installed that imports but lacks the HALO API, so verify
+# the actual symbols and skip cleanly when they're absent — this is an optional integration test.
 halo = pytest.importorskip("agent_harness", reason="agent-harness not installed")
+if not all(hasattr(halo, sym) for sym in ("AgentInput", "Harness", "DecisionAction")):
+    pytest.skip(
+        "installed 'agent_harness' is not the HALO runtime (missing AgentInput/Harness API)",
+        allow_module_level=True,
+    )
 
 
 def test_generation_is_never_auto_enforced_and_routes_to_review():
