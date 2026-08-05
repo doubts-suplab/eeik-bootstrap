@@ -150,8 +150,13 @@ versioned, queryable engine. See ADR-003 (generators on HALO) and ADR-004 (pack 
       calls the real engine (manifest validation + pack resolution) via an `EeikEngine` with two backends
       — **SDK** (`import eeik`, in-process) and **MCP** (`eeik mcp`) — falling back to its vendored copy
       when eeik is absent. (apex-sdlc `app/onboarding/eeik_engine.py`, `service.onboard_with_eeik`.)
-- [ ] **Governed generation over MCP** — an MCP `generate` tool that returns a staged, human-review draft
-      (not an auto-applied artifact), once the review handoff over MCP is designed.
+- [x] **Governed generation over MCP** — `eeik_generate` MCP tool + `eeik.generate()` SDK function run a
+      generation through HALO and return a **staged, human-review draft** — never an auto-applied artifact.
+      Generation is SUGGEST authority, so the shared core (`eeik/generation.py::run_generation`) guarantees
+      `auto_enforced=false`, routes the draft to human review, keeps `confidence_gate_bypass_total=0`, and
+      writes to a staging area; the MCP payload flags `autoApplied=false` explicitly. One implementation,
+      three surfaces (CLI `demo`/`run`, SDK, MCP). Fails safe when HALO is absent. (`eeik/generation.py`,
+      `eeik/mcp_tools.py`, ADR-003/006.)
 
 ### Tier 3 — Closing the loop
 - [x] **`eeik verify`** — the conformance gate: every declared agent/standard resolves to a file, the

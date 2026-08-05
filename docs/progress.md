@@ -54,7 +54,7 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 | **Agent-generator emits HALO Agent Contracts** | ✅ | `eeik contract` emits a schema-valid HALO Agent Contract from a pack agent (`eeik/contract.py`, ADR-009) |
 | **Reference architectures (engine-surfaced)** | ✅ | 4 blueprints — machine-readable descriptor + schema-valid manifest + design + runbook; `eeik architectures`, verify-checked (`eeik/architectures.py`, ADR-010) |
 | **Single canonical capability matrix** | ✅ | Resolver overlap consolidated onto `bootstrap/resolvers/capability-matrix.yaml`; duplicate stub removed; authoritative resolution is code (`eeik/packs.py`); APEX vendored copy re-synced |
-| Governed generation over MCP | ⬜ | Planned — a staged, human-review `generate` tool (not auto-applied) |
+| **Governed generation over MCP** | ✅ | `eeik_generate` (MCP) + `eeik.generate()` (SDK) return a staged, human-review draft — SUGGEST authority, `auto_enforced=false`, `autoApplied=false`, never applied; fails safe without HALO (`eeik/generation.py::run_generation`) |
 | Closed-loop knowledge capture from audit logs | ⬜ | Planned (Tier 3) |
 | Clarify dual-purpose root adapters | ⬜ | Planned (Tier 4) — taxonomy now documented (ADR-005) |
 

@@ -3,9 +3,14 @@ EEIK MCP tools — the read-model logic behind the EEIK MCP server.
 
 These are plain, synchronous, JSON-serialisable functions with no MCP dependency, so they are unit
 testable on their own. ``eeik/mcp_server.py`` is a thin transport layer that registers them with the
-MCP SDK. The v1 tool set is **read-only** — catalog, manifest validation, pack resolution, and drift —
-so an MCP host can *ask EEIK questions* safely. Generation stays behind the governed CLI (ADR-003):
-it is SUGGEST authority and must stage drafts for human review, never return auto-applied artifacts.
+MCP SDK. Most tools are **read-only** — catalog, manifest validation, pack resolution, drift, verify,
+reference architectures — so an MCP host can *ask EEIK questions* safely.
+
+The one write-ish tool, ``eeik_generate``, is **governed by construction** (ADR-003): generation is
+SUGGEST authority, so it runs through HALO's confidence gate (``auto_enforced`` is always ``False``),
+routes the draft to human review, and writes it to a *staging* area — it never returns an auto-applied
+artifact and never touches live config. The MCP surface therefore exposes generation without exposing
+enforcement: a host gets a *staged draft to review*, exactly like the CLI.
 
 Each tool returns a dict. The ``TOOLS`` list declares name + description + JSON input schema for
 MCP ``list_tools``.
@@ -52,6 +57,19 @@ def verify() -> dict:
 def reference_architectures() -> dict:
     """List EEIK's proven reference architectures (blueprints with a schema-valid manifest)."""
     return {"architectures": [a.to_dict() for a in _api.reference_architectures()]}
+
+
+def generate(generator: str = "agent-generator", spec: str | None = None) -> dict:
+    """Run one governed generation and return a STAGED, human-review draft (never auto-applied)."""
+    outcome = _api.generate(generator, spec=spec)
+    result = outcome.to_dict()
+    # Make the governance guarantee explicit in the wire payload the host reads.
+    result["autoApplied"] = False
+    result["note"] = (
+        "SUGGEST authority: this draft is staged for human review, not applied. "
+        "Review the artifact and move it into place to adopt it."
+    )
+    return result
 
 
 # ── MCP tool declarations ─────────────────────────────────────────────────────
@@ -125,6 +143,23 @@ TOOLS: list[dict[str, Any]] = [
                        "a schema-valid manifest, stack, components, and the capability packs it activates.",
         "handler": reference_architectures,
         "inputSchema": {"type": "object", "properties": {}},
+    },
+    {
+        "name": "eeik_generate",
+        "description": "Run a GOVERNED generation and return a STAGED, human-review draft — never "
+                       "auto-applied. Generation is SUGGEST authority: the draft passes HALO's confidence "
+                       "gate (auto_enforced is always false), is routed to human review, and is written to "
+                       "a staging area, not live config. Returns the decision, review routing, audit trail, "
+                       "staged path, and the draft artifact.",
+        "handler": generate,
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "generator": {**_STR, "description": "Generator to run (e.g. 'agent-generator', "
+                                                     "'repository-generator'). Default: agent-generator."},
+                "spec": {**_STR, "description": "Free-text intent describing what to generate."},
+            },
+        },
     },
 ]
 
