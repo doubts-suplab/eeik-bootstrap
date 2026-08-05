@@ -143,6 +143,38 @@
               "enum": ["event-driven", "command-driven", "pub-sub", "streaming", "none"]
             }
           }
+        },
+        "data": {
+          "type": "object",
+          "description": "Data-engineering workloads (activates the data-engineering pack).",
+          "additionalProperties": false,
+          "properties": {
+            "streaming": {
+              "type": "string",
+              "enum": ["kafka", "kinesis", "none"],
+              "description": "Stream-processing platform."
+            },
+            "batch": {
+              "type": "string",
+              "enum": ["spark", "glue", "databricks", "emr", "none"],
+              "description": "Batch/ETL processing engine."
+            },
+            "transformation": {
+              "type": "string",
+              "enum": ["dbt", "glue", "none"],
+              "description": "Data transformation tool."
+            },
+            "warehouse": {
+              "type": "string",
+              "enum": ["redshift", "snowflake", "athena", "bigquery", "none"],
+              "description": "Analytical query engine / warehouse."
+            },
+            "orchestration": {
+              "type": "string",
+              "enum": ["airflow", "step-functions", "dagster", "none"],
+              "description": "Pipeline orchestrator."
+            }
+          }
         }
       }
     },

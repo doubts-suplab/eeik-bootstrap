@@ -1,0 +1,66 @@
+# EEIK Reference Architecture — Data Platform (streaming + lakehouse)
+# A schema-valid eeik manifest. The `technology.data.*` block activates the data-engineering pack.
+
+schema_version: "1.0"
+
+project:
+  name: analytics-lakehouse
+  description: Streaming + batch data platform — ingest, curate, and serve analytics-ready data
+  owner: data-platform
+  domain: generic
+  project_type: greenfield
+
+technology:
+  backend:
+    language: python
+    version: 3.12
+    framework: none
+  frontend:
+    framework: none
+  database:
+    type: aurora-postgresql
+    migration_tool: none
+  messaging:
+    broker: kafka
+    pattern: streaming
+  data:
+    streaming: kafka
+    batch: spark
+    transformation: dbt
+    warehouse: athena
+    orchestration: airflow
+
+architecture:
+  style: event-driven
+  patterns:
+    - cqrs
+  api_style: rest
+
+cloud:
+  provider: aws
+  infra_as_code: cdk
+  regions:
+    - eu-west-1
+  multi_account: true
+
+ai:
+  enabled: false
+
+governance:
+  profile: standard
+  reviews_required:
+    - architecture-review
+    - security-review
+
+delivery:
+  model: multi-team
+  methodology: agile
+  sprint_length_weeks: 2
+  cicd_platform: github-actions
+
+observability:
+  enabled: true
+  logging: cloudwatch
+  tracing: x-ray
+  metrics: cloudwatch
+  slo_required: true

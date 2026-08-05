@@ -172,8 +172,8 @@ straight to `resolve-packs` / the repository-generator; `eeik verify` keeps them
 ([ADR-010](docs/decisions/ADR-010-reference-architectures-engine-surfaced.md)):
 
 ```bash
-eeik architectures                       # order-management (Java/Kafka/AWS) · ai-augmented-service (RAG/Bedrock/HALO)
-eeik architectures order-management      # stack, components, and the packs it resolves to
+eeik architectures                       # order-management · ai-augmented-service · data-platform · multi-tenant-saas
+eeik architectures data-platform         # stack, components, and the packs it resolves to
 ```
 
 > **Repository layout:** see [ARCHITECTURE.md](ARCHITECTURE.md) for the four-layer taxonomy (engine /

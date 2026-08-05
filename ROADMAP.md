@@ -188,16 +188,20 @@ the remaining stages are tracked here so the framework's layout keeps pace with 
 
 ---
 
-## v1.2 — Domain Capability Packs
+## v1.2 — Domain Capability Packs (Complete)
 
-Expanding domain-specific packs that are currently stubs.
+Domain-specific packs, now substantive (agents + standards + knowledge) and conformance-checked by
+`eeik verify` — the catalog advertises only agents that exist.
 
-### Planned
-- [ ] **Python capability pack** — Promote `python-developer` agent; add FastAPI and data science templates
-- [ ] **Data Engineering pack** — Full pipeline templates (Kafka, Spark, dbt), Airflow DAG skeletons
-- [ ] **OpenShift pack** — Kubernetes engineer agent, Helm chart templates, SCC patterns
-- [ ] **Banking domain pack** — PCI-DSS controls, SWIFT integration patterns, payment flow agents
-- [ ] **Healthcare domain pack** — FHIR-aware agent, HIPAA privacy controls, HL7 integration patterns
+### Delivered
+- [x] **Python capability pack** — `python-developer`, `fastapi-engineer`; python + fastapi standards.
+- [x] **Data Engineering pack** — `data-engineer`; data-engineering + data-pipeline standards; lakehouse
+      knowledge. (Now auto-resolves from `technology.data.*` — schema + resolver extended.)
+- [x] **OpenShift pack** — `openshift-engineer`, `kubernetes-engineer`; openshift standard.
+- [x] **Banking domain pack** — `banking-domain-expert`, `payments-specialist` (SWIFT/ISO 20022, SEPA,
+      SCA, PCI-DSS); banking-compliance standard. (v1.1)
+- [x] **Healthcare domain pack** — `healthcare-domain-expert`, `clinical-data-specialist` (FHIR R4, HL7 v2,
+      SNOMED/LOINC, HIPAA); healthcare-compliance standard. (v1.1)
 
 ---
 
@@ -210,15 +214,16 @@ the repository-generator, an `architecture.md`, and a `runbook.md`. `eeik archit
 
 ### Delivered
 - [x] **Order Management Microservice** — event-driven Spring Boot 3 / Java 21 / Aurora / Kafka on AWS;
-      DDD, transactional outbox, choreographed saga, CQRS. (`knowledge/reference-architectures/order-management/`)
-- [x] **AI-Augmented Service** — RAG on FastAPI / Bedrock / pgvector, every model call governed by HALO
-      (gate, tool allowlist, audit, human review). (`knowledge/reference-architectures/ai-augmented-service/`)
+      DDD, transactional outbox, choreographed saga, CQRS.
+- [x] **AI-Augmented Service** — RAG on FastAPI / Bedrock / pgvector, every model call governed by HALO.
+- [x] **Data Platform** — Kafka + Spark/Glue + dbt + Airflow + S3 lakehouse + Athena; medallion, idempotent
+      ingestion, data-quality gates.
+- [x] **Multi-Tenant SaaS** — shared infra + isolated tenants; Cognito identity, PostgreSQL RLS isolation,
+      per-tenant metering/billing, noisy-neighbour controls.
 - [x] **Engine surfacing + conformance** — `eeik architectures` (CLI), `eeik.reference_architectures()`
       (SDK), `eeik_reference_architectures` (MCP); `eeik verify` asserts manifest validity + pack match.
 
 ### Planned
-- [ ] **Data Platform** — Kafka + Spark + dbt + Airflow + S3/Glue + Athena
-- [ ] **Multi-Tenant SaaS** — Shared cluster, tenant isolation, billing integration, Cognito multi-tenancy
 - [ ] Per-architecture CDK stacks + seed data / local dev setup (currently: manifest + design + runbook)
 
 ---

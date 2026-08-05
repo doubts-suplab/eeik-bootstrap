@@ -1,5 +1,5 @@
 name: banking-pack
-version: "1.0"
+version: "1.1"
 status: built
 category: domain
 description: "Banking domain — payments, risk, and PSD2 / Basel III / PCI-DSS compliance."
@@ -9,7 +9,9 @@ manifest_triggers:
   - field: project.domain
     value: banking
 
-agents_provided: []
+agents_provided:
+  - banking-domain-expert
+  - payments-specialist
 
 standards_provided:
   - banking-compliance-standard

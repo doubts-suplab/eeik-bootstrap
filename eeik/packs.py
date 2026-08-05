@@ -118,6 +118,12 @@ def resolve_packs(manifest: dict, matrix: dict) -> list[str]:
     if mf_plat != "none":
         selected.add("modernization")
 
+    # Data-engineering workloads (technology.data.*) activate the data-engineering pack.
+    data = tech.get("data", {})
+    if any(str(data.get(k, "none")) not in ("none", "") for k in
+           ("streaming", "batch", "transformation", "warehouse", "orchestration")):
+        selected.add("data-engineering")
+
     # ── Domain selection ──────────────────────────────────────────────────────
     domain = project.get("domain", "generic")
     if domain in ("insurance", "banking", "healthcare"):

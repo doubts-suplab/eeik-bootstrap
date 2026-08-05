@@ -30,9 +30,11 @@ Surfaced on every read surface — `eeik/architectures.py` → `eeik architectur
 `eeik verify`**: each architecture's manifest must validate and must resolve to exactly the packs its
 descriptor claims (`expected_packs`). A drifted blueprint fails conformance like anything else.
 
-Two reference architectures ship as the initial set:
+Four reference architectures ship (v1.3 complete):
 - **order-management** — event-driven Spring Boot / Java 21 / Aurora / Kafka on AWS (DDD, outbox, saga, CQRS).
 - **ai-augmented-service** — RAG on FastAPI / Bedrock / pgvector, every model call governed by HALO.
+- **data-platform** — Kafka + Spark/Glue + dbt + Airflow + S3 lakehouse + Athena (medallion, DQ gates).
+- **multi-tenant-saas** — shared infra + isolated tenants; Cognito, PostgreSQL RLS, per-tenant metering/billing.
 
 ### Two correctness fixes this surfaced
 
@@ -41,9 +43,13 @@ Making the manifests resolve credibly exposed real engine bugs, fixed here:
    `cloud.services`, but the canonical schema puts `cloud` and `ai` at the **top level** — so the `aws`
    and `ai-engineering`/`agent-harness` packs were *never* resolved for any schema-valid manifest. Now
    it reads the top level; AWS/AI manifests resolve correctly.
-2. **Schema ↔ rules/stack gaps.** The `migration_tool` enum lacked `alembic` (EEIK's own Python stack),
+2. **`technology.data` didn't exist.** The `data-engineering` pack's own `manifest_triggers` reference
+   `technology.data.streaming|batch|transformation`, but the schema had no `data` section and the resolver
+   never checked it — so the pack could not auto-resolve. Added `technology.data` to the schema and the
+   resolver (the Data Platform architecture now activates `data-engineering`).
+3. **Schema ↔ rules/stack gaps.** The `migration_tool` enum lacked `alembic` (EEIK's own Python stack),
    and the governance object rejected `adr_required` / `coverage_threshold` — fields EEIK's *own
-   governance rules* recommend. All three added (backward-compatible).
+   governance rules* recommend. All added (backward-compatible).
 
 Separately, the CLI now dispatches subcommands **in-process** rather than spawning `python -m eeik.<cmd>`,
 removing a benign but ubiquitous re-execution `RuntimeWarning`.
