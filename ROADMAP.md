@@ -185,9 +185,12 @@ the remaining stages are tracked here so the framework's layout keeps pace with 
       docs) is documented with a "where does a new X go?" placement rule.
       See [ADR-005](docs/decisions/ADR-005-layered-directory-taxonomy.md) and
       [ARCHITECTURE.md](ARCHITECTURE.md). *Documented before moving any content, by design.*
-- [ ] **Clarify the dual-purpose adapters** — the root `.claude/`/`.github/`/`.kiro/`/`.cursor/` are both
-      EEIK's own dogfood config *and* the seed users copy (a documented footgun). Make the copy-target
-      explicit without breaking the `cp -r` adoption ergonomics.
+- [x] **Clarify the dual-purpose adapters** — done (ADR-011). `bootstrap/seed-manifest.yaml` classifies
+      every root entry as `seed` (copy) / `generated` (regenerate via the engine) / `engine` (never copy).
+      `eeik seed --into <dir> [--apply]` copies exactly the `seed` set (also `eeik seed --list`,
+      `eeik.seed_plan()`), additive to `cp -r`. The seed's own `quality-gate.yml` product jobs self-skip
+      on the engine repo (no `pom.xml`/`package.json`/`src/`). A test asserts no engine-only path is ever
+      classified `seed`.
 - [x] **Consolidate the resolver overlap** — unified on a single canonical matrix at
       `bootstrap/resolvers/capability-matrix.yaml` (all 19 packs, availability-annotated). The duplicate
       stub under `generators/capability-selector/` was removed; its README now redirects to the canonical

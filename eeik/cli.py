@@ -23,6 +23,7 @@ Commands:
     mcp                 Start the EEIK MCP server (read model over MCP)
     run <generator>     Run a generator via the HALO-governed harness
     demo                Offline governed-generation showcase (EEIK in action)
+    seed                Copy the seed set (adapter shells + shared config) into an adopting project
 
 Examples:
     eeik status
@@ -143,6 +144,7 @@ COMMANDS = {
     "mcp":               _mod("mcp_server"),
     "run":               _mod("runner"),
     "demo":              _mod("generation", "demo"),
+    "seed":              _mod("seed"),
 }
 
 HELP = """
@@ -166,6 +168,7 @@ HELP = """
   mcp                 Start the EEIK MCP server        (read model over Model Context Protocol)
   run <generator>     Run generator on HALO harness    [--governed] [--dry-run]
   demo                Governed-generation showcase     (offline, no API key)
+  seed                Copy the seed set into a project [--into DIR] [--apply] [--list]
 
 {bold}Quick start:{reset}
   1. eeik validate

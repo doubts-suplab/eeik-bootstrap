@@ -34,6 +34,7 @@ from eeik.api import (
     reference_architecture,
     reference_architectures,
     resolve_packs,
+    seed_plan,
     validate_agent_contract,
     validate_manifest,
     verify,
@@ -61,6 +62,7 @@ __all__ = [
     "agent_contract",
     "validate_agent_contract",
     "generate",
+    "seed_plan",
     "reference_architectures",
     "reference_architecture",
 ]

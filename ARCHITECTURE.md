@@ -36,6 +36,8 @@ eeik-bootstrap/
 │   ├── .claude/  .github/  .kiro/  .cursor/          agent/instruction projections
 │   ├── AGENTS.md  GEMINI.md                          root tool contexts
 │   └── .vscode/  intellij/                           IDE settings
+│   ▸ the dual role is now explicit: bootstrap/seed-manifest.yaml classifies every root
+│     entry as seed | generated | engine; `eeik seed` copies exactly the seed set (ADR-011)
 │
 └── DOCS & META  ── human-facing ──────────────────────────────────────────────
     ├── docs/                 guide (index.html), decisions/ (ADRs), reference/, progress.md
@@ -60,10 +62,15 @@ eeik-bootstrap/
 - Every capability pack declares a `version` in `metadata.yaml` (see ADR-004).
 - Generation runs on HALO and is SUGGEST authority — drafts are staged, never auto-applied (ADR-003).
 
-## Known rough edges (tracked, not yet moved)
+## Resolved rough edges
 
-Per ADR-005, the taxonomy is documented *before* relocating content. Outstanding in ROADMAP Tier 4:
+Per ADR-005, the taxonomy is documented *before* relocating content. Both Tier-4 rough edges are now
+closed without moving content:
 
-- **Dual-purpose adapters** — the root `.claude/`/`.github/`/`.kiro/`/`.cursor/` are both EEIK's own
-  config and the seed adopters copy. Make the copy-target explicit without breaking `cp -r`.
-- **Resolver overlap** — `generators/capability-selector` vs `bootstrap/resolvers` overlap; unify.
+- **Dual-purpose adapters** — resolved (ADR-011). `bootstrap/seed-manifest.yaml` classifies every root
+  entry as `seed` (copy) / `generated` (regenerate via the engine) / `engine` (never copy); `eeik seed`
+  (also `eeik.seed_plan()`) copies exactly the `seed` set, and the seed's `quality-gate.yml` product
+  jobs self-skip on the engine repo. A test asserts no engine-only path is ever classified `seed`.
+- **Resolver overlap** — resolved. Unified on the single canonical
+  `bootstrap/resolvers/capability-matrix.yaml`; the authoritative resolver is code
+  (`eeik/packs.py::resolve_packs`); the duplicate `generators/capability-selector` stub was removed.

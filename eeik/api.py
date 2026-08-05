@@ -28,6 +28,7 @@ from eeik import generation as _generation
 from eeik import lock as _lock
 from eeik import manifest as _manifest
 from eeik import packs as _packs
+from eeik import seed as _seed
 from eeik.architectures import ReferenceArchitecture
 from eeik.generation import GenerationOutcome
 from eeik.verify import Finding, VerifyReport, verify
@@ -219,6 +220,16 @@ def generate(generator: str = "agent-generator", *, spec: str | None = None) -> 
     return _generation.run_generation(generator, producer, producer_kind=kind)
 
 
+def seed_plan() -> dict[str, list[dict[str, str]]]:
+    """The seed taxonomy: which root entries an adopting project copies vs. regenerates vs. leaves.
+
+    Returns ``{"seed": [...], "generated": [...], "engine": [...]}`` from ``bootstrap/seed-manifest.yaml``
+    — the single source of truth behind ``eeik seed`` that makes the dual-purpose adapter boundary
+    explicit (ADR-005/011). Each entry is ``{"path", "note"}``.
+    """
+    return _seed.seed_plan()
+
+
 def reference_architectures() -> list[ReferenceArchitecture]:
     """Every proven, engine-surfaced architectural blueprint (ADR-010)."""
     return _architectures.load_all()
@@ -248,6 +259,7 @@ __all__ = [
     "agent_contract",
     "validate_agent_contract",
     "generate",
+    "seed_plan",
     "ReferenceArchitecture",
     "reference_architectures",
     "reference_architecture",
