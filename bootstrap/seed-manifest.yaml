@@ -1,0 +1,75 @@
+# EEIK Seed Manifest — the explicit copy-target for adopting projects.
+#
+# EEIK's root adapter directories are DUAL-PURPOSE (ADR-005, ADR-011): they are both EEIK's own
+# dogfood config AND the seed an adopting project takes. That is a documented footgun — a naive
+# `cp -r` of the whole repo drags the engine, tests, and EEIK's own agents into a product. This
+# manifest removes the ambiguity by classifying every root entry into one of three kinds, and it is
+# what `eeik seed` reads to copy the right things (and only those) into a target project.
+#
+#   seed       → COPY into your project. Adapter shells + shared config that a product wants verbatim.
+#   generated  → DO NOT hand-copy. Produced by `eeik activate` / `eeik generate-adapters` from *your*
+#                manifest — copying EEIK's dogfood output would import EEIK's own agent set. Regenerate.
+#   engine     → EEIK's engine, content sources, and docs. Never copied into an adopting project;
+#                you consume these through the `eeik` engine, you do not vendor them.
+#
+# Only the `seed` list is operative for `eeik seed`; `generated` and `engine` are documentation so a
+# human (or an agent) can answer "should I copy this?" without guessing. Anything not listed as `seed`
+# is simply not copied.
+version: 1
+
+seed:
+  - path: .github/instructions
+    note: GitHub Copilot workspace instructions — shared coding standards, safe to take verbatim.
+  - path: .github/workflows/quality-gate.yml
+    note: Downstream-product quality gate. Self-skips until your product build (pom.xml/package.json/src/) exists.
+  - path: .vscode
+    note: Shared editor settings.
+  - path: intellij
+    note: Shared IntelliJ settings.
+  - path: templates/PROJECT-CLAUDE.md
+    dest: CLAUDE.md
+    note: >
+      Your project's CLAUDE.md — replace the <!-- TODO --> placeholders. Deliberately NOT EEIK's own
+      root CLAUDE.md, which describes the EEIK repo itself and would misdirect Claude Code in a product.
+
+generated:
+  - path: .claude/agents
+    note: Materialised by `eeik activate` from the packs your manifest selects. Regenerate — do not copy EEIK's.
+  - path: .claude/commands
+    note: Materialised by `eeik activate`.
+  - path: .claude/standards
+    note: Materialised by `eeik activate`.
+  - path: .claude/workflows
+    note: Materialised by `eeik activate`.
+  - path: .kiro
+    note: Produced by `eeik generate-adapters`.
+  - path: .cursor
+    note: Produced by `eeik generate-adapters`.
+  - path: AGENTS.md
+    note: Produced by `eeik generate-adapters` (Codex/OpenAI tool context).
+  - path: GEMINI.md
+    note: Produced by `eeik generate-adapters` (Gemini CLI tool context).
+
+engine:
+  - path: eeik
+    note: The installable engine package. Install it (`pip install eeik`), never vendor it.
+  - path: scripts
+    note: Backward-compatible shims over the engine package.
+  - path: tests
+    note: EEIK's own engine test suite.
+  - path: pyproject.toml
+    note: EEIK's packaging. An adopting product has its own.
+  - path: eeik.lock
+    note: EEIK's own adopted-pack lockfile. Your project generates its own via `eeik lock`.
+  - path: capability-packs
+    note: Raw pack sources the engine reads. Consumed via `eeik activate`, not copied.
+  - path: generators
+    note: Generator prompts/blueprints the engine runs.
+  - path: bootstrap
+    note: Manifests, questions, resolvers, examples, and this seed manifest — engine inputs.
+  - path: knowledge
+    note: Cross-project ADRs, patterns, reference architectures — surfaced by the engine.
+  - path: templates
+    note: Code + PROJECT-CLAUDE templates the generators consume.
+  - path: docs
+    note: EEIK's own documentation and decision records.

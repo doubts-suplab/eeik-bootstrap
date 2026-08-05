@@ -484,7 +484,7 @@
         <div class="explorer-item">
           <div class="ei-label">Module</div>
           <div class="ei-name">eeik/mcp_server.py</div>
-          <div class="ei-desc">MCP server (<span class="mono">eeik mcp</span>) — serves the read model over the Model Context Protocol so any MCP host queries EEIK live. Tools: catalog, validate_manifest, resolve_packs, pack_drift.</div>
+          <div class="ei-desc">MCP server (<span class="mono">eeik mcp</span>) — serves the read model over the Model Context Protocol so any MCP host queries EEIK live. Tools: catalog, validate_manifest, resolve_packs, pack_drift, verify, reference_architectures, plus governed <span class="mono">generate</span> (staged, never auto-applied).</div>
         </div>
         <div class="explorer-item">
           <div class="ei-label">SDK</div>
@@ -504,7 +504,7 @@
         <div class="explorer-item">
           <div class="ei-label">Module</div>
           <div class="ei-name">eeik/architectures.py</div>
-          <div class="ei-desc">Engine-surfaced reference architectures (<span class="mono">eeik architectures</span>) — proven blueprints, each a schema-valid manifest + design + runbook. <span class="mono">eeik verify</span> checks each resolves to the packs it declares.</div>
+          <div class="ei-desc">Engine-surfaced reference architectures (<span class="mono">eeik architectures</span>) — 4 proven blueprints (order-management · ai-augmented-service · data-platform · multi-tenant-saas), each a schema-valid manifest + design + runbook. <span class="mono">eeik verify</span> checks each resolves to the packs it declares.</div>
         </div>
         <div class="explorer-item">
           <div class="ei-label">CI Workflow</div>
@@ -1077,11 +1077,13 @@ $ eeik catalog --provides java-architect
 
 // tools the host can now call, live:
   eeik_catalog · eeik_validate_manifest
-  eeik_resolve_packs · eeik_pack_drift</div>
+  eeik_resolve_packs · eeik_pack_drift
+  eeik_verify · eeik_reference_architectures
+  eeik_generate → staged, human-review draft</div>
       </div>
       <div class="card">
         <h3 style="font-size:15px;font-weight:700;margin-bottom:10px;color:var(--accent3);">Consume, don't copy</h3>
-        <p style="font-size:13px;color:var(--text-muted);">Instead of copying six static adapter files that drift, a host connects once and <strong style="color:var(--text)">asks EEIK questions live</strong>: "which packs support banking + FHIR?", "does this manifest validate?", "what would it activate?". Read-only in v1 — generation stays governed and staged (never auto-applied). Prefer in-process? The same read model is a typed SDK — <span class="mono">import eeik</span> (ADR-007). CLI, MCP, and SDK are three surfaces over <strong style="color:var(--text)">one</strong> implementation.</p>
+        <p style="font-size:13px;color:var(--text-muted);">Instead of copying six static adapter files that drift, a host connects once and <strong style="color:var(--text)">asks EEIK questions live</strong>: "which packs support banking + FHIR?", "does this manifest validate?", "what would it activate?". Reads are safe by construction; the one write tool, <span class="mono">eeik_generate</span>, is governed — it returns a <strong style="color:var(--text)">staged, human-review draft</strong> (SUGGEST authority, never auto-applied). Prefer in-process? The same read model is a typed SDK — <span class="mono">import eeik</span> (ADR-007). CLI, MCP, and SDK are three surfaces over <strong style="color:var(--text)">one</strong> implementation.</p>
         <p style="font-size:12px;color:var(--text-muted);margin-top:12px;">See <span class="mono">ADR-006</span> (MCP) &amp; <span class="mono">ADR-007</span> (SDK).</p>
       </div>
     </div>

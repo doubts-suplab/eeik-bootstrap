@@ -88,22 +88,14 @@ jobs:
         if: matrix.check == 'python'
         run: |
           if [ -f pyproject.toml ] || [ -f requirements.txt ]; then
-            pip install pip-audit
-            pip-audit --severity HIGH --format sarif --output pip-audit.sarif || EXIT_CODE=$?
-            if [ -n "$EXIT_CODE" ]; then
-              echo "pip-audit found vulnerabilities — see sarif report"
-              exit $EXIT_CODE
-            fi
+            python -m pip install --upgrade pip-audit
+            # Audit the project's declared dependencies (positional project path). pip-audit has no
+            # --severity flag and its SARIF format varies by version; a plain project audit is portable
+            # and its non-zero exit on a real vulnerability is the gate.
+            pip-audit . --progress-spinner off
           else
             echo "No Python project found, skipping pip-audit"
           fi
-
-      - name: Python — Upload SARIF
-        if: matrix.check == 'python' && always()
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: pip-audit.sarif
-        continue-on-error: true
 
   # ─── Container Image Scan ───────────────────────────────────────────────────
   container-scan:
@@ -138,13 +130,50 @@ jobs:
           sarif_file: trivy-results.sarif
 
   # ─── Static Analysis (CodeQL) ───────────────────────────────────────────────
+  # Language-generic template: analyse only the languages actually present. This avoids CodeQL's
+  # "configuration error" when, e.g., java-kotlin is in a fixed matrix but the repo has no Java to
+  # build (the eeik-bootstrap engine repo is Python + a little JS/TS). Downstream products pick up
+  # java-kotlin automatically once they contain Java.
+  codeql-detect:
+    name: CodeQL — detect languages
+    runs-on: ubuntu-latest
+    outputs:
+      languages: ${{ steps.detect.outputs.languages }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect CodeQL languages present
+        id: detect
+        run: |
+          has() { find . -path ./.git -prune -o -name "$1" -print 2>/dev/null | grep -q .; }
+          langs=()
+          if has '*.java' || has '*.kt' || [ -f pom.xml ] || [ -f build.gradle ] || [ -f build.gradle.kts ]; then
+            langs+=("java-kotlin")
+          fi
+          # CodeQL's JS/TS extractor also covers inline scripts in .html, so include those.
+          if has '*.ts' || has '*.tsx' || has '*.js' || has '*.jsx' || has '*.html' || [ -f package.json ]; then
+            langs+=("javascript-typescript")
+          fi
+          if has '*.py' || [ -f pyproject.toml ]; then
+            langs+=("python")
+          fi
+          if [ ${#langs[@]} -eq 0 ]; then
+            echo 'languages=[]' >> "$GITHUB_OUTPUT"
+          else
+            json=$(printf '"%s",' "${langs[@]}")
+            echo "languages=[${json%,}]" >> "$GITHUB_OUTPUT"
+          fi
+          echo "Detected CodeQL languages: ${langs[*]:-none}"
+
   codeql:
     name: CodeQL Static Analysis
+    needs: codeql-detect
+    if: needs.codeql-detect.outputs.languages != '[]'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        language: [java-kotlin, javascript-typescript]
+        language: ${{ fromJson(needs.codeql-detect.outputs.languages) }}
     steps:
       - uses: actions/checkout@v4
 

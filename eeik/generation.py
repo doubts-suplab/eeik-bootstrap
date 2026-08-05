@@ -26,8 +26,9 @@ from __future__ import annotations
 
 import argparse
 import sys
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Callable
+from typing import Any, Callable
 
 REPO_ROOT = Path(__file__).parent.parent
 STAGING_DIR = REPO_ROOT / ".eeik-staging"
@@ -104,29 +105,73 @@ def _write_staged(generator_name: str, artifact: str) -> Path:
     return out_file
 
 
-def govern_generation(
+# ── structured outcome (the SDK/MCP surface) ─────────────────────────────────────
+
+@dataclass(frozen=True)
+class GenerationOutcome:
+    """The governed result of one generation — JSON-serialisable, no console coupling.
+
+    The invariant every field defends: generation is SUGGEST authority, so ``auto_enforced`` is
+    always ``False`` and the draft is always *staged*, never applied. A consumer (CLI, SDK, MCP)
+    reads this to prove the governed path ran; it never receives an auto-applied artifact.
+    """
+
+    generator: str
+    halo_available: bool
+    producer_kind: str            # "offline-demo" | "registered" | "llm"
+    action: str | None            # None only when HALO is absent (fail-safe, ungoverned stage)
+    confidence: float | None
+    auto_enforced: bool           # MUST be False — SUGGEST never auto-enforces (gate rule G-5)
+    staged: bool                  # the artifact was written to staging, not live config
+    staged_path: str              # path relative to the repo root
+    bypass_total: int             # confidence_gate_bypass_total — MUST be 0
+    review: dict[str, Any] | None  # {"reason", "slaSeconds"} when routed to a human
+    audit: list[dict[str, str]] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+    artifact: str = ""
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+def run_generation(
     generator_name: str,
     producer: Producer,
     *,
+    producer_kind: str = "offline-demo",
     tenant: str = "eeik",
     user: str = "eeik-cli",
-) -> int:
-    """Run one generation through the HALO gate. Returns a process exit code.
+) -> GenerationOutcome:
+    """Run one generation through the HALO gate and return a structured, staged-only outcome.
 
-    Whatever the outcome, the artifact is only ever staged — never applied to live config — because
-    generation is SUGGEST authority. The function prints a full governance trace (decision, audit,
-    review queue) so ``eeik run --governed`` and ``eeik demo`` show the runtime *in action*.
+    This is the shared core behind ``eeik demo`` / ``eeik run --governed`` (CLI), ``eeik.generate``
+    (SDK), and the ``eeik_generate`` MCP tool — one implementation, three surfaces. It performs **no**
+    console output; ``govern_generation`` formats a trace from the returned outcome. Whatever the
+    outcome, the artifact is only ever *staged* — never applied — because generation is SUGGEST
+    authority. When HALO is not installed we **fail safe**: stage, warn, and never certify the gate.
     """
-    print(f"\n{ANSI_BOLD}EEIK Governed Generation{ANSI_RESET}  ·  generator: {ANSI_CYAN}{generator_name}{ANSI_RESET}")
-
     if not HALO_AVAILABLE:
-        # Fail safe: cannot certify the gate → never apply. Stage and warn.
         artifact, confidence = producer()
         staged = _write_staged(generator_name, artifact)
-        print(f"  {ANSI_YELLOW}⚠ HALO (agent-harness) is not installed — running UNGOVERNED.{ANSI_RESET}")
-        print(f"    Install it for governed generation:  pip install agent-harness")
-        print(f"    Fail-safe: artifact staged (not applied) → {staged.relative_to(REPO_ROOT)}\n")
-        return 0
+        return GenerationOutcome(
+            generator=generator_name,
+            halo_available=False,
+            producer_kind=producer_kind,
+            action=None,
+            confidence=max(0.0, min(1.0, float(confidence))),
+            auto_enforced=False,
+            staged=True,
+            staged_path=str(staged.relative_to(REPO_ROOT)),
+            bypass_total=0,
+            review=None,
+            audit=[],
+            warnings=[
+                "HALO (agent-harness) is not installed — generation ran UNGOVERNED. "
+                "Install it (pip install agent-harness) for a certified gate. Fail-safe: the artifact "
+                "was staged, not applied.",
+            ],
+            artifact=artifact,
+        )
 
     audit = InMemoryAudit()
     review = InMemoryHumanReview()
@@ -147,28 +192,70 @@ def govern_generation(
     )
     output = harness.invoke(agent, request)
     decision = output.decision
-
     staged = _write_staged(generator_name, agent.artifact)
 
-    # ── governance trace ─────────────────────────────────────────────────────────
-    enforced = decision.auto_enforced
-    verdict_colour = ANSI_GREEN if not enforced else ANSI_RED
-    print(f"  {ANSI_DIM}authority{ANSI_RESET} SUGGEST   "
-          f"{ANSI_DIM}action{ANSI_RESET} {decision.action.value}   "
-          f"{ANSI_DIM}confidence{ANSI_RESET} {decision.confidence:.2f}")
-    print(f"  {ANSI_DIM}gate → auto_enforced:{ANSI_RESET} {verdict_colour}{enforced}{ANSI_RESET}  "
-          f"{ANSI_DIM}(G-5: SUGGEST never auto-enforces){ANSI_RESET}")
-    print(f"  {ANSI_DIM}bypass counter:{ANSI_RESET} {obs.counter('confidence_gate_bypass_total')}  "
-          f"{ANSI_DIM}(must be 0){ANSI_RESET}")
-
+    review_item: dict[str, Any] | None = None
     if review.items:
         item = review.items[0]
-        print(f"  {ANSI_CYAN}→ routed to human review{ANSI_RESET}  "
-              f"reason={item.reason}  sla={item.sla_seconds}s")
-    for entry in audit.entries:
-        print(f"  {ANSI_DIM}audit:{ANSI_RESET} {entry.outcome}  \"{entry.rationale}\"")
+        review_item = {"reason": item.reason, "slaSeconds": item.sla_seconds}
 
-    print(f"\n  {ANSI_GREEN}✓ Draft staged for approval:{ANSI_RESET} {staged.relative_to(REPO_ROOT)}")
+    return GenerationOutcome(
+        generator=generator_name,
+        halo_available=True,
+        producer_kind=producer_kind,
+        action=decision.action.value,
+        confidence=decision.confidence,
+        auto_enforced=decision.auto_enforced,
+        staged=True,
+        staged_path=str(staged.relative_to(REPO_ROOT)),
+        bypass_total=obs.counter("confidence_gate_bypass_total"),
+        review=review_item,
+        audit=[{"outcome": e.outcome, "rationale": e.rationale} for e in audit.entries],
+        artifact=agent.artifact,
+    )
+
+
+def govern_generation(
+    generator_name: str,
+    producer: Producer,
+    *,
+    producer_kind: str = "offline-demo",
+    tenant: str = "eeik",
+    user: str = "eeik-cli",
+) -> int:
+    """Run one generation through the HALO gate and print a governance trace. Returns an exit code.
+
+    Thin console wrapper over :func:`run_generation` — the CLI/demo surface. The structured outcome
+    is the source of truth; this only formats it.
+    """
+    print(f"\n{ANSI_BOLD}EEIK Governed Generation{ANSI_RESET}  ·  generator: {ANSI_CYAN}{generator_name}{ANSI_RESET}")
+    outcome = run_generation(
+        generator_name, producer, producer_kind=producer_kind, tenant=tenant, user=user,
+    )
+
+    if not outcome.halo_available:
+        print(f"  {ANSI_YELLOW}⚠ HALO (agent-harness) is not installed — running UNGOVERNED.{ANSI_RESET}")
+        print(f"    Install it for governed generation:  pip install agent-harness")
+        print(f"    Fail-safe: artifact staged (not applied) → {outcome.staged_path}\n")
+        return 0
+
+    enforced = outcome.auto_enforced
+    verdict_colour = ANSI_GREEN if not enforced else ANSI_RED
+    print(f"  {ANSI_DIM}authority{ANSI_RESET} SUGGEST   "
+          f"{ANSI_DIM}action{ANSI_RESET} {outcome.action}   "
+          f"{ANSI_DIM}confidence{ANSI_RESET} {outcome.confidence:.2f}")
+    print(f"  {ANSI_DIM}gate → auto_enforced:{ANSI_RESET} {verdict_colour}{enforced}{ANSI_RESET}  "
+          f"{ANSI_DIM}(G-5: SUGGEST never auto-enforces){ANSI_RESET}")
+    print(f"  {ANSI_DIM}bypass counter:{ANSI_RESET} {outcome.bypass_total}  "
+          f"{ANSI_DIM}(must be 0){ANSI_RESET}")
+
+    if outcome.review:
+        print(f"  {ANSI_CYAN}→ routed to human review{ANSI_RESET}  "
+              f"reason={outcome.review['reason']}  sla={outcome.review['slaSeconds']}s")
+    for entry in outcome.audit:
+        print(f"  {ANSI_DIM}audit:{ANSI_RESET} {entry['outcome']}  \"{entry['rationale']}\"")
+
+    print(f"\n  {ANSI_GREEN}✓ Draft staged for approval:{ANSI_RESET} {outcome.staged_path}")
     print(f"  {ANSI_DIM}Approve by reviewing and moving the artifact into place, then commit.{ANSI_RESET}\n")
     return 0
 
@@ -189,6 +276,40 @@ def _demo_producer() -> tuple[str, float]:
         "Agent Contract so it is runtime-governed by construction.\n"
     )
     return artifact, 0.72  # below the 0.80 bar — the gate will route to review either way
+
+
+def offline_producer(generator: str, spec: str | None = None) -> Producer:
+    """A deterministic, offline producer for any generator (no API key / network).
+
+    Real LLM-backed generation requires the ``claude`` CLI or an API key and lives behind
+    ``eeik run``; when neither is available this stand-in keeps the *governed path* exercisable —
+    the point being to demonstrate the gate/stage/review behaviour, not the model output. The draft
+    echoes the requested generator and spec so a caller can see their intent was received.
+    """
+
+    def _produce() -> tuple[str, float]:
+        intent = (spec or "").strip() or "(no spec provided)"
+        artifact = (
+            f"# Draft from `{generator}` (offline)\n\n"
+            f"**Requested intent:** {intent}\n\n"
+            "> This is a deterministic offline draft produced without an LLM. It exists to exercise\n"
+            "> EEIK's *governed* generation path: SUGGEST authority, staged for human review, never\n"
+            "> auto-applied. Install `agent-harness` and wire an LLM-backed producer via `eeik run`\n"
+            "> for real content.\n"
+        )
+        return artifact, 0.72  # below the 0.80 bar → routed to review
+
+    return _produce
+
+
+def resolve_producer(generator: str, spec: str | None = None) -> tuple[Producer, str]:
+    """Return ``(producer, producer_kind)`` for a generator.
+
+    v1: always the deterministic offline producer (``producer_kind='offline-demo'``). The seam is
+    here so a future LLM-backed producer (``eeik run`` with an API key) can register per generator
+    without changing the SDK/MCP callers.
+    """
+    return offline_producer(generator, spec), "offline-demo"
 
 
 def main() -> int:

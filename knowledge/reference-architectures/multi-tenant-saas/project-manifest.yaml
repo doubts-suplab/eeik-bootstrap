@@ -1,0 +1,66 @@
+# EEIK Reference Architecture — Multi-Tenant SaaS
+# A schema-valid eeik manifest for a shared-infrastructure, isolated-tenant SaaS on AWS.
+
+schema_version: "1.0"
+
+project:
+  name: saas-platform
+  description: Multi-tenant SaaS — shared compute, isolated tenant data, per-tenant billing and identity
+  owner: platform-engineering
+  domain: generic
+  project_type: greenfield
+
+technology:
+  backend:
+    language: java
+    version: 21
+    framework: spring-boot
+  frontend:
+    framework: react
+  database:
+    type: aurora-postgresql
+    migration_tool: flyway
+    orm: spring-data-jpa
+  messaging:
+    broker: eventbridge
+    pattern: event-driven
+
+architecture:
+  style: modular-monolith
+  patterns:
+    - ddd
+    - api-gateway
+    - bff
+  api_style: rest
+
+cloud:
+  provider: aws
+  infra_as_code: cdk
+  regions:
+    - eu-west-1
+  multi_account: true
+
+ai:
+  enabled: false
+
+governance:
+  profile: enterprise
+  adr_required: true
+  coverage_threshold: 80
+  reviews_required:
+    - architecture-review
+    - security-review
+    - production-readiness-review
+
+delivery:
+  model: multi-team
+  methodology: agile
+  sprint_length_weeks: 2
+  cicd_platform: github-actions
+
+observability:
+  enabled: true
+  logging: cloudwatch
+  tracing: x-ray
+  metrics: cloudwatch
+  slo_required: true

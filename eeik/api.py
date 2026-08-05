@@ -24,10 +24,13 @@ import yaml
 from eeik import architectures as _architectures
 from eeik import catalog as _catalog
 from eeik import contract as _contract
+from eeik import generation as _generation
 from eeik import lock as _lock
 from eeik import manifest as _manifest
 from eeik import packs as _packs
+from eeik import seed as _seed
 from eeik.architectures import ReferenceArchitecture
+from eeik.generation import GenerationOutcome
 from eeik.verify import Finding, VerifyReport, verify
 from eeik.versions import all_pack_fingerprints
 
@@ -203,6 +206,30 @@ def validate_agent_contract(contract: dict) -> tuple[bool, str]:
     return _contract.validate_contract(contract)
 
 
+def generate(generator: str = "agent-generator", *, spec: str | None = None) -> GenerationOutcome:
+    """Run one **governed** generation and stage a human-review draft — never auto-applied (ADR-003).
+
+    Generation is SUGGEST authority: the draft flows through HALO's confidence gate, which guarantees
+    ``auto_enforced=False`` and routes it to human review, and the artifact is written to a staging
+    area rather than live config. Returns a :class:`~eeik.generation.GenerationOutcome` carrying the
+    decision, the review routing, the audit trail, and the staged path. When HALO is not installed it
+    **fails safe** (stages, warns, does not certify the gate). ``spec`` is free-text intent passed to
+    the producer. This is the in-process twin of the ``eeik_generate`` MCP tool.
+    """
+    producer, kind = _generation.resolve_producer(generator, spec)
+    return _generation.run_generation(generator, producer, producer_kind=kind)
+
+
+def seed_plan() -> dict[str, list[dict[str, str]]]:
+    """The seed taxonomy: which root entries an adopting project copies vs. regenerates vs. leaves.
+
+    Returns ``{"seed": [...], "generated": [...], "engine": [...]}`` from ``bootstrap/seed-manifest.yaml``
+    — the single source of truth behind ``eeik seed`` that makes the dual-purpose adapter boundary
+    explicit (ADR-005/011). Each entry is ``{"path", "note"}``.
+    """
+    return _seed.seed_plan()
+
+
 def reference_architectures() -> list[ReferenceArchitecture]:
     """Every proven, engine-surfaced architectural blueprint (ADR-010)."""
     return _architectures.load_all()
@@ -221,6 +248,7 @@ __all__ = [
     "DriftReport",
     "Finding",
     "VerifyReport",
+    "GenerationOutcome",
     "find_packs",
     "providers_of",
     "validate_manifest",
@@ -230,6 +258,8 @@ __all__ = [
     "verify",
     "agent_contract",
     "validate_agent_contract",
+    "generate",
+    "seed_plan",
     "ReferenceArchitecture",
     "reference_architectures",
     "reference_architecture",

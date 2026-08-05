@@ -27,10 +27,12 @@ eeik verify                           # asserts each manifest still validates & 
 |---|---|---|---|
 | [order-management](order-management/architecture.md) | Spring Boot 3 · Java 21 · Aurora · Kafka · CDK | Production | core · architecture · aws · delivery · java |
 | [ai-augmented-service](ai-augmented-service/architecture.md) | FastAPI · Bedrock · pgvector · HALO · React · CDK | Staging | + agent-harness · ai-engineering · governance · python · react |
+| [data-platform](data-platform/architecture.md) | Kafka · Spark/Glue · dbt · Airflow · S3 lakehouse · Athena · CDK | Production | + data-engineering · python |
+| [multi-tenant-saas](multi-tenant-saas/architecture.md) | Spring Boot 3 · Aurora RLS · Cognito · EventBridge · React · CDK | Production | core · architecture · aws · delivery · governance · java · react |
 
 ## Legacy prose blueprints
 
 - [multi-agent-ai-platform.md](multi-agent-ai-platform.md) — narrative blueprint (pre-v1.4 format; not
   yet engine-surfaced).
 
-Planned (ROADMAP v1.3): Data Platform, Multi-Tenant SaaS.
+Planned (ROADMAP v1.3): per-architecture CDK stacks + seed data / local dev setup.

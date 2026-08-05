@@ -172,8 +172,8 @@ straight to `resolve-packs` / the repository-generator; `eeik verify` keeps them
 ([ADR-010](docs/decisions/ADR-010-reference-architectures-engine-surfaced.md)):
 
 ```bash
-eeik architectures                       # order-management (Java/Kafka/AWS) · ai-augmented-service (RAG/Bedrock/HALO)
-eeik architectures order-management      # stack, components, and the packs it resolves to
+eeik architectures                       # order-management · ai-augmented-service · data-platform · multi-tenant-saas
+eeik architectures data-platform         # stack, components, and the packs it resolves to
 ```
 
 > **Repository layout:** see [ARCHITECTURE.md](ARCHITECTURE.md) for the four-layer taxonomy (engine /
@@ -184,7 +184,9 @@ call EEIK live instead of copying static adapter files ([ADR-006](docs/decisions
 
 ```bash
 pip install -e ".[mcp]"     # the MCP SDK is an optional extra
-eeik mcp                    # tools: eeik_catalog, eeik_validate_manifest, eeik_resolve_packs, eeik_pack_drift
+eeik mcp                    # read: eeik_catalog, eeik_validate_manifest, eeik_resolve_packs,
+                            #       eeik_pack_drift, eeik_verify, eeik_reference_architectures
+                            # governed write: eeik_generate → a STAGED, human-review draft (never auto-applied)
 ```
 
 Register it with a host — e.g. Claude Code `.mcp.json`:
@@ -203,6 +205,7 @@ result = eeik.validate_manifest(path="project-manifest.yaml")   # ValidationResu
 packs  = eeik.resolve_packs(manifest=doc)                        # ["core", "architecture", "java", ...]
 banking = eeik.find_packs(tag="banking")                         # [Pack(...), ...]
 who    = eeik.providers_of("java-architect")                     # [Provider(pack="java", kind="agent")]
+draft  = eeik.generate("agent-generator", spec="a refund agent") # GenerationOutcome — staged, auto_enforced=False
 ```
 
 The CLI, the MCP server, and this SDK are three surfaces over **one** implementation — they cannot drift.
@@ -369,19 +372,32 @@ mkdir my-new-service && cd my-new-service
 git init
 
 EEIK=/path/to/eeik_bootstrap   # set this to where you cloned EEIK
+```
 
-cp -r $EEIK/.claude      ./.claude
-cp -r $EEIK/.github      ./.github
-cp -r $EEIK/.kiro        ./.kiro
-cp -r $EEIK/.cursor      ./.cursor
-cp    $EEIK/AGENTS.md    ./AGENTS.md
-cp    $EEIK/GEMINI.md    ./GEMINI.md
+**Recommended — `eeik seed`.** EEIK's root dirs are dual-purpose (EEIK's own config *and* the seed you
+copy). `eeik seed` copies exactly the right subset — no engine, no tests, no EEIK's own agents, and it
+plants `templates/PROJECT-CLAUDE.md` as your `CLAUDE.md` (never EEIK's root one) automatically (ADR-011):
+
+```bash
+pip install -e $EEIK             # installs the `eeik` engine once
+eeik seed --list                 # see what's seed / generated / engine
+eeik seed --into . --apply       # copy the seed set into this project
+```
+
+**Or by hand** — the classic `cp -r`. Copy only the adapter shells, and mind the CLAUDE.md footgun:
+
+```bash
+cp -r $EEIK/.github/instructions ./.github/instructions
+cp -r $EEIK/.vscode              ./.vscode
 
 # ⚠️  IMPORTANT: use templates/PROJECT-CLAUDE.md — NOT CLAUDE.md from the EEIK root.
 # EEIK's CLAUDE.md describes the EEIK repo itself (bootstrap/, generators/, capability-packs/).
 # Claude Code reads it and thinks it's inside EEIK, causing artifacts to be created there.
 cp    $EEIK/templates/PROJECT-CLAUDE.md ./CLAUDE.md
 ```
+
+The `.claude/` agents, `.kiro/`, `.cursor/`, `AGENTS.md`, and `GEMINI.md` are **generated** — don't copy
+EEIK's; regenerate them from *your* manifest in step 2.
 
 ### 2. Validate and generate adapters
 

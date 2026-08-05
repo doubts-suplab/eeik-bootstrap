@@ -61,3 +61,23 @@ def test_to_dict_shapes_match_the_wire():
 def test_resolve_requires_an_argument():
     with pytest.raises(ValueError):
         eeik.resolve_packs()
+
+
+def test_generate_is_governed_suggest_and_staged():
+    """eeik.generate() runs the governed path: SUGGEST authority, staged, never auto-enforced."""
+    out = eeik.generate("agent-generator", spec="propose a refund eligibility agent")
+    assert isinstance(out, eeik.GenerationOutcome)
+    assert out.auto_enforced is False              # gate rule G-5
+    assert out.staged is True                      # staged, not applied to live config
+    assert out.bypass_total == 0                   # confidence_gate_bypass_total must be 0
+    assert out.generator == "agent-generator"
+    assert "propose a refund eligibility agent" in out.artifact
+    d = out.to_dict()
+    assert set(d) >= {"generator", "action", "confidence", "auto_enforced", "staged",
+                      "staged_path", "bypass_total", "review", "audit", "artifact"}
+
+
+def test_generate_default_generator():
+    out = eeik.generate()
+    assert out.generator == "agent-generator"
+    assert out.staged is True

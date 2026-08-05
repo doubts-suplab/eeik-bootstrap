@@ -1,6 +1,6 @@
 {
   "eeikVersion": "1.4.0",
-  "generatedAt": "2026-07-25T16:46:48+00:00",
+  "generatedAt": "2026-08-05T16:27:58+00:00",
   "packs": {
     "agent-harness": {
       "digest": "924a5809adb95e2b",
@@ -15,16 +15,16 @@
       "version": "1.0"
     },
     "architecture": {
-      "digest": "e8839255a25c88ff",
-      "version": "1.0"
+      "digest": "d7c0e2d1266539ea",
+      "version": "1.1"
     },
     "aws": {
       "digest": "fc878cc9df8c5817",
       "version": "1.0"
     },
     "banking": {
-      "digest": "08c5d85e5271900a",
-      "version": "1.0"
+      "digest": "2ef8b80aa9997581",
+      "version": "1.1"
     },
     "belgium-insurance": {
       "digest": "cd0379ecc8dee701",
@@ -51,8 +51,8 @@
       "version": "1.0"
     },
     "healthcare": {
-      "digest": "ba7e270c603a729c",
-      "version": "1.0"
+      "digest": "959ec8cab4bd8e49",
+      "version": "1.1"
     },
     "insurance": {
       "digest": "cc81950397eb2a97",

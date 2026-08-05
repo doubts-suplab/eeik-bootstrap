@@ -38,8 +38,9 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 | **Conformance gate (`eeik verify`)** | ✅ | Declared agents/standards resolve to files; manifest + lock consistent; fail/warn/pass + `--strict`; CLI/SDK/MCP (`eeik/verify.py`, ADR-008) |
 | **Pack metadata reconciled** | ✅ | 30 gaps fixed (trim phantoms, `X-standard`→`X` renames, declare shipped files, author `insurance-compliance-standard`); `eeik verify --strict` clean (0/0/21); catalog advertises only real files |
 | **Agent Contracts by construction** | ✅ | `eeik contract` / `eeik.agent_contract()` emit `agent-contract.schema.json`-conformant contracts per blueprint; validated by HALO's own validator (`eeik/contract.py`, ADR-009) |
-| **Reference architectures (engine-surfaced)** | ✅ | order-management + ai-augmented-service — each a schema-valid manifest + design + runbook; `eeik architectures` (CLI/SDK/MCP); `eeik verify` checks manifest + pack match (`eeik/architectures.py`, ADR-010) |
-| Resolver + schema fixes (surfaced by ref-archs) | ✅ | `resolve_packs` reads top-level `cloud`/`ai` (aws/ai-engineering packs now resolve); schema gains `alembic`, `adr_required`, `coverage_threshold`; CLI dispatches in-process (no `-m` warning) |
+| **Reference architectures (engine-surfaced)** | ✅ | 4 blueprints — order-management, ai-augmented-service, data-platform, multi-tenant-saas — each a schema-valid manifest + design + runbook; `eeik architectures` (CLI/SDK/MCP); `eeik verify` checks manifest + pack match (`eeik/architectures.py`, ADR-010) |
+| **v1.2 domain packs completed** | ✅ | banking (`banking-domain-expert`, `payments-specialist`) + healthcare (`healthcare-domain-expert`, `clinical-data-specialist`) authored; python/data-engineering/openshift already substantive; verify clean |
+| Resolver + schema fixes (surfaced by ref-archs) | ✅ | `resolve_packs` reads top-level `cloud`/`ai` and `technology.data.*` (aws/ai-engineering/data-engineering packs now resolve); schema gains `technology.data`, `alembic`, `adr_required`, `coverage_threshold`; CLI dispatches in-process |
 | Engine test suite | ✅ | 50 tests — engine + MCP (round-trip) + SDK + verify + contracts + reference architectures |
 | **Installable engine package** | ✅ | `scripts/` → `eeik/` package + `pyproject.toml`; `eeik` console script / `python -m eeik`; back-compat `scripts/*.py` shims; CI installs the package |
 | **Single canonical manifest schema** | ✅ | `eeik/schemas/manifest.schema.json` replaces 3 divergent copies; fixed the stale-schema bug that rejected EEIK's own examples |
@@ -49,11 +50,13 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 | **EEIK MCP server** | ✅ | `eeik mcp` — read model over MCP (`eeik_catalog`, `eeik_validate_manifest`, `eeik_resolve_packs`, `eeik_pack_drift`); read-only v1 (`eeik/mcp_server.py`, ADR-006) |
 | **Stable Python API / SDK** | ✅ | `import eeik` — typed `find_packs`/`providers_of`/`validate_manifest`/`resolve_packs`/`pack_drift`/`write_lock`; CLI + MCP delegate to it (`eeik/api.py`, ADR-007) |
 | **apex-sdlc onboarding consumes the engine** | ✅ | Cross-repo: APEX validates + resolves via the real engine — SDK (`import eeik`) or MCP (`eeik mcp`), vendored fallback (apex `app/onboarding/eeik_engine.py`) |
-| Governed generation over MCP | ⬜ | Planned — a staged, human-review `generate` tool (not auto-applied) |
-| `eeik verify` (conformance gate) | ⬜ | Planned (Tier 3) |
-| Agent-generator emits HALO Agent Contracts | ⬜ | Planned (Tier 3) |
+| **`eeik verify` (conformance gate)** | ✅ | `eeik verify --strict --exit-code` — pack conformance, manifest validity, lock drift, reference-architecture resolution; CI-gated (`eeik/verify.py`, ADR-008) |
+| **Agent-generator emits HALO Agent Contracts** | ✅ | `eeik contract` emits a schema-valid HALO Agent Contract from a pack agent (`eeik/contract.py`, ADR-009) |
+| **Reference architectures (engine-surfaced)** | ✅ | 4 blueprints — machine-readable descriptor + schema-valid manifest + design + runbook; `eeik architectures`, verify-checked (`eeik/architectures.py`, ADR-010) |
+| **Single canonical capability matrix** | ✅ | Resolver overlap consolidated onto `bootstrap/resolvers/capability-matrix.yaml`; duplicate stub removed; authoritative resolution is code (`eeik/packs.py`); APEX vendored copy re-synced |
+| **Governed generation over MCP** | ✅ | `eeik_generate` (MCP) + `eeik.generate()` (SDK) return a staged, human-review draft — SUGGEST authority, `auto_enforced=false`, `autoApplied=false`, never applied; fails safe without HALO (`eeik/generation.py::run_generation`) |
 | Closed-loop knowledge capture from audit logs | ⬜ | Planned (Tier 3) |
-| Clarify dual-purpose root adapters | ⬜ | Planned (Tier 4) — taxonomy now documented (ADR-005) |
+| **Clarify dual-purpose root adapters** | ✅ | `bootstrap/seed-manifest.yaml` classifies every root entry seed/generated/engine; `eeik seed` + `eeik.seed_plan()` copy exactly the seed set; seed CI self-skips on the engine repo (ADR-011) |
 
 ---
 

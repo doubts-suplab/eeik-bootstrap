@@ -1,0 +1,49 @@
+name: multi-tenant-saas
+title: Multi-Tenant SaaS
+summary: >
+  Shared-infrastructure, isolated-tenant SaaS on AWS: a Spring Boot modular monolith behind an API
+  gateway, Cognito-per-tenant identity, PostgreSQL row-level-security data isolation, per-tenant usage
+  metering and billing, and EventBridge for cross-module events. Demonstrates the tenant-isolation,
+  noisy-neighbour, and per-tenant-billing concerns every SaaS must solve.
+maturity: production
+manifest: project-manifest.yaml
+
+stack:
+  - java-21
+  - spring-boot-3
+  - aurora-postgresql-rls
+  - cognito
+  - api-gateway
+  - eventbridge
+  - react
+  - aws-cdk
+
+tags: [saas, multi-tenant, tenant-isolation, cognito, rls, billing, aws, java, modular-monolith]
+
+expected_packs: [core, architecture, aws, delivery, governance, java, react]
+
+components:
+  - name: API Gateway + BFF
+    tech: API Gateway → Spring Boot
+    responsibility: Terminates auth; resolves the tenant from the token; injects tenant context
+  - name: Identity
+    tech: Cognito (user pool per tenant or shared pool + tenant claim)
+    responsibility: Authentication; issues a JWT carrying the tenant id + roles
+  - name: Application (modular monolith)
+    tech: Spring Boot 3
+    responsibility: Bounded-context modules; every query is tenant-scoped by the tenant context
+  - name: Tenant-isolated store
+    tech: Aurora PostgreSQL + Row-Level Security
+    responsibility: One database, RLS policies keyed by tenant_id — no query can cross tenants
+  - name: Metering & Billing
+    tech: Usage events → EventBridge → metering store → billing (Stripe)
+    responsibility: Per-tenant usage capture, rating, and invoicing
+  - name: Control plane
+    tech: Spring Boot admin module
+    responsibility: Tenant onboarding/offboarding, plan/entitlements, feature flags per tenant
+
+key_decisions:
+  - "Pooled model with RLS: shared compute + one DB, tenant isolated at the row level (cost-efficient default)."
+  - "Tenant context is set once at the edge and enforced everywhere — never trusted from the request body."
+  - "Per-tenant metering from domain events; billing is downstream of usage, not bolted onto request paths."
+  - "Escape hatch to silo (dedicated DB/schema) for tenants that require it — isolation is a per-tenant policy."

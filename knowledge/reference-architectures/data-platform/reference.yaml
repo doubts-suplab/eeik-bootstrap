@@ -1,0 +1,49 @@
+name: data-platform
+title: Data Platform (streaming + lakehouse)
+summary: >
+  Streaming + batch data platform on AWS: Kafka ingestion, Spark/Glue batch, dbt transformations over a
+  medallion (bronze/silver/gold) S3 lakehouse cataloged in Glue and queried with Athena, orchestrated by
+  Airflow. Demonstrates idempotent ingestion, schema evolution, and data-quality gates.
+maturity: production
+manifest: project-manifest.yaml
+
+stack:
+  - python-3.12
+  - kafka-msk
+  - spark-glue
+  - dbt
+  - airflow-mwaa
+  - s3-lakehouse
+  - glue-catalog
+  - athena
+  - aws-cdk
+
+tags: [data-engineering, kafka, spark, dbt, airflow, lakehouse, medallion, aws, streaming, batch]
+
+expected_packs: [core, architecture, aws, data-engineering, delivery, python]
+
+components:
+  - name: Ingestion (streaming)
+    tech: Kafka (MSK) → S3 sink
+    responsibility: Land raw events into the bronze zone; keys + schema registry (Avro) preserved
+  - name: Batch / ETL
+    tech: Spark on Glue
+    responsibility: Bronze → silver — clean, dedupe, conform; idempotent, partitioned writes
+  - name: Transformation
+    tech: dbt
+    responsibility: Silver → gold — business models, tests, and documentation as code
+  - name: Lakehouse
+    tech: S3 + Glue Data Catalog (Iceberg/Parquet)
+    responsibility: Medallion zones (bronze/silver/gold); schema-on-read; time travel
+  - name: Serving
+    tech: Athena
+    responsibility: Ad-hoc + BI SQL over the gold zone; cost governed by partition pruning
+  - name: Orchestration
+    tech: Airflow (MWAA)
+    responsibility: DAG scheduling, dependencies, retries, backfills; data-quality gates between stages
+
+key_decisions:
+  - "Medallion (bronze/silver/gold): raw is immutable; refinement is reproducible from bronze."
+  - "Idempotent ingestion + partitioned overwrites: re-runs never double-count."
+  - "Schema evolution is backward-compatible (Avro registry); breaking changes are a new version."
+  - "Data-quality gates (dbt tests / Great Expectations) block promotion silver → gold."

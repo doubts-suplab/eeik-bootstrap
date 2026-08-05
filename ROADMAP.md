@@ -150,8 +150,13 @@ versioned, queryable engine. See ADR-003 (generators on HALO) and ADR-004 (pack 
       calls the real engine (manifest validation + pack resolution) via an `EeikEngine` with two backends
       — **SDK** (`import eeik`, in-process) and **MCP** (`eeik mcp`) — falling back to its vendored copy
       when eeik is absent. (apex-sdlc `app/onboarding/eeik_engine.py`, `service.onboard_with_eeik`.)
-- [ ] **Governed generation over MCP** — an MCP `generate` tool that returns a staged, human-review draft
-      (not an auto-applied artifact), once the review handoff over MCP is designed.
+- [x] **Governed generation over MCP** — `eeik_generate` MCP tool + `eeik.generate()` SDK function run a
+      generation through HALO and return a **staged, human-review draft** — never an auto-applied artifact.
+      Generation is SUGGEST authority, so the shared core (`eeik/generation.py::run_generation`) guarantees
+      `auto_enforced=false`, routes the draft to human review, keeps `confidence_gate_bypass_total=0`, and
+      writes to a staging area; the MCP payload flags `autoApplied=false` explicitly. One implementation,
+      three surfaces (CLI `demo`/`run`, SDK, MCP). Fails safe when HALO is absent. (`eeik/generation.py`,
+      `eeik/mcp_tools.py`, ADR-003/006.)
 
 ### Tier 3 — Closing the loop
 - [x] **`eeik verify`** — the conformance gate: every declared agent/standard resolves to a file, the
@@ -180,24 +185,36 @@ the remaining stages are tracked here so the framework's layout keeps pace with 
       docs) is documented with a "where does a new X go?" placement rule.
       See [ADR-005](docs/decisions/ADR-005-layered-directory-taxonomy.md) and
       [ARCHITECTURE.md](ARCHITECTURE.md). *Documented before moving any content, by design.*
-- [ ] **Clarify the dual-purpose adapters** — the root `.claude/`/`.github/`/`.kiro/`/`.cursor/` are both
-      EEIK's own dogfood config *and* the seed users copy (a documented footgun). Make the copy-target
-      explicit without breaking the `cp -r` adoption ergonomics.
-- [ ] **Consolidate the resolver overlap** — `generators/capability-selector` vs `bootstrap/resolvers`
-      cover overlapping ground; unify now that the taxonomy ADR has landed.
+- [x] **Clarify the dual-purpose adapters** — done (ADR-011). `bootstrap/seed-manifest.yaml` classifies
+      every root entry as `seed` (copy) / `generated` (regenerate via the engine) / `engine` (never copy).
+      `eeik seed --into <dir> [--apply]` copies exactly the `seed` set (also `eeik seed --list`,
+      `eeik.seed_plan()`), additive to `cp -r`. The seed's own `quality-gate.yml` product jobs self-skip
+      on the engine repo (no `pom.xml`/`package.json`/`src/`). A test asserts no engine-only path is ever
+      classified `seed`.
+- [x] **Consolidate the resolver overlap** — unified on a single canonical matrix at
+      `bootstrap/resolvers/capability-matrix.yaml` (all 19 packs, availability-annotated). The duplicate
+      stub under `generators/capability-selector/` was removed; its README now redirects to the canonical
+      file and states plainly that the *authoritative* resolver is code (`eeik/packs.py::resolve_packs`) —
+      the matrix is human-readable reference. `eeik/packs.py::MATRIX_FILE` repointed accordingly; APEX's
+      vendored copy + `PROVENANCE.md` re-synced (availability corrected: all 19 built, azure/gcp/retail
+      remain v2.0).
 
 ---
 
-## v1.2 — Domain Capability Packs
+## v1.2 — Domain Capability Packs (Complete)
 
-Expanding domain-specific packs that are currently stubs.
+Domain-specific packs, now substantive (agents + standards + knowledge) and conformance-checked by
+`eeik verify` — the catalog advertises only agents that exist.
 
-### Planned
-- [ ] **Python capability pack** — Promote `python-developer` agent; add FastAPI and data science templates
-- [ ] **Data Engineering pack** — Full pipeline templates (Kafka, Spark, dbt), Airflow DAG skeletons
-- [ ] **OpenShift pack** — Kubernetes engineer agent, Helm chart templates, SCC patterns
-- [ ] **Banking domain pack** — PCI-DSS controls, SWIFT integration patterns, payment flow agents
-- [ ] **Healthcare domain pack** — FHIR-aware agent, HIPAA privacy controls, HL7 integration patterns
+### Delivered
+- [x] **Python capability pack** — `python-developer`, `fastapi-engineer`; python + fastapi standards.
+- [x] **Data Engineering pack** — `data-engineer`; data-engineering + data-pipeline standards; lakehouse
+      knowledge. (Now auto-resolves from `technology.data.*` — schema + resolver extended.)
+- [x] **OpenShift pack** — `openshift-engineer`, `kubernetes-engineer`; openshift standard.
+- [x] **Banking domain pack** — `banking-domain-expert`, `payments-specialist` (SWIFT/ISO 20022, SEPA,
+      SCA, PCI-DSS); banking-compliance standard. (v1.1)
+- [x] **Healthcare domain pack** — `healthcare-domain-expert`, `clinical-data-specialist` (FHIR R4, HL7 v2,
+      SNOMED/LOINC, HIPAA); healthcare-compliance standard. (v1.1)
 
 ---
 
@@ -210,15 +227,16 @@ the repository-generator, an `architecture.md`, and a `runbook.md`. `eeik archit
 
 ### Delivered
 - [x] **Order Management Microservice** — event-driven Spring Boot 3 / Java 21 / Aurora / Kafka on AWS;
-      DDD, transactional outbox, choreographed saga, CQRS. (`knowledge/reference-architectures/order-management/`)
-- [x] **AI-Augmented Service** — RAG on FastAPI / Bedrock / pgvector, every model call governed by HALO
-      (gate, tool allowlist, audit, human review). (`knowledge/reference-architectures/ai-augmented-service/`)
+      DDD, transactional outbox, choreographed saga, CQRS.
+- [x] **AI-Augmented Service** — RAG on FastAPI / Bedrock / pgvector, every model call governed by HALO.
+- [x] **Data Platform** — Kafka + Spark/Glue + dbt + Airflow + S3 lakehouse + Athena; medallion, idempotent
+      ingestion, data-quality gates.
+- [x] **Multi-Tenant SaaS** — shared infra + isolated tenants; Cognito identity, PostgreSQL RLS isolation,
+      per-tenant metering/billing, noisy-neighbour controls.
 - [x] **Engine surfacing + conformance** — `eeik architectures` (CLI), `eeik.reference_architectures()`
       (SDK), `eeik_reference_architectures` (MCP); `eeik verify` asserts manifest validity + pack match.
 
 ### Planned
-- [ ] **Data Platform** — Kafka + Spark + dbt + Airflow + S3/Glue + Athena
-- [ ] **Multi-Tenant SaaS** — Shared cluster, tenant isolation, billing integration, Cognito multi-tenancy
 - [ ] Per-architecture CDK stacks + seed data / local dev setup (currently: manifest + design + runbook)
 
 ---
