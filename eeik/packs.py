@@ -29,7 +29,7 @@ except ImportError:
 REPO_ROOT   = Path(__file__).parent.parent
 PACKS_DIR   = REPO_ROOT / "capability-packs"
 CLAUDE_DIR  = REPO_ROOT / ".claude"
-MATRIX_FILE = REPO_ROOT / "generators" / "capability-selector" / "capability-matrix.yaml"
+MATRIX_FILE = REPO_ROOT / "bootstrap" / "resolvers" / "capability-matrix.yaml"
 
 ANSI_GREEN  = "\033[92m"
 ANSI_YELLOW = "\033[93m"
@@ -74,6 +74,12 @@ def load_manifest() -> dict:
 
 
 def load_matrix() -> dict:
+    """Load the human-readable capability matrix (bootstrap/resolvers).
+
+    The matrix is reference documentation only — ``resolve_packs`` is code-driven
+    and does not consume it. It is loaded so the CLI can surface / cross-check the
+    field→pack mapping, and to keep a single canonical matrix location.
+    """
     if not MATRIX_FILE.exists():
         return {}
     with open(MATRIX_FILE) as f:

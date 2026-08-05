@@ -183,8 +183,13 @@ the remaining stages are tracked here so the framework's layout keeps pace with 
 - [ ] **Clarify the dual-purpose adapters** — the root `.claude/`/`.github/`/`.kiro/`/`.cursor/` are both
       EEIK's own dogfood config *and* the seed users copy (a documented footgun). Make the copy-target
       explicit without breaking the `cp -r` adoption ergonomics.
-- [ ] **Consolidate the resolver overlap** — `generators/capability-selector` vs `bootstrap/resolvers`
-      cover overlapping ground; unify now that the taxonomy ADR has landed.
+- [x] **Consolidate the resolver overlap** — unified on a single canonical matrix at
+      `bootstrap/resolvers/capability-matrix.yaml` (all 19 packs, availability-annotated). The duplicate
+      stub under `generators/capability-selector/` was removed; its README now redirects to the canonical
+      file and states plainly that the *authoritative* resolver is code (`eeik/packs.py::resolve_packs`) —
+      the matrix is human-readable reference. `eeik/packs.py::MATRIX_FILE` repointed accordingly; APEX's
+      vendored copy + `PROVENANCE.md` re-synced (availability corrected: all 19 built, azure/gcp/retail
+      remain v2.0).
 
 ---
 

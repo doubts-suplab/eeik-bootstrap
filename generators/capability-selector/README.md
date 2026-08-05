@@ -4,66 +4,58 @@
 
 Maps `project-manifest.yaml` fields to the capability packs required for that project.
 
-The Capability Selector is the decision engine that sits between the Bootstrap Engine and the Generators. It reads a validated manifest and produces `selected-capabilities.yaml` — the list of packs that will be activated for the project.
+The Capability Selector is the decision engine that sits between the Bootstrap Engine and the Generators. It reads a validated manifest and produces the resolved list of packs that will be activated for the project.
+
+## Where the logic lives (v1.4)
+
+> **The authoritative resolver is code, not this directory.** As of the generation-engine
+> refactor, manifest → pack resolution is implemented in **`eeik/packs.py::resolve_packs`** and
+> exercised through `eeik activate` / `eeik.resolve_packs()`. It handles cases a flat matrix cannot —
+> top-level `cloud`/`ai`/`technology.data`, governance profiles, domain packs, modernization triggers,
+> and manifest `capability_packs` overrides.
+>
+> The human-readable field → pack reference matrix is the single canonical file at
+> **[`bootstrap/resolvers/capability-matrix.yaml`](../../bootstrap/resolvers/capability-matrix.yaml)**.
+> A duplicate stub previously lived here; it was removed to avoid drift. Keep the canonical matrix in
+> sync with `resolve_packs`.
 
 ## Design Principle
 
 ```
 project-manifest.yaml
         ↓
-Capability Selector
+resolve_packs (eeik/packs.py)          ← authoritative, code-driven
         ↓
-selected-capabilities.yaml
+resolved packs (eeik activate)
         ↓
 Repository Generator + Agent Factory
 ```
 
-## Mapping Logic
+## Mapping reference
 
-Each manifest field triggers one or more capability packs. The rules are defined in `capability-matrix.yaml`.
-
-### Current Mappings
+See [`bootstrap/resolvers/capability-matrix.yaml`](../../bootstrap/resolvers/capability-matrix.yaml)
+for the full, canonical field → pack mapping (all 19 packs, availability annotated). A sample:
 
 | Manifest Field | Value | Packs Activated |
 |----------------|-------|----------------|
 | `technology.backend.language` | `java21` | `architecture-pack`, `java-pack` |
-| `cloud.provider` | `aws` | `aws-pack` |
+| `cloud` | `aws` | `aws-pack` |
+| `technology.data.*` | any set | `data-engineering-pack` |
 | `domain` | `insurance` | `insurance-pack` |
-| `ai.enabled` | `true` | `ai-engineering-pack` |
-| `governance.profile` | any | `governance-pack` |
+| `ai.enabled` | `true` | `ai-engineering-pack`, `agent-harness-pack` |
+| `governance.profile` | `regulated`/`enterprise` | `governance-pack` |
 
-The `architecture-pack` and `governance-pack` are always included — they are foundational.
+`core-pack` and `delivery-pack` are always included — they are foundational.
 
 ## Pack Dependencies
 
-When a pack is selected, its `dependencies.yaml` is read and dependent packs are added automatically. Example:
+When a pack is selected, its `metadata.yaml` dependencies are read and dependent packs are added
+automatically (e.g. `java-pack` → `architecture-pack`). `resolve_packs` returns packs in dependency
+order.
 
-```
-java-pack selected
-    → dependencies: [architecture-pack]
-    → architecture-pack added (if not already present)
-```
+## Inspecting resolution
 
-## Outputs
-
-```yaml
-# selected-capabilities.yaml
-packs:
-  - architecture-pack
-  - java-pack
-  - aws-pack
-  - governance-pack
-
-governance_profile: standard
-agent_recommendations:
-  - solution-architect
-  - java-architect
-  - aws-architect
-```
-
-## Files
-
-```
-capability-selector/
-└── capability-matrix.yaml   ← Manifest field → pack mapping rules
+```bash
+eeik activate --list   # show the packs a manifest resolves to
+eeik catalog           # queryable pack index
 ```

@@ -50,9 +50,11 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 | **EEIK MCP server** | ✅ | `eeik mcp` — read model over MCP (`eeik_catalog`, `eeik_validate_manifest`, `eeik_resolve_packs`, `eeik_pack_drift`); read-only v1 (`eeik/mcp_server.py`, ADR-006) |
 | **Stable Python API / SDK** | ✅ | `import eeik` — typed `find_packs`/`providers_of`/`validate_manifest`/`resolve_packs`/`pack_drift`/`write_lock`; CLI + MCP delegate to it (`eeik/api.py`, ADR-007) |
 | **apex-sdlc onboarding consumes the engine** | ✅ | Cross-repo: APEX validates + resolves via the real engine — SDK (`import eeik`) or MCP (`eeik mcp`), vendored fallback (apex `app/onboarding/eeik_engine.py`) |
+| **`eeik verify` (conformance gate)** | ✅ | `eeik verify --strict --exit-code` — pack conformance, manifest validity, lock drift, reference-architecture resolution; CI-gated (`eeik/verify.py`, ADR-008) |
+| **Agent-generator emits HALO Agent Contracts** | ✅ | `eeik contract` emits a schema-valid HALO Agent Contract from a pack agent (`eeik/contract.py`, ADR-009) |
+| **Reference architectures (engine-surfaced)** | ✅ | 4 blueprints — machine-readable descriptor + schema-valid manifest + design + runbook; `eeik architectures`, verify-checked (`eeik/architectures.py`, ADR-010) |
+| **Single canonical capability matrix** | ✅ | Resolver overlap consolidated onto `bootstrap/resolvers/capability-matrix.yaml`; duplicate stub removed; authoritative resolution is code (`eeik/packs.py`); APEX vendored copy re-synced |
 | Governed generation over MCP | ⬜ | Planned — a staged, human-review `generate` tool (not auto-applied) |
-| `eeik verify` (conformance gate) | ⬜ | Planned (Tier 3) |
-| Agent-generator emits HALO Agent Contracts | ⬜ | Planned (Tier 3) |
 | Closed-loop knowledge capture from audit logs | ⬜ | Planned (Tier 3) |
 | Clarify dual-purpose root adapters | ⬜ | Planned (Tier 4) — taxonomy now documented (ADR-005) |
 
