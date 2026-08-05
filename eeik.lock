@@ -1,6 +1,6 @@
 {
   "eeikVersion": "1.4.0",
-  "generatedAt": "2026-08-05T10:22:19+00:00",
+  "generatedAt": "2026-08-05T16:27:58+00:00",
   "packs": {
     "agent-harness": {
       "digest": "924a5809adb95e2b",
@@ -15,8 +15,8 @@
       "version": "1.0"
     },
     "architecture": {
-      "digest": "e8839255a25c88ff",
-      "version": "1.0"
+      "digest": "d7c0e2d1266539ea",
+      "version": "1.1"
     },
     "aws": {
       "digest": "fc878cc9df8c5817",
