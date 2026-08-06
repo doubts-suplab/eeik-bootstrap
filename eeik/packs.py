@@ -113,6 +113,8 @@ def resolve_packs(manifest: dict, matrix: dict) -> list[str]:
         selected.add("java")
     if lang == "python":
         selected.add("python")
+    if lang == "go":
+        selected.add("go")
     if fe_fw == "angular":
         selected.add("angular") if (PACKS_DIR / "angular").exists() else None
     if fe_fw == "react":
