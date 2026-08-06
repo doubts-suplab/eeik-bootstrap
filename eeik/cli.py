@@ -24,6 +24,7 @@ Commands:
     run <generator>     Run a generator via the HALO-governed harness
     demo                Offline governed-generation showcase (EEIK in action)
     seed                Copy the seed set (adapter shells + shared config) into an adopting project
+    lessons             Closed-loop knowledge capture: draft staged lessons from HALO/APEX audit logs
 
 Examples:
     eeik status
@@ -145,6 +146,7 @@ COMMANDS = {
     "run":               _mod("runner"),
     "demo":              _mod("generation", "demo"),
     "seed":              _mod("seed"),
+    "lessons":           _mod("lessons"),
 }
 
 HELP = """
@@ -169,6 +171,7 @@ HELP = """
   run <generator>     Run generator on HALO harness    [--governed] [--dry-run]
   demo                Governed-generation showcase     (offline, no API key)
   seed                Copy the seed set into a project [--into DIR] [--apply] [--list]
+  lessons             Capture lessons from audit logs  [--from FILE] [--list] [--json]
 
 {bold}Quick start:{reset}
   1. eeik validate

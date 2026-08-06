@@ -504,7 +504,7 @@
         <div class="explorer-item">
           <div class="ei-label">Module</div>
           <div class="ei-name">eeik/architectures.py</div>
-          <div class="ei-desc">Engine-surfaced reference architectures (<span class="mono">eeik architectures</span>) — 4 proven blueprints (order-management · ai-augmented-service · data-platform · multi-tenant-saas), each a schema-valid manifest + design + runbook. <span class="mono">eeik verify</span> checks each resolves to the packs it declares.</div>
+          <div class="ei-desc">Engine-surfaced reference architectures (<span class="mono">eeik architectures</span>) — 4 proven blueprints (order-management · ai-augmented-service · data-platform · multi-tenant-saas), each a schema-valid manifest + design + runbook + a deployable <span class="mono">cdk/</span> app and <span class="mono">local-dev/</span> (docker-compose + seed). <span class="mono">eeik verify</span> checks each resolves to the packs it declares.</div>
         </div>
         <div class="explorer-item">
           <div class="ei-label">CI Workflow</div>
@@ -526,7 +526,7 @@
 
     <!-- CAPABILITIES TAB -->
     <div id="tab-capabilities" class="tab-panel">
-      <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px;">19 capability packs — tool-agnostic intelligence bundles. Each pack contains agents, standards, and knowledge. Select a pack to explore its contents.</p>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px;">20 capability packs — tool-agnostic intelligence bundles. Each pack contains agents, standards, and knowledge. Select a pack to explore its contents.</p>
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;" id="pack-pills">
         <span class="pack-pill sel" onclick="showPack('core')">core</span>
         <span class="pack-pill" onclick="showPack('architecture')">architecture</span>
@@ -1063,7 +1063,7 @@ $ eeik catalog --provides java-architect
       </div>
       <div class="card">
         <h3 style="font-size:15px;font-weight:700;margin-bottom:10px;color:var(--accent3);">A registry, not a folder</h3>
-        <p style="font-size:13px;color:var(--text-muted);">All 19 packs are tagged &amp; categorised into a machine-readable index of every pack, agent, command, and standard — with version + digest provenance. Query by <span class="mono">--tag</span>, free-text <span class="mono">--query</span>, or <span class="mono">--provides &lt;name&gt;</span>. The <span class="mono">--json</span> output is the read model the <strong style="color:var(--text)">EEIK MCP server</strong> exposes.</p>
+        <p style="font-size:13px;color:var(--text-muted);">All 20 packs are tagged &amp; categorised into a machine-readable index of every pack, agent, command, and standard — with version + digest provenance. Query by <span class="mono">--tag</span>, free-text <span class="mono">--query</span>, or <span class="mono">--provides &lt;name&gt;</span>. The <span class="mono">--json</span> output is the read model the <strong style="color:var(--text)">EEIK MCP server</strong> exposes.</p>
       </div>
     </div>
 
@@ -1079,7 +1079,8 @@ $ eeik catalog --provides java-architect
   eeik_catalog · eeik_validate_manifest
   eeik_resolve_packs · eeik_pack_drift
   eeik_verify · eeik_reference_architectures
-  eeik_generate → staged, human-review draft</div>
+  eeik_generate · eeik_capture_lessons
+  → staged, human-review drafts</div>
       </div>
       <div class="card">
         <h3 style="font-size:15px;font-weight:700;margin-bottom:10px;color:var(--accent3);">Consume, don't copy</h3>
@@ -1349,7 +1350,7 @@ cp    $EEIK/templates/PROJECT-CLAUDE.md ./CLAUDE.md</div>
 # aws   → if technology.cloud = aws
 # angular → if technology.frontend = angular
 # belgium-insurance → if capability_packs includes it
-# ... 19 packs, resolved from manifest
+# ... 20 packs, resolved from manifest
 
 # Or /analyze-project for existing repos:
 /analyze-project</div>
@@ -1483,7 +1484,7 @@ codex "add OpenTelemetry tracing to the order service"
           <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:100%; background: linear-gradient(90deg, var(--green), #34d399);"></div></div>
         </div>
         <div class="progress-item">
-          <div class="progress-header"><span>Capability Packs (19 packs)</span><span style="color:var(--green)">100%</span></div>
+          <div class="progress-header"><span>Capability Packs (20 packs)</span><span style="color:var(--green)">100%</span></div>
           <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:100%; background: linear-gradient(90deg, var(--green), #34d399);"></div></div>
         </div>
         <div class="progress-item">
@@ -1511,7 +1512,7 @@ codex "add OpenTelemetry tracing to the order service"
         <div class="card" style="padding:14px 18px;">
           <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">Capability Packs</div>
           <div style="font-size:28px;font-weight:800;color:var(--green)">18 / 18</div>
-          <div style="font-size:12px;color:var(--text-muted);">All 19 packs built — core, architecture, java, aws, ai-engineering, agent-harness, governance, angular, react, data-engineering, python, openshift, containers, delivery, modernization, insurance, banking, belgium-insurance, healthcare.</div>
+          <div style="font-size:12px;color:var(--text-muted);">All 20 packs built — core, architecture, java, python, go, aws, ai-engineering, agent-harness, governance, angular, react, data-engineering, openshift, containers, delivery, modernization, insurance, banking, belgium-insurance, healthcare.</div>
         </div>
         <div class="card" style="padding:14px 18px;">
           <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">AI Tools</div>
@@ -1632,7 +1633,7 @@ codex "add OpenTelemetry tracing to the order service"
         <span class="gap-badge done" style="color:var(--green); border-color:rgba(52,211,153,.4); background:rgba(52,211,153,.08);">✅ RESOLVED — Phase 2–5</span>
         <span class="gap-title">All 18 Capability Packs Built + 6 AI Tools Configured</span>
       </div>
-      <p class="gap-desc">All 19 packs built: core, architecture, java, aws, ai-engineering, agent-harness, governance, angular, react, data-engineering, python, openshift, containers, delivery, modernization, insurance, banking, belgium-insurance, healthcare. All 6 AI tool adapters generated: <span class="mono">Claude Code · GitHub Copilot · Kiro · Codex CLI · Cursor · Gemini CLI</span>. Python CLI scripts enable headless CI generation without a human present.</p>
+      <p class="gap-desc">All 20 packs built: core, architecture, java, python, go, aws, ai-engineering, agent-harness, governance, angular, react, data-engineering, openshift, containers, delivery, modernization, insurance, banking, belgium-insurance, healthcare. All 6 AI tool adapters generated: <span class="mono">Claude Code · GitHub Copilot · Kiro · Codex CLI · Cursor · Gemini CLI</span>. Python CLI scripts enable headless CI generation without a human present.</p>
     </div>
 
     <div class="gap-item medium">
@@ -1701,7 +1702,7 @@ codex "add OpenTelemetry tracing to the order service"
         <div class="card" style="margin-bottom:12px; border-left: 3px solid var(--orange);">
           <h3 style="margin-bottom:8px;">🟠 Short-term (Next)</h3>
           <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--text-muted);">
-            <li style="color:var(--green);">✅ All 19 capability packs built</li>
+            <li style="color:var(--green);">✅ All 20 capability packs built</li>
             <li style="color:var(--green);">✅ All 6 AI tool adapters generated</li>
             <li style="color:var(--green);">✅ Python CLI scripts for headless CI generation</li>
             <li>→ Build test harness for agent persona validation</li>
@@ -1714,7 +1715,7 @@ codex "add OpenTelemetry tracing to the order service"
         <div class="card" style="margin-bottom:12px; border-left: 3px solid var(--yellow);">
           <h3 style="margin-bottom:8px;">🟡 Medium-term</h3>
           <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--text-muted);">
-            <li style="color:var(--green);">✅ All 19 capability packs — built</li>
+            <li style="color:var(--green);">✅ All 20 capability packs — built</li>
             <li style="color:var(--green);">✅ All 8 generators — built</li>
             <li style="color:var(--green);">✅ Governed generation on HALO (v1.4)</li>
             <li style="color:var(--green);">✅ Pack versioning + lockfile + drift (v1.4)</li>

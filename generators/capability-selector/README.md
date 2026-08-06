@@ -34,7 +34,7 @@ Repository Generator + Agent Factory
 ## Mapping reference
 
 See [`bootstrap/resolvers/capability-matrix.yaml`](../../bootstrap/resolvers/capability-matrix.yaml)
-for the full, canonical field → pack mapping (all 19 packs, availability annotated). A sample:
+for the full, canonical field → pack mapping (all 20 packs, availability annotated). A sample:
 
 | Manifest Field | Value | Packs Activated |
 |----------------|-------|----------------|

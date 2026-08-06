@@ -47,3 +47,8 @@ key_decisions:
   - "Idempotent ingestion + partitioned overwrites: re-runs never double-count."
   - "Schema evolution is backward-compatible (Avro registry); breaking changes are a new version."
   - "Data-quality gates (dbt tests / Great Expectations) block promotion silver → gold."
+
+# Deployable infrastructure + local dev (ADR-010, ROADMAP v1.3). Surfaced by the engine and verified.
+deployment:
+  cdk: cdk/                 # AWS CDK app (TypeScript) — the architecture as deployable infrastructure
+  local_dev: local-dev/     # docker-compose + seed data to run the architecture on a laptop, no AWS

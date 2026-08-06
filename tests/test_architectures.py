@@ -52,4 +52,15 @@ def test_verify_includes_reference_architecture_findings():
 
 def test_to_dict_is_json_shaped():
     d = eeik.reference_architecture("ai-augmented-service").to_dict()
-    assert set(d) >= {"name", "title", "stack", "tags", "expected_packs", "components", "manifest_path"}
+    assert set(d) >= {"name", "title", "stack", "tags", "expected_packs", "components",
+                      "manifest_path", "deployment"}
+
+
+def test_every_architecture_ships_deployable_cdk_and_local_dev():
+    """ROADMAP v1.3: each reference architecture surfaces a real CDK app + local-dev, verify-checked."""
+    for a in eeik.reference_architectures():
+        assert a.deployment.get("cdk"), f"{a.name}: no cdk deployment surfaced"
+        assert a.deployment.get("local_dev"), f"{a.name}: no local-dev surfaced"
+        # The engine only surfaces paths that exist and are real (cdk.json / docker-compose.yml present).
+        assert (REPO_ROOT / a.deployment["cdk"] / "cdk.json").exists()
+        assert (REPO_ROOT / a.deployment["local_dev"] / "docker-compose.yml").exists()

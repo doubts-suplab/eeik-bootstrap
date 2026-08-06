@@ -1,0 +1,21 @@
+name: go-pack
+version: "1.0"
+status: built
+category: backend
+description: "Go engineering — cloud-native services, standard-library HTTP, table-driven tests, and idiomatic concurrency."
+tags: [go, golang, backend, cloud-native, microservices, grpc, kubernetes]
+
+manifest_triggers:
+  - field: technology.backend.language
+    value: go
+
+agents_provided:
+  - go-developer
+  - go-microservices-engineer
+
+standards_provided:
+  - go-standard
+
+dependencies:
+  - architecture-pack
+  - core-pack

@@ -46,3 +46,8 @@ key_decisions:
   - "RAG grounds answers in retrieved passages with citations; ungrounded answers are DEFERred."
   - "Low-confidence or tool-denied responses route to human review rather than auto-answering."
   - "pgvector over a separate vector DB: one datastore until scale/latency demands a dedicated index."
+
+# Deployable infrastructure + local dev (ADR-010, ROADMAP v1.3). Surfaced by the engine and verified.
+deployment:
+  cdk: cdk/                 # AWS CDK app (TypeScript) — the architecture as deployable infrastructure
+  local_dev: local-dev/     # docker-compose + seed data to run the architecture on a laptop, no AWS

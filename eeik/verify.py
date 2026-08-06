@@ -183,6 +183,15 @@ def check_reference_architectures() -> list[Finding]:
             ))
         else:
             findings.append(Finding("reference-architectures", "pass", subject, "manifest valid; packs match"))
+        # Declared deployment artifacts must be real, not empty dirs (ROADMAP v1.3).
+        expected_marker = {"cdk": "cdk.json", "local_dev": "docker-compose.yml"}
+        for kind, rel in arch.deployment.items():
+            marker = expected_marker.get(kind)
+            if marker and not (REPO_ROOT / rel / marker).exists():
+                findings.append(Finding(
+                    "reference-architectures", "warn", subject,
+                    f"deployment.{kind} '{rel}' is missing its {marker}",
+                ))
     return findings
 
 

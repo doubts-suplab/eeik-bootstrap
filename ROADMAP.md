@@ -134,7 +134,7 @@ versioned, queryable engine. See ADR-003 (generators on HALO) and ADR-004 (pack 
 - [x] **Pack/agent registry + catalog** — `eeik catalog` builds a machine-readable, queryable index of
       packs, agents, commands, and standards with version + content-digest provenance. Query by `--tag`,
       free-text `--query`, or `--provides <name>` ("which pack provides `java-architect`?"); `--json` is
-      the read model the MCP server will expose. All 19 packs are now tagged + categorised.
+      the read model the MCP server will expose. All 20 packs are now tagged + categorised.
       (`eeik/catalog.py`)
 - [x] **EEIK MCP server** — `eeik mcp` exposes the engine's read model over the Model Context Protocol:
       `eeik_catalog`, `eeik_validate_manifest`, `eeik_resolve_packs`, `eeik_pack_drift`. One live server
@@ -174,8 +174,12 @@ versioned, queryable engine. See ADR-003 (generators on HALO) and ADR-004 (pack 
       0.80), tool allowlist (supervisors hold none), and safe failure behaviour. All 8 blueprints validate
       against HALO's own validator. Closes the chain: EEIK generates against HALO's contract schema → HALO runs it.
       See [ADR-009](docs/decisions/ADR-009-agent-generator-emits-halo-contracts.md). (`eeik/contract.py`)
-- [ ] **Closed-loop knowledge capture** — HALO/APEX audit logs → lessons → back into EEIK knowledge
-      packs, making "every project leaves the org smarter" real.
+- [x] **Closed-loop knowledge capture** — done (ADR-012). `eeik lessons --from audit.json` /
+      `eeik.capture_lessons()` / `eeik_capture_lessons` (MCP) ingest HALO/APEX audit records, select the
+      learnable ones (blocks, alerts, sub-0.80-confidence human-review outcomes), group them by theme, and
+      draft `LL-NNN` lessons — **governed as SUGGEST authority**: staged under `.eeik-staging/lessons/`,
+      `auto_enforced=false`, never auto-committed. A human curates Root Cause / Fix and promotes. Closes
+      the loop `HALO/APEX audit → staged lesson → knowledge base`. (`eeik/lessons.py`)
 
 ### Tier 4 — Directory structure (Planned)
 
@@ -208,6 +212,9 @@ Domain-specific packs, now substantive (agents + standards + knowledge) and conf
 
 ### Delivered
 - [x] **Python capability pack** — `python-developer`, `fastapi-engineer`; python + fastapi standards.
+- [x] **Go capability pack** — `go-developer`, `go-microservices-engineer`; go-standard (cloud-native,
+      std-lib-first, gRPC/protobuf, `context`, table-driven `-race` tests). `technology.backend.language:
+      go` resolves it (schema enum + resolver + matrix extended); 20 packs total.
 - [x] **Data Engineering pack** — `data-engineer`; data-engineering + data-pipeline standards; lakehouse
       knowledge. (Now auto-resolves from `technology.data.*` — schema + resolver extended.)
 - [x] **OpenShift pack** — `openshift-engineer`, `kubernetes-engineer`; openshift standard.
@@ -236,8 +243,13 @@ the repository-generator, an `architecture.md`, and a `runbook.md`. `eeik archit
 - [x] **Engine surfacing + conformance** — `eeik architectures` (CLI), `eeik.reference_architectures()`
       (SDK), `eeik_reference_architectures` (MCP); `eeik verify` asserts manifest validity + pack match.
 
-### Planned
-- [ ] Per-architecture CDK stacks + seed data / local dev setup (currently: manifest + design + runbook)
+### Delivered (cont.)
+- [x] **Per-architecture CDK stacks + seed data / local dev** — each of the 4 reference architectures now
+      ships a deployable `cdk/` (TypeScript AWS CDK app — VPC/Aurora/MSK/ECS, pgvector, medallion
+      lakehouse+Glue+Athena, Cognito+RLS as appropriate) and a `local-dev/` (`docker compose up -d` +
+      seed data — Postgres/Kafka/MinIO/pgvector, with schema + demo rows). `reference.yaml` gained a
+      `deployment` block; `eeik architectures` surfaces it and `eeik verify` asserts each `cdk/` has a
+      `cdk.json` and each `local-dev/` a `docker-compose.yml`.
 
 ---
 

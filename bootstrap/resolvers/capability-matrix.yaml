@@ -7,11 +7,12 @@
 # and manifest `capability_packs` overrides. Keep this file in sync with that code.
 #
 # Availability: ✅ built (in capability-packs/) · 📋 planned (roadmap, not built)
-# All 19 packs below are ✅ built as of v1.4; azure/gcp/retail are 📋 planned (ROADMAP v2.0).
+# All 20 packs below are ✅ built as of v1.4 (go-pack added); azure/gcp/retail are 📋 planned (ROADMAP v2.0).
 
 backend:
   java:    { packs: [architecture-pack, java-pack] }       # ✅
   python:  { packs: [architecture-pack, python-pack] }     # ✅
+  go:      { packs: [architecture-pack, go-pack] }         # ✅ cloud-native Go services
   mixed:   { packs: [architecture-pack, java-pack, python-pack] }  # ✅
 
 frontend:

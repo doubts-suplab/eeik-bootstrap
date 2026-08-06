@@ -45,3 +45,8 @@ key_decisions:
   - "Choreographed saga over an orchestrator: services react to events; compensations on failure."
   - "CQRS read model on a replica: query load never contends with the write path."
   - "Idempotency keys on payment: at-least-once delivery must not double-charge."
+
+# Deployable infrastructure + local dev (ADR-010, ROADMAP v1.3). Surfaced by the engine and verified.
+deployment:
+  cdk: cdk/                 # AWS CDK app (TypeScript) — the architecture as deployable infrastructure
+  local_dev: local-dev/     # docker-compose + seed data to run the architecture on a laptop, no AWS

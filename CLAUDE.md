@@ -41,7 +41,8 @@ CLI: `eeik demo` (offline governed showcase), `eeik lock|diff|upgrade`, `eeik ca
 index), `eeik architectures` (engine-surfaced reference architectures, ADR-010), `eeik verify`
 (conformance gate, ADR-008), `eeik contract` (emit a HALO Agent Contract, ADR-009), `eeik mcp`
 (read-model MCP server, ADR-006), `eeik run <gen> --governed`, `eeik seed` (copy the seed set into an
-adopting project — the explicit dual-purpose boundary, ADR-011).
+adopting project — the explicit dual-purpose boundary, ADR-011), `eeik lessons` (closed-loop knowledge
+capture — HALO/APEX audit logs → staged `LL-NNN` lessons, SUGGEST authority, ADR-012).
 Tests: `python3 -m pytest tests/ -q`. Keep `docs/progress.md`, `ROADMAP.md`, `README.md`, and
 `docs/index.html` in sync when this layer changes.
 
@@ -64,6 +65,7 @@ Agents live in `.claude/agents/`. Claude Code automatically selects the most rel
 |--------|--------|
 | Java / Spring Boot | `java-developer`, `java-tech-lead`, `java-tester`, `jacoco-coverage-tester`, `senior-developer` |
 | Python | `python-developer` |
+| Go | `go-developer`, `go-microservices-engineer` |
 | Angular | `angular-developer`, `angular-tester`, `angular-coverage-checker` |
 | Architecture | `architect`, `enterprise-architect`, `arb-reviewer` |
 | Cloud / Infra | `aws-architect`, `cdk-terraform-helper`, `aws-deploy-helper`, `ci-engineer`, `containerisation-helper`, `kubernetes-engineer`, `devsecops-engineer`, `local-deploy-helper` |
@@ -107,6 +109,12 @@ Agents live in `.claude/agents/`. Claude Code automatically selects the most rel
 - FastAPI with Pydantic v2, SQLAlchemy async, Alembic
 - pytest with `pytest-asyncio`, `pytest-cov`, `testcontainers-python`
 - Ruff for formatting and linting
+
+### Go
+- Go 1.22+, standard-library-first (`net/http`, `database/sql`, `log/slog`)
+- Cloud-native services: gRPC + protobuf (`buf`), context propagation, graceful shutdown
+- Table-driven tests, `go test -race`, Testcontainers-go for integration
+- `gofmt` + `go vet` + `golangci-lint`; idiomatic errors (`%w`, `errors.Is/As`)
 
 ### Data Engineering
 - Apache Kafka with Schema Registry (Avro / Protobuf)

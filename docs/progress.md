@@ -44,7 +44,8 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 | Engine test suite | ✅ | 50 tests — engine + MCP (round-trip) + SDK + verify + contracts + reference architectures |
 | **Installable engine package** | ✅ | `scripts/` → `eeik/` package + `pyproject.toml`; `eeik` console script / `python -m eeik`; back-compat `scripts/*.py` shims; CI installs the package |
 | **Single canonical manifest schema** | ✅ | `eeik/schemas/manifest.schema.json` replaces 3 divergent copies; fixed the stale-schema bug that rejected EEIK's own examples |
-| **Pack/agent registry + catalog** | ✅ | `eeik catalog` — queryable index (`--tag` / `--query` / `--provides` / `--json`); all 19 packs tagged + categorised (`eeik/catalog.py`) |
+| **Pack/agent registry + catalog** | ✅ | `eeik catalog` — queryable index (`--tag` / `--query` / `--provides` / `--json`); all 20 packs tagged + categorised (`eeik/catalog.py`) |
+| **Go language pack** | ✅ | `go-developer`, `go-microservices-engineer` + go-standard (cloud-native, gRPC, `-race` tests); `technology.backend.language: go` resolves it (schema + resolver + matrix) |
 | **Directory taxonomy documented** | ✅ | ADR-005 + `ARCHITECTURE.md` — engine / content / adapters / docs layers + placement rule |
 | LLM-backed generators (repository/agent/knowledge/governance) | 🟡 | Prompts + governed harness exist; require the `claude` CLI / API key to produce real output |
 | **EEIK MCP server** | ✅ | `eeik mcp` — read model over MCP (`eeik_catalog`, `eeik_validate_manifest`, `eeik_resolve_packs`, `eeik_pack_drift`); read-only v1 (`eeik/mcp_server.py`, ADR-006) |
@@ -52,10 +53,10 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 | **apex-sdlc onboarding consumes the engine** | ✅ | Cross-repo: APEX validates + resolves via the real engine — SDK (`import eeik`) or MCP (`eeik mcp`), vendored fallback (apex `app/onboarding/eeik_engine.py`) |
 | **`eeik verify` (conformance gate)** | ✅ | `eeik verify --strict --exit-code` — pack conformance, manifest validity, lock drift, reference-architecture resolution; CI-gated (`eeik/verify.py`, ADR-008) |
 | **Agent-generator emits HALO Agent Contracts** | ✅ | `eeik contract` emits a schema-valid HALO Agent Contract from a pack agent (`eeik/contract.py`, ADR-009) |
-| **Reference architectures (engine-surfaced)** | ✅ | 4 blueprints — machine-readable descriptor + schema-valid manifest + design + runbook; `eeik architectures`, verify-checked (`eeik/architectures.py`, ADR-010) |
+| **Reference architectures (engine-surfaced)** | ✅ | 4 blueprints — descriptor + schema-valid manifest + design + runbook + **deployable `cdk/` and `local-dev/`** (per-arch CDK app + docker-compose + seed data); `eeik architectures` surfaces deployment, verify-checked (`eeik/architectures.py`, ADR-010) |
 | **Single canonical capability matrix** | ✅ | Resolver overlap consolidated onto `bootstrap/resolvers/capability-matrix.yaml`; duplicate stub removed; authoritative resolution is code (`eeik/packs.py`); APEX vendored copy re-synced |
 | **Governed generation over MCP** | ✅ | `eeik_generate` (MCP) + `eeik.generate()` (SDK) return a staged, human-review draft — SUGGEST authority, `auto_enforced=false`, `autoApplied=false`, never applied; fails safe without HALO (`eeik/generation.py::run_generation`) |
-| Closed-loop knowledge capture from audit logs | ⬜ | Planned (Tier 3) |
+| **Closed-loop knowledge capture from audit logs** | ✅ | `eeik lessons` / `eeik.capture_lessons()` / `eeik_capture_lessons` (MCP): HALO/APEX audit → staged `LL-NNN` lesson drafts, SUGGEST authority (`auto_enforced=false`), human-curated (`eeik/lessons.py`, ADR-012) |
 | **Clarify dual-purpose root adapters** | ✅ | `bootstrap/seed-manifest.yaml` classifies every root entry seed/generated/engine; `eeik seed` + `eeik.seed_plan()` copy exactly the seed set; seed CI self-skips on the engine repo (ADR-011) |
 
 ---
