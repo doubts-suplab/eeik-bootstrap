@@ -1,0 +1,5 @@
+{"event_id":"e-0001","event_type":"order_placed","occurred_at":"2026-08-01T10:00:00Z","order_id":"o-1001","customer_id":"c-01","amount_minor":4599,"currency":"EUR"}
+{"event_id":"e-0002","event_type":"order_placed","occurred_at":"2026-08-01T10:05:00Z","order_id":"o-1002","customer_id":"c-02","amount_minor":12000,"currency":"EUR"}
+{"event_id":"e-0003","event_type":"payment_settled","occurred_at":"2026-08-01T10:07:00Z","order_id":"o-1002","amount_minor":12000,"currency":"EUR"}
+{"event_id":"e-0002","event_type":"order_placed","occurred_at":"2026-08-01T10:05:00Z","order_id":"o-1002","customer_id":"c-02","amount_minor":12000,"currency":"EUR"}
+{"event_id":"e-0004","event_type":"order_cancelled","occurred_at":"2026-08-01T11:00:00Z","order_id":"o-1001","customer_id":"c-01"}

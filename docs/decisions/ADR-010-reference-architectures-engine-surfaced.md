@@ -73,6 +73,17 @@ removing a benign but ubiquitous re-execution `RuntimeWarning`.
 - Each new reference architecture must keep `expected_packs` in sync with resolution (verify enforces it).
 - The schema grew three enum/property values (small, backward-compatible; apex's vendored copy should re-sync).
 
+## Update (2026-08-06) — deployable, not just describable
+
+Each reference architecture now also ships **deployable infrastructure and a local-dev setup** (ROADMAP
+v1.3): a `cdk/` TypeScript AWS CDK app (architecture-appropriate constructs — VPC/Aurora/MSK/ECS for
+order-management, Aurora pgvector + scoped Bedrock for ai-augmented-service, medallion S3 + Glue +
+Athena + MSK for data-platform, Cognito + Aurora RLS + EventBridge for multi-tenant-saas) and a
+`local-dev/` (`docker compose up -d` + seed data — Postgres/Kafka/MinIO/pgvector with schema and demo
+rows). `reference.yaml` gained a `deployment` block; `ReferenceArchitecture.deployment` surfaces it on
+CLI/SDK, and `verify` asserts each declared `cdk/` has a `cdk.json` and each `local-dev/` a
+`docker-compose.yml` — so the infrastructure is conformance-checked like everything else.
+
 ## Related
 
 - ADR-004/005 (schema), ADR-008 (verify). `eeik/architectures.py`, `eeik/packs.py`, `tests/test_architectures.py`.

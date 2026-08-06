@@ -7,10 +7,12 @@ As of EEIK v1.4 each reference architecture is a **first-class, engine-surfaced*
 
 ```
 <name>/
-├── reference.yaml          # machine-readable descriptor (title, stack, components, expected_packs)
+├── reference.yaml          # machine-readable descriptor (title, stack, components, expected_packs, deployment)
 ├── project-manifest.yaml   # a SCHEMA-VALID eeik manifest — feed to `eeik resolve-packs` / repo-generator
 ├── architecture.md         # the design
-└── runbook.md              # operations
+├── runbook.md              # operations
+├── cdk/                    # deployable AWS CDK app (TypeScript) — the architecture as infrastructure
+└── local-dev/              # docker-compose + seed data to run it on a laptop, no AWS
 ```
 
 The engine surfaces and checks them:
@@ -30,9 +32,12 @@ eeik verify                           # asserts each manifest still validates & 
 | [data-platform](data-platform/architecture.md) | Kafka · Spark/Glue · dbt · Airflow · S3 lakehouse · Athena · CDK | Production | + data-engineering · python |
 | [multi-tenant-saas](multi-tenant-saas/architecture.md) | Spring Boot 3 · Aurora RLS · Cognito · EventBridge · React · CDK | Production | core · architecture · aws · delivery · governance · java · react |
 
+Each architecture is also **deployable**: `cdk/` is a real AWS CDK app (`npm install && npx cdk deploy`)
+and `local-dev/` brings it up on a laptop with `docker compose up -d` + seed data. `eeik architectures
+<name>` surfaces both paths, and `eeik verify` checks each declared `cdk/` has a `cdk.json` and each
+`local-dev/` a `docker-compose.yml` — so the infrastructure can't silently rot either.
+
 ## Legacy prose blueprints
 
 - [multi-agent-ai-platform.md](multi-agent-ai-platform.md) — narrative blueprint (pre-v1.4 format; not
   yet engine-surfaced).
-
-Planned (ROADMAP v1.3): per-architecture CDK stacks + seed data / local dev setup.

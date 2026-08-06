@@ -58,6 +58,7 @@ class ReferenceArchitecture:
     components: list[dict[str, str]] = field(default_factory=list)
     key_decisions: list[str] = field(default_factory=list)
     manifest_path: str = ""
+    deployment: dict[str, str] = field(default_factory=dict)  # {"cdk": path, "local_dev": path}
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -80,6 +81,11 @@ def _load_one(arch_dir: Path) -> ReferenceArchitecture | None:
         components=list(d.get("components") or []),
         key_decisions=list(d.get("key_decisions") or []),
         manifest_path=str(manifest.relative_to(REPO_ROOT)) if manifest.exists() else "",
+        deployment={
+            k: str((arch_dir / v).relative_to(REPO_ROOT))
+            for k, v in (d.get("deployment") or {}).items()
+            if (arch_dir / v).exists()
+        },
     )
 
 
@@ -124,6 +130,9 @@ def _print_detail(a: ReferenceArchitecture) -> None:
     print(f"  {a.summary}\n")
     print(f"  {ANSI_BOLD}Stack{ANSI_RESET}      {', '.join(a.stack)}")
     print(f"  {ANSI_BOLD}Manifest{ANSI_RESET}   {a.manifest_path}")
+    if a.deployment:
+        depl = "  ".join(f"{k}={v}" for k, v in a.deployment.items())
+        print(f"  {ANSI_BOLD}Deploy{ANSI_RESET}     {ANSI_DIM}{depl}{ANSI_RESET}")
     try:
         actual = resolved_packs(a)
         match = "✓" if actual == a.expected_packs else "≠"

@@ -47,3 +47,8 @@ key_decisions:
   - "Tenant context is set once at the edge and enforced everywhere — never trusted from the request body."
   - "Per-tenant metering from domain events; billing is downstream of usage, not bolted onto request paths."
   - "Escape hatch to silo (dedicated DB/schema) for tenants that require it — isolation is a per-tenant policy."
+
+# Deployable infrastructure + local dev (ADR-010, ROADMAP v1.3). Surfaced by the engine and verified.
+deployment:
+  cdk: cdk/                 # AWS CDK app (TypeScript) — the architecture as deployable infrastructure
+  local_dev: local-dev/     # docker-compose + seed data to run the architecture on a laptop, no AWS
