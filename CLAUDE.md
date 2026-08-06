@@ -41,7 +41,8 @@ CLI: `eeik demo` (offline governed showcase), `eeik lock|diff|upgrade`, `eeik ca
 index), `eeik architectures` (engine-surfaced reference architectures, ADR-010), `eeik verify`
 (conformance gate, ADR-008), `eeik contract` (emit a HALO Agent Contract, ADR-009), `eeik mcp`
 (read-model MCP server, ADR-006), `eeik run <gen> --governed`, `eeik seed` (copy the seed set into an
-adopting project — the explicit dual-purpose boundary, ADR-011).
+adopting project — the explicit dual-purpose boundary, ADR-011), `eeik lessons` (closed-loop knowledge
+capture — HALO/APEX audit logs → staged `LL-NNN` lessons, SUGGEST authority, ADR-012).
 Tests: `python3 -m pytest tests/ -q`. Keep `docs/progress.md`, `ROADMAP.md`, `README.md`, and
 `docs/index.html` in sync when this layer changes.
 

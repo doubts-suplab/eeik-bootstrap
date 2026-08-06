@@ -72,6 +72,18 @@ def generate(generator: str = "agent-generator", spec: str | None = None) -> dic
     return result
 
 
+def capture_lessons(records: list[dict] | None = None) -> dict:
+    """Closed-loop capture: draft STAGED lessons from HALO/APEX audit records (never auto-committed)."""
+    report = _api.capture_lessons(records or [])
+    result = report.to_dict()
+    result["autoApplied"] = False
+    result["note"] = (
+        "SUGGEST authority: lessons are staged for human curation, never committed to the knowledge "
+        "base. Fill Root Cause / Fix and promote them by hand."
+    )
+    return result
+
+
 # ── MCP tool declarations ─────────────────────────────────────────────────────
 
 _STR = {"type": "string"}
@@ -158,6 +170,25 @@ TOOLS: list[dict[str, Any]] = [
                 "generator": {**_STR, "description": "Generator to run (e.g. 'agent-generator', "
                                                      "'repository-generator'). Default: agent-generator."},
                 "spec": {**_STR, "description": "Free-text intent describing what to generate."},
+            },
+        },
+    },
+    {
+        "name": "eeik_capture_lessons",
+        "description": "Closed-loop knowledge capture: draft STAGED lessons from HALO/APEX audit records "
+                       "(blocks, alerts, low-confidence human-review outcomes). SUGGEST authority — drafts "
+                       "are staged for human curation, never committed to the knowledge base. Returns the "
+                       "drafted lessons, staged paths, and the governance verdict.",
+        "handler": capture_lessons,
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "records": {
+                    "type": "array",
+                    "description": "Audit records (HALO/APEX). Each: action, confidence, outcome, "
+                                   "rationale, agent, tenant, timestamp.",
+                    "items": {"type": "object"},
+                },
             },
         },
     },

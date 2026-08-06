@@ -174,8 +174,12 @@ versioned, queryable engine. See ADR-003 (generators on HALO) and ADR-004 (pack 
       0.80), tool allowlist (supervisors hold none), and safe failure behaviour. All 8 blueprints validate
       against HALO's own validator. Closes the chain: EEIK generates against HALO's contract schema → HALO runs it.
       See [ADR-009](docs/decisions/ADR-009-agent-generator-emits-halo-contracts.md). (`eeik/contract.py`)
-- [ ] **Closed-loop knowledge capture** — HALO/APEX audit logs → lessons → back into EEIK knowledge
-      packs, making "every project leaves the org smarter" real.
+- [x] **Closed-loop knowledge capture** — done (ADR-012). `eeik lessons --from audit.json` /
+      `eeik.capture_lessons()` / `eeik_capture_lessons` (MCP) ingest HALO/APEX audit records, select the
+      learnable ones (blocks, alerts, sub-0.80-confidence human-review outcomes), group them by theme, and
+      draft `LL-NNN` lessons — **governed as SUGGEST authority**: staged under `.eeik-staging/lessons/`,
+      `auto_enforced=false`, never auto-committed. A human curates Root Cause / Fix and promotes. Closes
+      the loop `HALO/APEX audit → staged lesson → knowledge base`. (`eeik/lessons.py`)
 
 ### Tier 4 — Directory structure (Planned)
 

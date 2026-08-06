@@ -6,13 +6,25 @@ Captured learnings from EEIK-managed projects.
 
 ## How to Contribute
 
-After a sprint retrospective or project milestone, run:
+**Manually** — after a sprint retrospective or project milestone, run:
 
 ```
 /capture-lesson "brief description of learning"
 ```
 
 The agent will guide you through the full lesson format.
+
+**Closed-loop (from the runtime)** — draft lessons automatically from HALO/APEX audit logs, where every
+`BLOCK`/`ALERT` and low-confidence human-review decision already carries a rationale (ADR-012):
+
+```bash
+eeik lessons --from audit.json     # → staged LL-NNN drafts under .eeik-staging/lessons/
+eeik lessons --list                # the curated lessons already promoted here
+```
+
+Capture is **SUGGEST authority**: drafts are *staged*, never auto-committed. You fill in Root Cause /
+Fix and move a draft into this directory (and add it to the index below) to promote it. Same guarantee
+whether you use the CLI, `eeik.capture_lessons()` (SDK), or `eeik_capture_lessons` (MCP).
 
 ## Index
 

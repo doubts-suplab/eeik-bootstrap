@@ -55,7 +55,7 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 | **Reference architectures (engine-surfaced)** | ✅ | 4 blueprints — machine-readable descriptor + schema-valid manifest + design + runbook; `eeik architectures`, verify-checked (`eeik/architectures.py`, ADR-010) |
 | **Single canonical capability matrix** | ✅ | Resolver overlap consolidated onto `bootstrap/resolvers/capability-matrix.yaml`; duplicate stub removed; authoritative resolution is code (`eeik/packs.py`); APEX vendored copy re-synced |
 | **Governed generation over MCP** | ✅ | `eeik_generate` (MCP) + `eeik.generate()` (SDK) return a staged, human-review draft — SUGGEST authority, `auto_enforced=false`, `autoApplied=false`, never applied; fails safe without HALO (`eeik/generation.py::run_generation`) |
-| Closed-loop knowledge capture from audit logs | ⬜ | Planned (Tier 3) |
+| **Closed-loop knowledge capture from audit logs** | ✅ | `eeik lessons` / `eeik.capture_lessons()` / `eeik_capture_lessons` (MCP): HALO/APEX audit → staged `LL-NNN` lesson drafts, SUGGEST authority (`auto_enforced=false`), human-curated (`eeik/lessons.py`, ADR-012) |
 | **Clarify dual-purpose root adapters** | ✅ | `bootstrap/seed-manifest.yaml` classifies every root entry seed/generated/engine; `eeik seed` + `eeik.seed_plan()` copy exactly the seed set; seed CI self-skips on the engine repo (ADR-011) |
 
 ---

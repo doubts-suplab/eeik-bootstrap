@@ -25,12 +25,14 @@ from eeik import architectures as _architectures
 from eeik import catalog as _catalog
 from eeik import contract as _contract
 from eeik import generation as _generation
+from eeik import lessons as _lessons
 from eeik import lock as _lock
 from eeik import manifest as _manifest
 from eeik import packs as _packs
 from eeik import seed as _seed
 from eeik.architectures import ReferenceArchitecture
 from eeik.generation import GenerationOutcome
+from eeik.lessons import LessonCaptureReport
 from eeik.verify import Finding, VerifyReport, verify
 from eeik.versions import all_pack_fingerprints
 
@@ -220,6 +222,25 @@ def generate(generator: str = "agent-generator", *, spec: str | None = None) -> 
     return _generation.run_generation(generator, producer, producer_kind=kind)
 
 
+def capture_lessons(records: list[dict[str, Any]]) -> LessonCaptureReport:
+    """Closed-loop knowledge capture: draft staged lessons from HALO/APEX audit records (ADR-012).
+
+    Selects the learnable audit entries (blocks, alerts, low-confidence human-review outcomes), drafts
+    one lesson per theme in the repository's ``LL-NNN`` format, stages them under ``.eeik-staging/``,
+    and governs the batch through HALO so it is SUGGEST authority — ``auto_enforced=False``, never
+    auto-committed. A human curates and promotes. Returns a :class:`~eeik.lessons.LessonCaptureReport`.
+    """
+    return _lessons.capture_lessons(records)
+
+
+def curated_lessons() -> list[dict[str, str]]:
+    """The curated lessons already in the knowledge base (``knowledge/lessons-learned/LL-NNN``).
+
+    Named ``curated_lessons`` (not ``lessons``) to avoid shadowing the ``eeik.lessons`` submodule.
+    """
+    return _lessons.list_lessons()
+
+
 def seed_plan() -> dict[str, list[dict[str, str]]]:
     """The seed taxonomy: which root entries an adopting project copies vs. regenerates vs. leaves.
 
@@ -249,6 +270,7 @@ __all__ = [
     "Finding",
     "VerifyReport",
     "GenerationOutcome",
+    "LessonCaptureReport",
     "find_packs",
     "providers_of",
     "validate_manifest",
@@ -259,6 +281,8 @@ __all__ = [
     "agent_contract",
     "validate_agent_contract",
     "generate",
+    "capture_lessons",
+    "curated_lessons",
     "seed_plan",
     "ReferenceArchitecture",
     "reference_architectures",
