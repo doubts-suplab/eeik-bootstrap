@@ -1,32 +1,84 @@
+# EEIK Project Manifest — Example: Insurance Claims Modernization (IBM i → Java/AWS, AI-augmented)
+# Schema: eeik/schemas/manifest.schema.json (canonical)
+#
+# Use case: Modernise a legacy IBM i (RPG) claims system to Spring Boot microservices on AWS, with an
+#           AI-augmented adjudication assistant. Regulated insurance domain (GDPR / Solvency II).
+
+schema_version: "1.0"
+
 project:
   name: claims-modernization
+  description: Modernise the legacy IBM i claims platform to cloud-native services with AI assist
+  owner: claims-engineering
+  domain: insurance
+  project_type: modernization
 
-project_type:
-  modernization
-
-domain:
-  insurance
-
-backend:
-  java21
-
-frontend:
-  react
-
-cloud:
-  aws
+technology:
+  backend:
+    language: java
+    version: 21
+    framework: spring-boot
+  frontend:
+    framework: react
+  database:
+    type: aurora-postgresql
+    migration_tool: flyway
+    orm: spring-data-jpa
+  messaging:
+    broker: kafka
+    pattern: event-driven
+  mainframe:
+    platform: ibmi
+    languages:
+      - rpg
+      - cl
 
 architecture:
-  microservices
+  style: microservices
+  patterns:
+    - ddd
+    - strangler-fig
+    - anti-corruption-layer
+  api_style: rest
+
+cloud:
+  provider: aws
+  infra_as_code: cdk
+  regions:
+    - eu-west-1
+  multi_account: true
 
 ai:
-  multi-agent
-
-modernization:
-  ibmi
+  enabled: true
+  pattern: multi-agent
+  governance_required: true
 
 governance:
-  regulated
+  profile: regulated
+  adr_required: true
+  coverage_threshold: 80
+  compliance_frameworks:
+    - gdpr
+    - solvency-ii
+  reviews_required:
+    - architecture-review
+    - security-review
+    - compliance-review
+    - production-readiness-review
 
 delivery:
-  enterprise-program
+  model: multi-team
+  methodology: agile
+  sprint_length_weeks: 2
+  cicd_platform: github-actions
+
+observability:
+  enabled: true
+  logging: cloudwatch
+  tracing: x-ray
+  metrics: cloudwatch
+  slo_required: true
+
+# ── Resolved Capability Packs (indicative) ────────────────────
+# core, architecture, java, aws, delivery, insurance, modernization,
+# ai-engineering, agent-harness, governance

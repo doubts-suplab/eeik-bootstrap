@@ -24,6 +24,7 @@ import yaml
 from eeik import architectures as _architectures
 from eeik import catalog as _catalog
 from eeik import contract as _contract
+from eeik import doctor as _doctor
 from eeik import generation as _generation
 from eeik import lessons as _lessons
 from eeik import lock as _lock
@@ -31,6 +32,7 @@ from eeik import manifest as _manifest
 from eeik import packs as _packs
 from eeik import seed as _seed
 from eeik.architectures import ReferenceArchitecture
+from eeik.doctor import DoctorReport
 from eeik.generation import GenerationOutcome
 from eeik.lessons import LessonCaptureReport
 from eeik.verify import Finding, VerifyReport, verify
@@ -233,6 +235,17 @@ def capture_lessons(records: list[dict[str, Any]]) -> LessonCaptureReport:
     return _lessons.capture_lessons(records)
 
 
+def doctor() -> DoctorReport:
+    """Diagnose common adoption/health problems, each with an actionable fix (the `eeik doctor` command).
+
+    Composes the engine's own probes — Python/deps, HALO + MCP availability, manifest validity, pack
+    resolution, adapter materialisation, lock drift, and the conformance gate — into one health report
+    that never throws. Returns a :class:`~eeik.doctor.DoctorReport` (``healthy``/``ok``, counts, and a
+    list of :class:`~eeik.doctor.Diagnostic` with level ``pass``/``warn``/``fail``/``skip`` and a fix).
+    """
+    return _doctor.doctor()
+
+
 def curated_lessons() -> list[dict[str, str]]:
     """The curated lessons already in the knowledge base (``knowledge/lessons-learned/LL-NNN``).
 
@@ -271,6 +284,7 @@ __all__ = [
     "VerifyReport",
     "GenerationOutcome",
     "LessonCaptureReport",
+    "DoctorReport",
     "find_packs",
     "providers_of",
     "validate_manifest",
@@ -283,6 +297,7 @@ __all__ = [
     "generate",
     "capture_lessons",
     "curated_lessons",
+    "doctor",
     "seed_plan",
     "ReferenceArchitecture",
     "reference_architectures",

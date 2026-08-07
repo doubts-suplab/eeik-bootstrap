@@ -157,6 +157,16 @@ eeik verify --exit-code                         # CI gate: non-zero on hard fail
 eeik verify --strict --exit-code                # also fail on warnings (clean today)
 ```
 
+New to EEIK? Run **`eeik doctor`** — it diagnoses common adoption/health problems (Python + deps, HALO
+and MCP availability, manifest validity, pack resolution, adapter materialisation, lock drift, and the
+conformance gate) and prints an actionable fix for each. It never throws:
+
+```bash
+eeik doctor                                     # health report with a fix per problem
+eeik doctor --exit-code                         # non-zero on any FAIL (setup gate)
+eeik doctor --json                              # machine-readable (same on the SDK / MCP)
+```
+
 Emit a **HALO Agent Contract** for a generated agent — runtime-governed by construction (the archetype
 fixes the authority ceiling, capabilities, gate threshold, and tool allowlist; validated by HALO's own
 schema). Closes the chain: EEIK generates against **HALO's** Agent Contract schema → HALO runs it
@@ -185,7 +195,7 @@ call EEIK live instead of copying static adapter files ([ADR-006](docs/decisions
 ```bash
 pip install -e ".[mcp]"     # the MCP SDK is an optional extra
 eeik mcp                    # read: eeik_catalog, eeik_validate_manifest, eeik_resolve_packs,
-                            #       eeik_pack_drift, eeik_verify, eeik_reference_architectures
+                            #       eeik_pack_drift, eeik_verify, eeik_reference_architectures, eeik_doctor
                             # governed write: eeik_generate, eeik_capture_lessons → STAGED, human-review
                             #                 drafts (never auto-applied)
 ```
@@ -208,6 +218,7 @@ banking = eeik.find_packs(tag="banking")                         # [Pack(...), .
 who    = eeik.providers_of("java-architect")                     # [Provider(pack="java", kind="agent")]
 draft  = eeik.generate("agent-generator", spec="a refund agent") # GenerationOutcome — staged, auto_enforced=False
 lessons = eeik.capture_lessons(audit_records)                    # closed loop: audit → staged LL-NNN drafts
+health = eeik.doctor()                                           # DoctorReport(healthy, counts, diagnostics+fixes)
 ```
 
 The CLI, the MCP server, and this SDK are three surfaces over **one** implementation — they cannot drift.

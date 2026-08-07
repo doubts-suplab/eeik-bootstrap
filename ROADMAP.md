@@ -295,9 +295,10 @@ Risk notes call out dependencies or hazards.
       `mcp`, `enterprise`, `bootstrap`). _Effort S · Impact M · discoverability._
 - [ ] **`CHANGELOG.md`**, **`CODE_OF_CONDUCT.md`**, **`SUPPORT`/FAQ**. _Effort S · Impact M · CHANGELOG
       can be generated from Conventional Commits._
-- [ ] **`eeik doctor`** — diagnose common adoption problems (missing/unresolved packs, lock drift, broken
-      adapters, Python version, absent HALO) with actionable fixes. _Effort M · Impact H · composes
-      existing verify/diff/status internals; a strong onboarding safety net._
+- [x] **`eeik doctor`** — **done.** Diagnoses common adoption problems (Python + core deps, HALO and MCP
+      availability, manifest validity, pack resolution, adapter materialisation, lock drift, and the
+      conformance gate) with an actionable fix per finding; never throws. Three surfaces: `eeik doctor`
+      (`--json`/`--strict`/`--exit-code`), `eeik.doctor()` (SDK), `eeik_doctor` (MCP). (`eeik/doctor.py`)
 
 ### 1. Accessibility & onboarding
 - [ ] Restructure README (Quick Start → diagram → "seed vs engine" up front → deep detail collapsed).
@@ -316,13 +317,22 @@ Risk notes call out dependencies or hazards.
 > intended for this engine. No relicensing is planned; adopters should read `LICENSE` before use.
 
 ### 3. Testing & quality
-- [ ] **Shipped-content smoke test** — assert `eeik verify --strict` and representative catalog queries
-      pass over the *real* packs (guards content, not just engine logic). _Effort S · Impact H · mostly a
-      thin wrapper over existing APIs._
+- [x] **Shipped-content smoke test** — done (`tests/test_shipped_content.py`): every pack's metadata is
+      well-formed + versioned, the catalog covers all 22 with digests, declared agents resolve, the
+      conformance gate is clean, `eeik.doctor()` reports healthy, and every `bootstrap/examples/*.yaml`
+      validates + resolves. It immediately surfaced real gaps — see the fixes below.
+      - Fixed a validator crash on a malformed manifest (`governance:` as a scalar) — `check_governance_rules`
+        / `check_pack_overrides` now coerce non-mapping sections to `{}` (never throw).
+      - Rewrote the stale `insurance-modernization.yaml` example (pre-canonical flat format) to the
+        canonical schema.
+      - Closed schema↔resolver gaps the example exposed: added `technology.mainframe` (platform +
+        languages — the resolver + governance rules already read it), and the `anti-corruption-layer`
+        pattern + `solvency-ii` / `basel-iii` compliance frameworks used by the domain packs.
 - [ ] Broaden `manifest.py` / `packs.py` edge-case coverage + **pack materialization / adapter
       generation** tests. _Effort M · Impact M._
-- [ ] **CI matrix Python 3.11/3.12/3.13** + **coverage reporting with a floor**. _Effort S · Impact M ·
-      the `dev` extra + quality-gate already have the tooling; add a matrix axis + `--cov-fail-under`._
+- [x] **CI matrix Python 3.11/3.12/3.13** + **coverage floor** — done. `eeik-validate.yml` engine-tests
+      runs the suite across 3.11/3.12/3.13 with `--cov=eeik --cov-fail-under=50` (currently ~57%) and
+      uploads a coverage artifact per version. `pytest-cov` added to the `test` extra.
 - [ ] **Hook tests** — `bats` (or a shell harness) for `pre-bash-guard` / `post-edit-check` etc. _Effort
       M · Impact M · currently untested shell is a blind spot._
 - [ ] **Content linting beyond agent-lint** — frontmatter schema, description length, required sections
@@ -348,7 +358,11 @@ Risk notes call out dependencies or hazards.
       M · Impact M · must not weaken the SUGGEST-authority guarantee — preview only, still no auto-apply._
 - [ ] **MCP production notes** — auth / rate-limiting guidance for MCP hosts + example configs beyond
       Claude Code `.mcp.json` (IDEs, an APEX agent). _Effort S · Impact M._
-- [ ] **Consistent `--json` everywhere** + `eeik doctor` (see Quick wins). _Effort M · Impact H._
+- [x] **`eeik doctor`** delivered (see Quick wins). _Effort M · Impact H._
+- [x] **Consistent `--json` on inspection commands** — `status`, `validate`, and `diff` now emit `--json`
+      alongside catalog/architectures/verify/doctor/lessons; the `diff` payload matches
+      `eeik.pack_drift().to_dict()` so there is one drift schema across CLI/SDK/MCP. (Remaining
+      non-inspection commands — activate/generate-adapters/seed apply — stay human-only by design.)
 
 ### 6. Documentation & process
 - [ ] Keep **Tier 4** items marked done (resolver + dual-purpose adapters are closed — reflected above).

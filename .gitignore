@@ -56,3 +56,8 @@ dist/
 *.tfstate
 *.tfstate.backup
 .terraform.lock.hcl
+
+# Coverage / pytest artifacts
+.coverage
+coverage.xml
+htmlcov/

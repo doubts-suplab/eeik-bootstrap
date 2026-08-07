@@ -20,7 +20,7 @@ dependencies = [
 governance = ["agent-harness>=0.1.0"]
 # MCP server: expose the EEIK read model over the Model Context Protocol (ADR-006).
 mcp = ["mcp>=1.0"]
-test = ["pytest>=7.0", "agent-harness>=0.1.0", "mcp>=1.0"]
+test = ["pytest>=7.0", "pytest-cov>=4.0", "agent-harness>=0.1.0", "mcp>=1.0"]
 # Dev tooling for the downstream-product quality gate (.github/workflows/quality-gate.yml): the
 # `pip install -e ".[dev]"` step needs ruff + mypy present, plus the test extras.
 dev = ["ruff>=0.6", "mypy>=1.8", "pytest>=7.0", "pytest-cov>=4.0", "agent-harness>=0.1.0", "mcp>=1.0"]

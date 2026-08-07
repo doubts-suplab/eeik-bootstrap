@@ -175,6 +175,26 @@
               "description": "Pipeline orchestrator."
             }
           }
+        },
+        "mainframe": {
+          "type": "object",
+          "description": "Legacy mainframe / IBM i source platform (activates the modernization pack).",
+          "additionalProperties": false,
+          "properties": {
+            "platform": {
+              "type": "string",
+              "enum": ["ibmi", "mainframe-zos", "as400", "none"],
+              "description": "Legacy platform being modernised."
+            },
+            "languages": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["rpg", "rpgle", "cobol", "cl", "jcl", "dds", "pli", "assembler"]
+              },
+              "description": "Legacy languages present on the source platform."
+            }
+          }
         }
       }
     },
@@ -202,7 +222,7 @@
           "description": "Additional architectural patterns in use.",
           "items": {
             "type": "string",
-            "enum": ["ddd", "cqrs", "saga", "outbox", "api-gateway", "bff", "strangler-fig"]
+            "enum": ["ddd", "cqrs", "saga", "outbox", "api-gateway", "bff", "strangler-fig", "anti-corruption-layer"]
           }
         },
         "api_style": {
@@ -313,7 +333,7 @@
           "description": "Applicable compliance frameworks.",
           "items": {
             "type": "string",
-            "enum": ["gdpr", "pci-dss", "hipaa", "iso27001", "soc2", "eu-ai-act", "none"]
+            "enum": ["gdpr", "pci-dss", "hipaa", "iso27001", "soc2", "eu-ai-act", "solvency-ii", "basel-iii", "none"]
           }
         },
         "adr_required": {

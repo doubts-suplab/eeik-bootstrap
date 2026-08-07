@@ -59,6 +59,11 @@ def reference_architectures() -> dict:
     return {"architectures": [a.to_dict() for a in _api.reference_architectures()]}
 
 
+def doctor() -> dict:
+    """Diagnose common adoption/health problems, each with an actionable fix."""
+    return _api.doctor().to_dict()
+
+
 def generate(generator: str = "agent-generator", spec: str | None = None) -> dict:
     """Run one governed generation and return a STAGED, human-review draft (never auto-applied)."""
     outcome = _api.generate(generator, spec=spec)
@@ -154,6 +159,15 @@ TOOLS: list[dict[str, Any]] = [
         "description": "List EEIK's proven reference architectures — engine-surfaced blueprints, each with "
                        "a schema-valid manifest, stack, components, and the capability packs it activates.",
         "handler": reference_architectures,
+        "inputSchema": {"type": "object", "properties": {}},
+    },
+    {
+        "name": "eeik_doctor",
+        "description": "Diagnose common EEIK adoption/health problems — Python/deps, HALO + MCP "
+                       "availability, manifest validity, pack resolution, adapter materialisation, lock "
+                       "drift, and the conformance gate — each with an actionable fix. Returns "
+                       "{healthy, ok, counts, diagnostics}. Read-only; never throws.",
+        "handler": doctor,
         "inputSchema": {"type": "object", "properties": {}},
     },
     {
