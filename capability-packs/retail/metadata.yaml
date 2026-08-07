@@ -1,0 +1,25 @@
+name: retail-pack
+version: "1.0"
+status: built
+category: domain
+description: "Retail & e-commerce domain — catalog, cart/checkout, order management, inventory, pricing/promotions, omnichannel, PCI-DSS payments."
+tags: [retail, ecommerce, domain, catalog, checkout, inventory, pricing, omnichannel, pci-dss, gdpr]
+
+manifest_triggers:
+  - field: project.domain
+    value: retail
+
+agents_provided:
+  - retail-domain-expert
+  - ecommerce-specialist
+
+standards_provided:
+  - retail-standard
+
+compliance_hints:
+  - pci-dss
+  - gdpr
+
+dependencies:
+  - architecture-pack
+  - core-pack

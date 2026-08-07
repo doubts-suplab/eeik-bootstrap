@@ -46,6 +46,8 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 | **Single canonical manifest schema** | ✅ | `eeik/schemas/manifest.schema.json` replaces 3 divergent copies; fixed the stale-schema bug that rejected EEIK's own examples |
 | **Pack/agent registry + catalog** | ✅ | `eeik catalog` — queryable index (`--tag` / `--query` / `--provides` / `--json`); all 20 packs tagged + categorised (`eeik/catalog.py`) |
 | **Go language pack** | ✅ | `go-developer`, `go-microservices-engineer` + go-standard (cloud-native, gRPC, `-race` tests); `technology.backend.language: go` resolves it (schema + resolver + matrix) |
+| **Node.js / TypeScript pack** | ✅ | `node-developer`, `typescript-api-engineer` + node-standard (strict TS, Zod, NestJS/Fastify, Vitest); resolves on `backend.language: node` |
+| **Retail domain pack** | ✅ | `retail-domain-expert`, `ecommerce-specialist` + retail-standard (catalog/checkout/inventory/order state machine, PCI-DSS, GDPR); resolves on `project.domain: retail` |
 | **Directory taxonomy documented** | ✅ | ADR-005 + `ARCHITECTURE.md` — engine / content / adapters / docs layers + placement rule |
 | LLM-backed generators (repository/agent/knowledge/governance) | 🟡 | Prompts + governed harness exist; require the `claude` CLI / API key to produce real output |
 | **EEIK MCP server** | ✅ | `eeik mcp` — read model over MCP (`eeik_catalog`, `eeik_validate_manifest`, `eeik_resolve_packs`, `eeik_pack_drift`); read-only v1 (`eeik/mcp_server.py`, ADR-006) |

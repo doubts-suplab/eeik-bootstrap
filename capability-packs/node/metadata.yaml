@@ -1,0 +1,21 @@
+name: node-pack
+version: "1.0"
+status: built
+category: backend
+description: "Node.js / TypeScript backend — NestJS & Fastify services, strict TypeScript, Zod validation, and Vitest."
+tags: [node, nodejs, typescript, backend, nestjs, fastify, zod, vitest]
+
+manifest_triggers:
+  - field: technology.backend.language
+    value: node
+
+agents_provided:
+  - node-developer
+  - typescript-api-engineer
+
+standards_provided:
+  - node-standard
+
+dependencies:
+  - architecture-pack
+  - core-pack

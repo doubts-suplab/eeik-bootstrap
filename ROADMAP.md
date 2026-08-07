@@ -134,7 +134,7 @@ versioned, queryable engine. See ADR-003 (generators on HALO) and ADR-004 (pack 
 - [x] **Pack/agent registry + catalog** — `eeik catalog` builds a machine-readable, queryable index of
       packs, agents, commands, and standards with version + content-digest provenance. Query by `--tag`,
       free-text `--query`, or `--provides <name>` ("which pack provides `java-architect`?"); `--json` is
-      the read model the MCP server will expose. All 20 packs are now tagged + categorised.
+      the read model the MCP server will expose. All 22 packs are now tagged + categorised.
       (`eeik/catalog.py`)
 - [x] **EEIK MCP server** — `eeik mcp` exposes the engine's read model over the Model Context Protocol:
       `eeik_catalog`, `eeik_validate_manifest`, `eeik_resolve_packs`, `eeik_pack_drift`. One live server
@@ -214,7 +214,13 @@ Domain-specific packs, now substantive (agents + standards + knowledge) and conf
 - [x] **Python capability pack** — `python-developer`, `fastapi-engineer`; python + fastapi standards.
 - [x] **Go capability pack** — `go-developer`, `go-microservices-engineer`; go-standard (cloud-native,
       std-lib-first, gRPC/protobuf, `context`, table-driven `-race` tests). `technology.backend.language:
-      go` resolves it (schema enum + resolver + matrix extended); 20 packs total.
+      go` resolves it (schema enum + resolver + matrix extended).
+- [x] **Node.js / TypeScript capability pack** — `node-developer`, `typescript-api-engineer`;
+      node-standard (strict TS, Zod boundaries, NestJS/Fastify, Vitest, `pino`). Resolves on
+      `technology.backend.language: node`.
+- [x] **Retail domain pack** — `retail-domain-expert`, `ecommerce-specialist`; retail-standard (catalog /
+      cart-checkout / inventory-reservation / order state machine / PCI-DSS tokenised payments / GDPR).
+      Resolves on `project.domain: retail` (previously annotated planned-for-v2.0; pulled forward). 22 packs total.
 - [x] **Data Engineering pack** — `data-engineer`; data-engineering + data-pipeline standards; lakehouse
       knowledge. (Now auto-resolves from `technology.data.*` — schema + resolver extended.)
 - [x] **OpenShift pack** — `openshift-engineer`, `kubernetes-engineer`; openshift standard.

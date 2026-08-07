@@ -7,12 +7,13 @@
 # and manifest `capability_packs` overrides. Keep this file in sync with that code.
 #
 # Availability: ✅ built (in capability-packs/) · 📋 planned (roadmap, not built)
-# All 20 packs below are ✅ built as of v1.4 (go-pack added); azure/gcp/retail are 📋 planned (ROADMAP v2.0).
+# All 22 packs below are ✅ built as of v1.4 (go, node, retail added); azure/gcp are 📋 planned (ROADMAP v2.0).
 
 backend:
   java:    { packs: [architecture-pack, java-pack] }       # ✅
   python:  { packs: [architecture-pack, python-pack] }     # ✅
   go:      { packs: [architecture-pack, go-pack] }         # ✅ cloud-native Go services
+  node:    { packs: [architecture-pack, node-pack] }       # ✅ Node.js / TypeScript services
   mixed:   { packs: [architecture-pack, java-pack, python-pack] }  # ✅
 
 frontend:
@@ -61,6 +62,7 @@ domain:
   banking:           { packs: [banking-pack],           compliance_hints: [pci-dss, gdpr, basel-iii] } # ✅
   healthcare:        { packs: [healthcare-pack],        compliance_hints: [hipaa, gdpr] }              # ✅
   belgium-insurance: { packs: [belgium-insurance-pack], compliance_hints: [gdpr, solvency-ii] }        # ✅
+  retail:            { packs: [retail-pack],            compliance_hints: [pci-dss, gdpr] }            # ✅
   generic:           { packs: [] }
 
 modernization:                         # technology.mainframe.platform != none → modernization-pack
