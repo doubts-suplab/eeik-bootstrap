@@ -310,12 +310,10 @@ Risk notes call out dependencies or hazards.
 ### 2. Packaging, distribution & discoverability
 - [ ] PyPI publish + release automation (tag → build → publish → GitHub Release notes). _Effort M ·
       Impact H · security: use OIDC trusted publishing, no long-lived tokens._
-- [ ] **License review** — AGPL-3.0 is strong copyleft (network-use disclosure). For a *seed* repo this
-      may deter commercial adopters. Options: (a) document the rationale + a clear "your generated project
-      is yours" note; (b) dual-license; (c) relicense the **engine** (`eeik/`) permissively (Apache-2.0)
-      while keeping content copyleft. _Effort M (decision) / L (relicense) · Impact H · Risk: relicensing
-      needs contributor sign-off (CLA/DCO) — treat as a deliberate governance decision, not a quick edit._
 - [ ] Badges + topics + "Who is this for?". _Effort S · Impact M._
+
+> **License:** AGPL-3.0 is retained by decision — the strong-copyleft, network-use-disclosure posture is
+> intended for this engine. No relicensing is planned; adopters should read `LICENSE` before use.
 
 ### 3. Testing & quality
 - [ ] **Shipped-content smoke test** — assert `eeik verify --strict` and representative catalog queries
@@ -386,8 +384,8 @@ Risk notes call out dependencies or hazards.
 
 > Scheduling note: the **Quick wins** block is the recommended next increment (a "v1.5 — Adoption &
 > Distribution" milestone) — mostly docs + packaging + a `doctor`/smoke-test, low risk, high adopter
-> impact. License relicensing and composable packs are the two items needing a deliberate decision, not
-> just implementation.
+> impact. **Composable packs** is the one item needing a deliberate design decision, not just
+> implementation. (The license question is settled — AGPL-3.0 is retained.)
 
 ---
 

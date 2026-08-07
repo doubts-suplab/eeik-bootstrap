@@ -81,10 +81,10 @@ low risk, high impact):
 | CI polish | Dependabot/Renovate; pre-commit (ruff/mypy); make `verify --strict` + `diff` required checks | ⬜ Planned |
 | Content | Adapter parity matrix; stricter domain-pack criteria; staged→committed lessons promotion workflow | ⬜ Planned |
 | Governance | Document HALO-absent "works offline" table; MCP production auth/rate-limit notes | ⬜ Planned |
-| Strategic | License review (AGPL vs permissive engine); composable packs; signed packs / private registry; opt-in telemetry | ⬜ Planned (decisions) |
+| Strategic | Composable packs; signed packs / private registry; opt-in telemetry (license: AGPL-3.0 retained by decision) | ⬜ Planned (decisions) |
 
-> Two items need a *decision*, not just implementation: **license** (relicensing needs contributor
-> sign-off) and **composable packs** (a dependency model beyond today's flat `dependencies:`).
+> **Composable packs** needs a *design decision*, not just implementation (a dependency model beyond
+> today's flat `dependencies:`). The license question is settled — AGPL-3.0 is retained.
 
 ---
 
