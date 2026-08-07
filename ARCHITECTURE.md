@@ -7,6 +7,21 @@
 EEIK is a **governed generation engine**, not a runnable product (that's APEX). Its repository is
 organised into **four layers** with distinct lifecycles.
 
+## The flow
+
+```mermaid
+flowchart LR
+  R[Requirements] --> M[project-manifest.yaml]
+  M --> RP[resolve capability packs<br/>eeik/packs.py]
+  RP --> GA[generate adapters + agents<br/>generators/]
+  GA --> GOV[govern on HALO<br/>confidence gate · audit · human review]
+  GOV --> KC[capture knowledge<br/>eeik lessons → knowledge/]
+  KC -. every project leaves the org smarter .-> RP
+```
+
+The **engine** drives that flow over the **content** layers; the **adapters** are what an adopting
+project takes; **docs** describe it. The four layers:
+
 ```
 eeik-bootstrap/
 ├── ENGINE  ── executable Python; the only layer that runs ─────────────────────
