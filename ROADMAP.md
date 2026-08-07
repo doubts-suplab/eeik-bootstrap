@@ -295,9 +295,10 @@ Risk notes call out dependencies or hazards.
       `mcp`, `enterprise`, `bootstrap`). _Effort S · Impact M · discoverability._
 - [ ] **`CHANGELOG.md`**, **`CODE_OF_CONDUCT.md`**, **`SUPPORT`/FAQ**. _Effort S · Impact M · CHANGELOG
       can be generated from Conventional Commits._
-- [ ] **`eeik doctor`** — diagnose common adoption problems (missing/unresolved packs, lock drift, broken
-      adapters, Python version, absent HALO) with actionable fixes. _Effort M · Impact H · composes
-      existing verify/diff/status internals; a strong onboarding safety net._
+- [x] **`eeik doctor`** — **done.** Diagnoses common adoption problems (Python + core deps, HALO and MCP
+      availability, manifest validity, pack resolution, adapter materialisation, lock drift, and the
+      conformance gate) with an actionable fix per finding; never throws. Three surfaces: `eeik doctor`
+      (`--json`/`--strict`/`--exit-code`), `eeik.doctor()` (SDK), `eeik_doctor` (MCP). (`eeik/doctor.py`)
 
 ### 1. Accessibility & onboarding
 - [ ] Restructure README (Quick Start → diagram → "seed vs engine" up front → deep detail collapsed).
@@ -348,7 +349,9 @@ Risk notes call out dependencies or hazards.
       M · Impact M · must not weaken the SUGGEST-authority guarantee — preview only, still no auto-apply._
 - [ ] **MCP production notes** — auth / rate-limiting guidance for MCP hosts + example configs beyond
       Claude Code `.mcp.json` (IDEs, an APEX agent). _Effort S · Impact M._
-- [ ] **Consistent `--json` everywhere** + `eeik doctor` (see Quick wins). _Effort M · Impact H._
+- [x] **`eeik doctor`** delivered (see Quick wins). _Effort M · Impact H._
+- [ ] **Consistent `--json` on every command** (doctor/verify/catalog/architectures/lessons already have
+      it; extend to the rest). _Effort S · Impact M._
 
 ### 6. Documentation & process
 - [ ] Keep **Tier 4** items marked done (resolver + dual-purpose adapters are closed — reflected above).

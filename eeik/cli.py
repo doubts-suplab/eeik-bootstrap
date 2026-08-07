@@ -25,6 +25,7 @@ Commands:
     demo                Offline governed-generation showcase (EEIK in action)
     seed                Copy the seed set (adapter shells + shared config) into an adopting project
     lessons             Closed-loop knowledge capture: draft staged lessons from HALO/APEX audit logs
+    doctor              Diagnose common adoption/health problems with an actionable fix for each
 
 Examples:
     eeik status
@@ -147,6 +148,7 @@ COMMANDS = {
     "demo":              _mod("generation", "demo"),
     "seed":              _mod("seed"),
     "lessons":           _mod("lessons"),
+    "doctor":            _mod("doctor"),
 }
 
 HELP = """
@@ -172,6 +174,7 @@ HELP = """
   demo                Governed-generation showcase     (offline, no API key)
   seed                Copy the seed set into a project [--into DIR] [--apply] [--list]
   lessons             Capture lessons from audit logs  [--from FILE] [--list] [--json]
+  doctor              Diagnose adoption/health problems [--json] [--strict] [--exit-code]
 
 {bold}Quick start:{reset}
   1. eeik validate

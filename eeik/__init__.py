@@ -17,6 +17,7 @@ __version__ = "1.4.0"
 # dispatches subcommands in-process — see cli.py — so this eager import does not trigger the
 # `python -m` re-execution warning.)
 from eeik.api import (
+    DoctorReport,
     DriftEntry,
     DriftReport,
     Finding,
@@ -29,8 +30,9 @@ from eeik.api import (
     VerifyReport,
     agent_contract,
     capture_lessons,
-    find_packs,
     curated_lessons,
+    doctor,
+    find_packs,
     generate,
     pack_drift,
     providers_of,
@@ -55,6 +57,7 @@ __all__ = [
     "VerifyReport",
     "GenerationOutcome",
     "LessonCaptureReport",
+    "DoctorReport",
     "ReferenceArchitecture",
     "find_packs",
     "providers_of",
@@ -68,6 +71,7 @@ __all__ = [
     "generate",
     "capture_lessons",
     "curated_lessons",
+    "doctor",
     "seed_plan",
     "reference_architectures",
     "reference_architecture",
