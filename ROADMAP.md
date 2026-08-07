@@ -271,6 +271,126 @@ the repository-generator, an `architecture.md`, and a `runbook.md`. `eeik archit
 
 ---
 
+## Future Enhancements — Adoption, Distribution & Robustness (evaluation-driven)
+
+Captured from an external evaluation of the repository (2026-08). The project is assessed as a mature,
+well-governed engine; the **highest leverage is reducing first-adopter cognitive load and making the
+installable engine consumable outside this monorepo**. Items below are planning-only — each carries a
+plan and a feasibility read so they can be scheduled without re-deriving the analysis.
+
+**Feasibility legend:** Effort **S** (≤1 day) / **M** (2–5 days) / **L** (>1 week) · Impact **H/M/L** ·
+Risk notes call out dependencies or hazards.
+
+### Quick wins (do first — high impact / low-to-moderate effort)
+- [ ] Adopter-first README: a 3–5 command **Quick Start** at the very top, leading with
+      `eeik seed --into <dir>`; push deep engine/MCP/SDK detail into collapsible sections or a dedicated
+      **Engine Reference** page. _Effort S · Impact H · no code; pairs with the diagram below._
+- [ ] **Top-of-repo diagram** — one flow: `requirements → resolve packs → generate adapters/agents →
+      govern (HALO) → capture knowledge`, in README + ARCHITECTURE. _Effort S · Impact H · mermaid keeps
+      it diffable._
+- [ ] **Publish `eeik` to PyPI** with SemVer, so MCP/SDK consumers `pip install eeik` instead of
+      `-e .`. _Effort M · Impact H · needs a release workflow + trusted-publisher/OIDC; unblocks APEX
+      consuming a pinned version._
+- [ ] **Badges + "Who is this for?" + GitHub topics** (`ai-agents`, `claude-code`, `github-copilot`,
+      `mcp`, `enterprise`, `bootstrap`). _Effort S · Impact M · discoverability._
+- [ ] **`CHANGELOG.md`**, **`CODE_OF_CONDUCT.md`**, **`SUPPORT`/FAQ**. _Effort S · Impact M · CHANGELOG
+      can be generated from Conventional Commits._
+- [ ] **`eeik doctor`** — diagnose common adoption problems (missing/unresolved packs, lock drift, broken
+      adapters, Python version, absent HALO) with actionable fixes. _Effort M · Impact H · composes
+      existing verify/diff/status internals; a strong onboarding safety net._
+
+### 1. Accessibility & onboarding
+- [ ] Restructure README (Quick Start → diagram → "seed vs engine" up front → deep detail collapsed).
+      _Effort S · Impact H._
+- [ ] Make **`docs/index.html` / interactive guide** the default newcomer landing experience; link it
+      prominently and keep it in the doc-sync rule. _Effort S · Impact M._
+- [ ] State the **dual role explicitly and early**: `eeik seed --into <dir>` is the primary *adoption*
+      path (copy config into a project); the engine is for *generation* (ADR-011). _Effort S · Impact H._
+
+### 2. Packaging, distribution & discoverability
+- [ ] PyPI publish + release automation (tag → build → publish → GitHub Release notes). _Effort M ·
+      Impact H · security: use OIDC trusted publishing, no long-lived tokens._
+- [ ] **License review** — AGPL-3.0 is strong copyleft (network-use disclosure). For a *seed* repo this
+      may deter commercial adopters. Options: (a) document the rationale + a clear "your generated project
+      is yours" note; (b) dual-license; (c) relicense the **engine** (`eeik/`) permissively (Apache-2.0)
+      while keeping content copyleft. _Effort M (decision) / L (relicense) · Impact H · Risk: relicensing
+      needs contributor sign-off (CLA/DCO) — treat as a deliberate governance decision, not a quick edit._
+- [ ] Badges + topics + "Who is this for?". _Effort S · Impact M._
+
+### 3. Testing & quality
+- [ ] **Shipped-content smoke test** — assert `eeik verify --strict` and representative catalog queries
+      pass over the *real* packs (guards content, not just engine logic). _Effort S · Impact H · mostly a
+      thin wrapper over existing APIs._
+- [ ] Broaden `manifest.py` / `packs.py` edge-case coverage + **pack materialization / adapter
+      generation** tests. _Effort M · Impact M._
+- [ ] **CI matrix Python 3.11/3.12/3.13** + **coverage reporting with a floor**. _Effort S · Impact M ·
+      the `dev` extra + quality-gate already have the tooling; add a matrix axis + `--cov-fail-under`._
+- [ ] **Hook tests** — `bats` (or a shell harness) for `pre-bash-guard` / `post-edit-check` etc. _Effort
+      M · Impact M · currently untested shell is a blind spot._
+- [ ] **Content linting beyond agent-lint** — frontmatter schema, description length, required sections
+      (extend `eeik-validate.yml` or add an `eeik lint-content`). _Effort M · Impact M._
+
+### 4. Content & capability packs
+- [ ] **Adapter parity matrix** — document depth per tool (Claude Code / Copilot rich; Cursor / Kiro /
+      Gemini / Codex thinner) and set a generator goal to narrow the gap. _Effort S (matrix) / L (close
+      the gap) · Impact M._
+- [ ] **Domain-pack contribution criteria** — prefer generic + extensible patterns over org-specific
+      content; add generic "regulated" exemplars. Guards against sparse/bespoke packs. _Effort S · Impact
+      M · process, enforced in CONTRIBUTING + review._
+- [ ] Expand **reference architectures**; keep every manifest schema-valid and resolving cleanly (already
+      verify-gated). _Effort M · Impact M._
+- [ ] Strengthen **closed-loop capture** — more worked examples + a documented **staged → committed**
+      promotion workflow (curation checklist, who approves). _Effort S · Impact M · builds on ADR-012._
+
+### 5. Engine & governance robustness
+- [ ] **Document the HALO-absent experience precisely** — a table of "works offline / needs HALO"
+      (validate, resolve, catalog, verify, seed, contract work offline; governed generation stages
+      fail-safe). _Effort S · Impact M._
+- [ ] **Preview / dry-run generation mode** even lighter than staged, for local experimentation. _Effort
+      M · Impact M · must not weaken the SUGGEST-authority guarantee — preview only, still no auto-apply._
+- [ ] **MCP production notes** — auth / rate-limiting guidance for MCP hosts + example configs beyond
+      Claude Code `.mcp.json` (IDEs, an APEX agent). _Effort S · Impact M._
+- [ ] **Consistent `--json` everywhere** + `eeik doctor` (see Quick wins). _Effort M · Impact H._
+
+### 6. Documentation & process
+- [ ] Keep **Tier 4** items marked done (resolver + dual-purpose adapters are closed — reflected above).
+      _Effort S · Impact L · housekeeping._
+- [ ] **"First contribution" path** in CONTRIBUTING (e.g. improve one standard / add one example). _Effort
+      S · Impact M._
+- [ ] **Engine security model** section in SECURITY.md — what the Python package can/can't do, the
+      filesystem scope of generators (writes only to `.eeik-staging/`), no network in the core. _Effort S ·
+      Impact M._
+- [ ] `CHANGELOG.md` + `CODE_OF_CONDUCT.md` + SUPPORT/FAQ (see Quick wins). _Effort S · Impact M._
+
+### 7. Operational / CI polish
+- [ ] **Dependabot / Renovate** for Python deps + GitHub Actions. _Effort S · Impact M._
+- [ ] **Pre-commit hooks** (ruff, mypy, YAML/JSON-schema checks) mirroring CI locally. _Effort S · Impact
+      M · reuses the `dev` extra._
+- [ ] Make **`eeik verify --strict --exit-code`** and **`eeik diff --exit-code`** *required* status
+      checks (branch protection). _Effort S · Impact H · repo-admin setting; both already run green in
+      `eeik-validate.yml`._
+- [ ] **Upload catalog/verify reports as CI artifacts** on failure for faster debugging. _Effort S ·
+      Impact M · add `--json > report` + `upload-artifact`._
+
+### 8. Longer-term strategic
+- [ ] **Composable packs** — richer dependency resolution + conflict detection between packs. _Effort L ·
+      Impact M · Risk: needs a dependency model beyond today's flat `dependencies:`._
+- [ ] **Opt-in telemetry** — which packs/agents are most used, to prioritise the catalog. _Effort M ·
+      Impact M · Risk: privacy — must be strictly opt-in, local-first, documented._
+- [ ] **Enterprise story** — private pack registries, **signed packs** (provenance beyond the content
+      digest), air-gapped install. _Effort L · Impact H (enterprise) · builds on `eeik.lock` digests._
+- [ ] **Broader tool support** — new AI coding surfaces as they appear, via the adapter generator. _Effort
+      M each · Impact M._
+- [ ] **Stable APEX integration surface** — keep the SDK/MCP contract stable and document the integration
+      surface as a versioned contract. _Effort M · Impact H · protects the primary consumer._
+
+> Scheduling note: the **Quick wins** block is the recommended next increment (a "v1.5 — Adoption &
+> Distribution" milestone) — mostly docs + packaging + a `doctor`/smoke-test, low risk, high adopter
+> impact. License relicensing and composable packs are the two items needing a deliberate decision, not
+> just implementation.
+
+---
+
 ## Contributing to the Roadmap
 
 To propose a new capability:

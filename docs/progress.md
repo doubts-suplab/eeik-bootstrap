@@ -63,6 +63,31 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 
 ---
 
+## Backlog — Adoption, Distribution & Robustness (evaluation-driven, planned)
+
+An external evaluation (2026-08) rates the engine as mature and well-governed; the biggest remaining
+leverage is **first-adopter cognitive load** and **consuming the engine outside this monorepo**. The full
+plan + per-item feasibility lives in [ROADMAP.md → Future Enhancements](../ROADMAP.md#future-enhancements--adoption-distribution--robustness-evaluation-driven).
+Recommended next increment — a **v1.5 "Adoption & Distribution"** milestone (mostly docs + packaging,
+low risk, high impact):
+
+| Theme | Headline items | Status |
+|---|---|---|
+| Onboarding | Adopter-first README + top-of-repo flow diagram; lead with `eeik seed --into <dir>`; guide as landing page | ⬜ Planned |
+| Distribution | **Publish `eeik` to PyPI** (OIDC release automation); badges + GitHub topics | ⬜ Planned |
+| CLI UX | **`eeik doctor`** (diagnose missing packs / drift / broken adapters / Python / HALO); consistent `--json` | ⬜ Planned |
+| Testing | Shipped-content smoke test; Python 3.11/3.12/3.13 matrix + coverage floor; hook tests | ⬜ Planned |
+| Docs/process | `CHANGELOG.md`, `CODE_OF_CONDUCT.md`, SUPPORT/FAQ; engine security-model section | ⬜ Planned |
+| CI polish | Dependabot/Renovate; pre-commit (ruff/mypy); make `verify --strict` + `diff` required checks | ⬜ Planned |
+| Content | Adapter parity matrix; stricter domain-pack criteria; staged→committed lessons promotion workflow | ⬜ Planned |
+| Governance | Document HALO-absent "works offline" table; MCP production auth/rate-limit notes | ⬜ Planned |
+| Strategic | License review (AGPL vs permissive engine); composable packs; signed packs / private registry; opt-in telemetry | ⬜ Planned (decisions) |
+
+> Two items need a *decision*, not just implementation: **license** (relicensing needs contributor
+> sign-off) and **composable packs** (a dependency model beyond today's flat `dependencies:`).
+
+---
+
 ## How to see it in action
 
 ```bash
