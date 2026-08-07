@@ -235,7 +235,7 @@ SECURITY.md        Vulnerability reporting
 .cursor/           Cursor       — .mdc rules (golden-rules, architecture, security)
 
 ── Intelligence Layer (tool-agnostic) ────────────────────────────────────────
-capability-packs/  20 packs — core, architecture, java, aws, ai-engineering,
+capability-packs/  22 packs — core, architecture, java, aws, ai-engineering,
                    agent-harness, governance, angular, react, data-engineering,
                    python, openshift, containers, delivery, modernization,
                    insurance, banking, belgium-insurance, healthcare
@@ -334,7 +334,7 @@ EEIK separates reusable engineering intelligence into capability packs.
 
 Examples:
 ```
-capability-packs/       (20 packs)
+capability-packs/       (22 packs)
 ├── core/               foundational agents, golden rules, security/observability baselines
 ├── architecture/       enterprise-architect, arb-reviewer, reference architectures
 ├── java/               java-architect, spring-security-engineer, testcontainers patterns

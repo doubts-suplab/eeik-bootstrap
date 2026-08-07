@@ -115,6 +115,8 @@ def resolve_packs(manifest: dict, matrix: dict) -> list[str]:
         selected.add("python")
     if lang == "go":
         selected.add("go")
+    if lang == "node":
+        selected.add("node")
     if fe_fw == "angular":
         selected.add("angular") if (PACKS_DIR / "angular").exists() else None
     if fe_fw == "react":
@@ -134,7 +136,7 @@ def resolve_packs(manifest: dict, matrix: dict) -> list[str]:
 
     # ── Domain selection ──────────────────────────────────────────────────────
     domain = project.get("domain", "generic")
-    if domain in ("insurance", "banking", "healthcare"):
+    if domain in ("insurance", "banking", "healthcare", "retail"):
         selected.add(domain)
 
     # ── Governance-driven ─────────────────────────────────────────────────────

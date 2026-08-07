@@ -79,7 +79,7 @@
           "properties": {
             "language": {
               "type": "string",
-              "enum": ["java", "python", "go", "mixed"],
+              "enum": ["java", "python", "go", "node", "mixed"],
               "description": "Primary backend language."
             },
             "version": {

@@ -66,6 +66,7 @@ Agents live in `.claude/agents/`. Claude Code automatically selects the most rel
 | Java / Spring Boot | `java-developer`, `java-tech-lead`, `java-tester`, `jacoco-coverage-tester`, `senior-developer` |
 | Python | `python-developer` |
 | Go | `go-developer`, `go-microservices-engineer` |
+| Node / TypeScript | `node-developer`, `typescript-api-engineer` |
 | Angular | `angular-developer`, `angular-tester`, `angular-coverage-checker` |
 | Architecture | `architect`, `enterprise-architect`, `arb-reviewer` |
 | Cloud / Infra | `aws-architect`, `cdk-terraform-helper`, `aws-deploy-helper`, `ci-engineer`, `containerisation-helper`, `kubernetes-engineer`, `devsecops-engineer`, `local-deploy-helper` |
@@ -115,6 +116,12 @@ Agents live in `.claude/agents/`. Claude Code automatically selects the most rel
 - Cloud-native services: gRPC + protobuf (`buf`), context propagation, graceful shutdown
 - Table-driven tests, `go test -race`, Testcontainers-go for integration
 - `gofmt` + `go vet` + `golangci-lint`; idiomatic errors (`%w`, `errors.Is/As`)
+
+### Node.js / TypeScript
+- Node 20+, TypeScript 5.5+ (`"strict": true`, no `any`)
+- NestJS / Fastify services; Zod validation at the boundary; typed, validated env config
+- Vitest / Jest with coverage; Testcontainers for integration; `pino` structured logging
+- ESLint `no-floating-promises`; parameterised queries (Prisma / Drizzle)
 
 ### Data Engineering
 - Apache Kafka with Schema Registry (Avro / Protobuf)

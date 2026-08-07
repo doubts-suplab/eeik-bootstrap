@@ -58,6 +58,30 @@ def test_go_backend_resolves_the_go_pack():
     assert {"go-developer", "go-microservices-engineer"} <= set(go.agents)
 
 
+def test_node_backend_resolves_the_node_pack():
+    manifest = {
+        "schema_version": "1.0",
+        "project": {"name": "svc", "domain": "generic", "project_type": "greenfield"},
+        "technology": {"backend": {"language": "node"}},
+    }
+    resolved = eeik.resolve_packs(manifest=manifest)
+    assert "node" in resolved and "architecture" in resolved
+    node = next(p for p in eeik.find_packs() if p.pack == "node")
+    assert {"node-developer", "typescript-api-engineer"} <= set(node.agents)
+
+
+def test_retail_domain_resolves_the_retail_pack():
+    manifest = {
+        "schema_version": "1.0",
+        "project": {"name": "shop", "domain": "retail", "project_type": "greenfield"},
+        "technology": {"backend": {"language": "node"}},
+    }
+    resolved = eeik.resolve_packs(manifest=manifest)
+    assert "retail" in resolved
+    retail = next(p for p in eeik.find_packs() if p.pack == "retail")
+    assert {"retail-domain-expert", "ecommerce-specialist"} <= set(retail.agents)
+
+
 def test_pack_drift_typed_report():
     report = eeik.pack_drift()
     assert isinstance(report, eeik.DriftReport)

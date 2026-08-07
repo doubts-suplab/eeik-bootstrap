@@ -46,6 +46,8 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 | **Single canonical manifest schema** | ✅ | `eeik/schemas/manifest.schema.json` replaces 3 divergent copies; fixed the stale-schema bug that rejected EEIK's own examples |
 | **Pack/agent registry + catalog** | ✅ | `eeik catalog` — queryable index (`--tag` / `--query` / `--provides` / `--json`); all 20 packs tagged + categorised (`eeik/catalog.py`) |
 | **Go language pack** | ✅ | `go-developer`, `go-microservices-engineer` + go-standard (cloud-native, gRPC, `-race` tests); `technology.backend.language: go` resolves it (schema + resolver + matrix) |
+| **Node.js / TypeScript pack** | ✅ | `node-developer`, `typescript-api-engineer` + node-standard (strict TS, Zod, NestJS/Fastify, Vitest); resolves on `backend.language: node` |
+| **Retail domain pack** | ✅ | `retail-domain-expert`, `ecommerce-specialist` + retail-standard (catalog/checkout/inventory/order state machine, PCI-DSS, GDPR); resolves on `project.domain: retail` |
 | **Directory taxonomy documented** | ✅ | ADR-005 + `ARCHITECTURE.md` — engine / content / adapters / docs layers + placement rule |
 | LLM-backed generators (repository/agent/knowledge/governance) | 🟡 | Prompts + governed harness exist; require the `claude` CLI / API key to produce real output |
 | **EEIK MCP server** | ✅ | `eeik mcp` — read model over MCP (`eeik_catalog`, `eeik_validate_manifest`, `eeik_resolve_packs`, `eeik_pack_drift`); read-only v1 (`eeik/mcp_server.py`, ADR-006) |
@@ -58,6 +60,31 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 | **Governed generation over MCP** | ✅ | `eeik_generate` (MCP) + `eeik.generate()` (SDK) return a staged, human-review draft — SUGGEST authority, `auto_enforced=false`, `autoApplied=false`, never applied; fails safe without HALO (`eeik/generation.py::run_generation`) |
 | **Closed-loop knowledge capture from audit logs** | ✅ | `eeik lessons` / `eeik.capture_lessons()` / `eeik_capture_lessons` (MCP): HALO/APEX audit → staged `LL-NNN` lesson drafts, SUGGEST authority (`auto_enforced=false`), human-curated (`eeik/lessons.py`, ADR-012) |
 | **Clarify dual-purpose root adapters** | ✅ | `bootstrap/seed-manifest.yaml` classifies every root entry seed/generated/engine; `eeik seed` + `eeik.seed_plan()` copy exactly the seed set; seed CI self-skips on the engine repo (ADR-011) |
+
+---
+
+## Backlog — Adoption, Distribution & Robustness (evaluation-driven, planned)
+
+An external evaluation (2026-08) rates the engine as mature and well-governed; the biggest remaining
+leverage is **first-adopter cognitive load** and **consuming the engine outside this monorepo**. The full
+plan + per-item feasibility lives in [ROADMAP.md → Future Enhancements](../ROADMAP.md#future-enhancements--adoption-distribution--robustness-evaluation-driven).
+Recommended next increment — a **v1.5 "Adoption & Distribution"** milestone (mostly docs + packaging,
+low risk, high impact):
+
+| Theme | Headline items | Status |
+|---|---|---|
+| Onboarding | Adopter-first README + top-of-repo flow diagram; lead with `eeik seed --into <dir>`; guide as landing page | ⬜ Planned |
+| Distribution | **Publish `eeik` to PyPI** (OIDC release automation); badges + GitHub topics | ⬜ Planned |
+| CLI UX | **`eeik doctor`** (diagnose missing packs / drift / broken adapters / Python / HALO); consistent `--json` | ⬜ Planned |
+| Testing | Shipped-content smoke test; Python 3.11/3.12/3.13 matrix + coverage floor; hook tests | ⬜ Planned |
+| Docs/process | `CHANGELOG.md`, `CODE_OF_CONDUCT.md`, SUPPORT/FAQ; engine security-model section | ⬜ Planned |
+| CI polish | Dependabot/Renovate; pre-commit (ruff/mypy); make `verify --strict` + `diff` required checks | ⬜ Planned |
+| Content | Adapter parity matrix; stricter domain-pack criteria; staged→committed lessons promotion workflow | ⬜ Planned |
+| Governance | Document HALO-absent "works offline" table; MCP production auth/rate-limit notes | ⬜ Planned |
+| Strategic | License review (AGPL vs permissive engine); composable packs; signed packs / private registry; opt-in telemetry | ⬜ Planned (decisions) |
+
+> Two items need a *decision*, not just implementation: **license** (relicensing needs contributor
+> sign-off) and **composable packs** (a dependency model beyond today's flat `dependencies:`).
 
 ---
 
