@@ -282,19 +282,19 @@ plan and a feasibility read so they can be scheduled without re-deriving the ana
 Risk notes call out dependencies or hazards.
 
 ### Quick wins (do first — high impact / low-to-moderate effort)
-- [ ] Adopter-first README: a 3–5 command **Quick Start** at the very top, leading with
-      `eeik seed --into <dir>`; push deep engine/MCP/SDK detail into collapsible sections or a dedicated
-      **Engine Reference** page. _Effort S · Impact H · no code; pairs with the diagram below._
-- [ ] **Top-of-repo diagram** — one flow: `requirements → resolve packs → generate adapters/agents →
-      govern (HALO) → capture knowledge`, in README + ARCHITECTURE. _Effort S · Impact H · mermaid keeps
-      it diffable._
-- [ ] **Publish `eeik` to PyPI** with SemVer, so MCP/SDK consumers `pip install eeik` instead of
-      `-e .`. _Effort M · Impact H · needs a release workflow + trusted-publisher/OIDC; unblocks APEX
-      consuming a pinned version._
-- [ ] **Badges + "Who is this for?" + GitHub topics** (`ai-agents`, `claude-code`, `github-copilot`,
-      `mcp`, `enterprise`, `bootstrap`). _Effort S · Impact M · discoverability._
-- [ ] **`CHANGELOG.md`**, **`CODE_OF_CONDUCT.md`**, **`SUPPORT`/FAQ**. _Effort S · Impact M · CHANGELOG
-      can be generated from Conventional Commits._
+- [x] **Adopter-first README** — Quick Start (seed-first) + badges at the top; the deep engine/MCP/SDK
+      walkthrough is collapsed behind a `<details>`.
+- [x] **Top-of-repo diagram** — the `requirements → resolve → generate → govern → capture` flow as a
+      mermaid diagram in README + ARCHITECTURE.
+- [x] **Publish `eeik` to PyPI** — `release.yml` builds sdist+wheel on a version tag and publishes via
+      **OIDC trusted publishing** (no stored token), then cuts a GitHub Release; PyPI metadata enriched
+      (classifiers/urls/keywords/license) and the schema ships in the wheel. _One-time maintainer setup:
+      configure the PyPI Trusted Publisher for this repo + `pypi` environment, then push `vX.Y.Z`._
+- [x] **Badges + "Who is this for?"** — added to the README. _GitHub **topics** (`ai-agents`,
+      `claude-code`, `github-copilot`, `mcp`, `enterprise`, `bootstrap`) are a one-line repo-settings
+      action for a maintainer — recommended list captured here._
+- [x] **`CHANGELOG.md`** (Keep a Changelog), **`CODE_OF_CONDUCT.md`** (Contributor Covenant), and
+      **`SUPPORT.md`** (support + FAQ) added.
 - [x] **`eeik doctor`** — **done.** Diagnoses common adoption problems (Python + core deps, HALO and MCP
       availability, manifest validity, pack resolution, adapter materialisation, lock drift, and the
       conformance gate) with an actionable fix per finding; never throws. Three surfaces: `eeik doctor`
@@ -396,10 +396,13 @@ Risk notes call out dependencies or hazards.
 - [ ] **Stable APEX integration surface** — keep the SDK/MCP contract stable and document the integration
       surface as a versioned contract. _Effort M · Impact H · protects the primary consumer._
 
-> Scheduling note: the **Quick wins** block is the recommended next increment (a "v1.5 — Adoption &
-> Distribution" milestone) — mostly docs + packaging + a `doctor`/smoke-test, low risk, high adopter
-> impact. **Composable packs** is the one item needing a deliberate design decision, not just
-> implementation. (The license question is settled — AGPL-3.0 is retained.)
+> Scheduling note: the **Quick wins** block is **done** — the "v1.5 — Adoption & Distribution"
+> increment (adopter-first README + diagram, PyPI release workflow, badges, CHANGELOG /
+> CODE_OF_CONDUCT / SUPPORT, `eeik doctor`, shipped-content smoke test, Python matrix + coverage).
+> Remaining higher-effort items sit in sections 1–8 below; **composable packs** is the one needing a
+> deliberate design decision, not just implementation. (The license question is settled — AGPL-3.0 is
+> retained.) Two follow-ups need a maintainer action outside the repo: configure the PyPI Trusted
+> Publisher, and set the GitHub topics.
 
 ---
 

@@ -75,11 +75,11 @@ low risk, high impact):
 
 | Theme | Headline items | Status |
 |---|---|---|
-| Onboarding | Adopter-first README + top-of-repo flow diagram; lead with `eeik seed --into <dir>`; guide as landing page | ⬜ Planned |
-| Distribution | **Publish `eeik` to PyPI** (OIDC release automation); badges + GitHub topics | ⬜ Planned |
+| Onboarding | ~~Adopter-first README + top-of-repo flow diagram; lead with `eeik seed`~~ ✅ (guide as landing page still open) | 🟡 In progress |
+| Distribution | ~~PyPI release automation (OIDC)~~ ✅ workflow ready; ~~badges~~ ✅ (GitHub topics = maintainer repo-setting) | ✅ Done |
 | CLI UX | ~~`eeik doctor`~~ ✅; ~~`--json` on status/validate/diff~~ ✅ (inspection commands consistent) | ✅ Done |
 | Testing | ~~Shipped-content smoke test~~ ✅; ~~Python 3.11/3.12/3.13 matrix + coverage floor (≥50%)~~ ✅; hook tests still open | 🟡 In progress |
-| Docs/process | `CHANGELOG.md`, `CODE_OF_CONDUCT.md`, SUPPORT/FAQ; engine security-model section | ⬜ Planned |
+| Docs/process | ~~`CHANGELOG.md`, `CODE_OF_CONDUCT.md`, SUPPORT/FAQ~~ ✅; engine security-model section still open | 🟡 In progress |
 | CI polish | Dependabot/Renovate; pre-commit (ruff/mypy); make `verify --strict` + `diff` required checks | ⬜ Planned |
 | Content | Adapter parity matrix; stricter domain-pack criteria; staged→committed lessons promotion workflow | ⬜ Planned |
 | Governance | Document HALO-absent "works offline" table; MCP production auth/rate-limit notes | ⬜ Planned |

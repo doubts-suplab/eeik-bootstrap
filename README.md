@@ -1,6 +1,56 @@
 # Enterprise Engineering Intelligence Kit (EEIK) Bootstrap
 
-## AI-Native Enterprise Engineering Bootstrap Platform
+![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue)
+![License](https://img.shields.io/badge/license-AGPL--3.0-green)
+![MCP](https://img.shields.io/badge/MCP-read%20model%20%2B%20governed%20write-8A2BE2)
+![Governed](https://img.shields.io/badge/generation-HALO--governed%20(SUGGEST)-orange)
+![Packs](https://img.shields.io/badge/capability%20packs-22-informational)
+
+> A ready-to-fork seed **and** an installable, governed generation engine that gives **6 AI coding
+> tools** — Claude Code, GitHub Copilot, Kiro, Codex CLI, Cursor, Gemini CLI — the enterprise context to
+> act as specialist engineers from day one.
+
+## Quick Start
+
+**Adopt the config into your project** (the primary path — copies the *seed* set only, never the engine
+or EEIK's own agents):
+
+```bash
+pip install -e /path/to/eeik-bootstrap      # install the `eeik` engine once
+eeik seed --into . --apply                  # copy adapter shells + shared config into this project
+eeik doctor                                 # check your setup (deps, manifest, packs) with a fix per issue
+# then: write project-manifest.yaml → `eeik activate --apply` to materialise the packs you selected
+```
+
+**Try the engine** (no API key, no cloud):
+
+```bash
+pip install -e ".[test]"                    # engine + HALO (agent-harness) + pytest
+eeik demo                                   # generate an agent on the real HALO confidence gate
+eeik catalog --tag regulated                # query the 22-pack capability catalog
+eeik architectures                          # 4 proven, deployable reference architectures
+```
+
+```mermaid
+flowchart LR
+  R[Requirements] --> M[project-manifest.yaml]
+  M --> RP[resolve capability packs]
+  RP --> GA[generate adapters + agents]
+  GA --> GOV[govern on HALO<br/>confidence gate · audit · human review]
+  GOV --> KC[capture knowledge<br/>lessons → back into packs]
+  KC -. every project leaves the org smarter .-> RP
+```
+
+## Who is this for?
+
+| You are… | EEIK gives you… |
+|---|---|
+| **A team adopting AI tools** | One config, six tools speaking your standards — `eeik seed` into any repo |
+| **A platform / enablement team** | A governed engine: versioned packs, drift detection, conformance gates |
+| **A product that generates artifacts** (e.g. APEX) | A stable SDK + MCP surface to validate manifests, resolve packs, and govern generation |
+| **A regulated enterprise** | Domain packs (banking/insurance/healthcare/retail), governance reviews, HALO-governed generation |
+
+---
 
 A ready-to-fork seed repository that gives **6 AI coding tools** — Claude Code, GitHub Copilot, Kiro, Codex CLI, Cursor, and Gemini CLI — the enterprise context they need to act as specialist engineers from day one.
 
@@ -117,6 +167,9 @@ governed agent runtime — not ungoverned `claude --print`:
 
 ## EEIK in Action — the Governed Generation Engine
 
+<details>
+<summary><strong>Full engine walkthrough</strong> — demo · lock/drift · catalog · verify · contracts · architectures · MCP · SDK (click to expand)</summary>
+
 ```bash
 pip install -e ".[test]"                        # the eeik engine + HALO (agent-harness) + pytest
 eeik demo                                       # generate an agent on the REAL HALO gate — no API key
@@ -225,6 +278,8 @@ The CLI, the MCP server, and this SDK are three surfaces over **one** implementa
 
 This is the same runtime, gate, and audit that APEX uses for its SDLC phase agents — EEIK now dogfoods
 the `agent-harness` capability pack it ships to everyone else.
+
+</details>
 
 ---
 
