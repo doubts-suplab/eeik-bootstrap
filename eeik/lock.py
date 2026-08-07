@@ -158,12 +158,24 @@ def cmd_lock(args: argparse.Namespace) -> int:
 def cmd_diff(args: argparse.Namespace) -> int:
     path = lock_path(args.file)
     locked = read_lock(path)
-    print(f"\n{ANSI_BOLD}EEIK Drift Report{ANSI_RESET}")
+    as_json = getattr(args, "json", False)
+
     if locked is None:
-        print(f"  {ANSI_YELLOW}⚠ No {path.name} found — run: eeik lock{ANSI_RESET}\n")
+        if as_json:
+            print(json.dumps({"lockPresent": False, "driftCount": 0, "drift": []}, indent=2))
+        else:
+            print(f"\n{ANSI_BOLD}EEIK Drift Report{ANSI_RESET}")
+            print(f"  {ANSI_YELLOW}⚠ No {path.name} found — run: eeik lock{ANSI_RESET}\n")
         return 1
     current = all_pack_fingerprints(resolve_current_packs())
     drift = compute_drift(locked, current)
+
+    if as_json:
+        # Shape matches eeik.pack_drift().to_dict() — one drift schema across CLI/SDK/MCP.
+        print(json.dumps({"lockPresent": True, "driftCount": len(drift), "drift": drift}, indent=2))
+        return 2 if (drift and args.exit_code) else 0
+
+    print(f"\n{ANSI_BOLD}EEIK Drift Report{ANSI_RESET}")
     print(f"  Locked at : {locked.get('generatedAt', '?')}  (eeik {locked.get('eeikVersion', '?')})\n")
     print_drift(drift)
     if drift and args.exit_code:
@@ -199,6 +211,7 @@ def main() -> int:
     p_diff = sub.add_parser("diff", help="Report drift between eeik.lock and current packs")
     p_diff.add_argument("--file", metavar="PATH", help="Lockfile path (default: eeik.lock)")
     p_diff.add_argument("--exit-code", action="store_true", help="Exit 2 when drift is found (CI gate)")
+    p_diff.add_argument("--json", action="store_true", help="Emit the drift report as JSON")
     p_diff.set_defaults(func=cmd_diff)
 
     p_up = sub.add_parser("upgrade", help="Re-pin eeik.lock to current versions")

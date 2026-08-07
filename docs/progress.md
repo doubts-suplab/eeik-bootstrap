@@ -61,6 +61,7 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 | **Closed-loop knowledge capture from audit logs** | ✅ | `eeik lessons` / `eeik.capture_lessons()` / `eeik_capture_lessons` (MCP): HALO/APEX audit → staged `LL-NNN` lesson drafts, SUGGEST authority (`auto_enforced=false`), human-curated (`eeik/lessons.py`, ADR-012) |
 | **Clarify dual-purpose root adapters** | ✅ | `bootstrap/seed-manifest.yaml` classifies every root entry seed/generated/engine; `eeik seed` + `eeik.seed_plan()` copy exactly the seed set; seed CI self-skips on the engine repo (ADR-011) |
 | **`eeik doctor` (adoption/health diagnostic)** | ✅ | Diagnoses Python/deps, HALO+MCP availability, manifest validity, pack resolution, adapter materialisation, lock drift, conformance — each with an actionable fix; never throws. CLI (`--json`/`--strict`/`--exit-code`) + `eeik.doctor()` SDK + `eeik_doctor` MCP (`eeik/doctor.py`) |
+| **Shipped-content smoke test + schema completeness** | ✅ | `tests/test_shipped_content.py` guards the real packs/examples; surfaced + fixed a validator crash on malformed input, a stale example, and schema↔resolver gaps (`technology.mainframe`, `anti-corruption-layer`, `solvency-ii`/`basel-iii`). `--json` on status/validate/diff. Engine tests run on **Python 3.11/3.12/3.13** with a **coverage floor (≥50%)** |
 
 ---
 
@@ -76,8 +77,8 @@ low risk, high impact):
 |---|---|---|
 | Onboarding | Adopter-first README + top-of-repo flow diagram; lead with `eeik seed --into <dir>`; guide as landing page | ⬜ Planned |
 | Distribution | **Publish `eeik` to PyPI** (OIDC release automation); badges + GitHub topics | ⬜ Planned |
-| CLI UX | ~~`eeik doctor`~~ ✅ shipped; consistent `--json` on remaining commands | 🟡 In progress |
-| Testing | Shipped-content smoke test; Python 3.11/3.12/3.13 matrix + coverage floor; hook tests | ⬜ Planned |
+| CLI UX | ~~`eeik doctor`~~ ✅; ~~`--json` on status/validate/diff~~ ✅ (inspection commands consistent) | ✅ Done |
+| Testing | ~~Shipped-content smoke test~~ ✅; ~~Python 3.11/3.12/3.13 matrix + coverage floor (≥50%)~~ ✅; hook tests still open | 🟡 In progress |
 | Docs/process | `CHANGELOG.md`, `CODE_OF_CONDUCT.md`, SUPPORT/FAQ; engine security-model section | ⬜ Planned |
 | CI polish | Dependabot/Renovate; pre-commit (ruff/mypy); make `verify --strict` + `diff` required checks | ⬜ Planned |
 | Content | Adapter parity matrix; stricter domain-pack criteria; staged→committed lessons promotion workflow | ⬜ Planned |

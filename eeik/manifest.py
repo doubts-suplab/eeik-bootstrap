@@ -57,9 +57,15 @@ def check_governance_rules(manifest: dict) -> tuple[list[str], list[str]]:
     errors:   list[str] = []
     warnings: list[str] = []
 
-    gov     = manifest.get("governance", {})
-    tech    = manifest.get("technology", {})
-    project = manifest.get("project", {})
+    # Be defensive: a malformed manifest (e.g. `governance: regulated` as a scalar) must yield schema
+    # errors from Phase 1, not crash the governance rules. Coerce non-mapping sections to {}.
+    def _section(key: str) -> dict:
+        val = manifest.get(key)
+        return val if isinstance(val, dict) else {}
+
+    gov     = _section("governance")
+    tech    = _section("technology")
+    project = _section("project")
     profile = gov.get("profile", "basic")
     domain  = project.get("domain", "generic")
 
@@ -155,7 +161,9 @@ def check_governance_rules(manifest: dict) -> tuple[list[str], list[str]]:
 def check_pack_overrides(manifest: dict) -> list[str]:
     """Warn if explicitly listed packs don't exist in the repo."""
     warnings: list[str] = []
-    cap = manifest.get("capability_packs", {})
+    cap = manifest.get("capability_packs")
+    if not isinstance(cap, dict):
+        return warnings
     for pack_name in cap.get("include", []):
         pack_path = PACKS_DIR / pack_name
         if not pack_path.exists():
@@ -193,8 +201,9 @@ def validate_document(manifest: dict) -> tuple[list[str], list[str]]:
 # ── main ──────────────────────────────────────────────────────────────────────
 
 def main() -> int:
-    strict = "--strict" in sys.argv
-    args   = [a for a in sys.argv[1:] if not a.startswith("--")]
+    strict   = "--strict" in sys.argv
+    as_json  = "--json" in sys.argv
+    args     = [a for a in sys.argv[1:] if not a.startswith("--")]
 
     # Locate manifest
     if args:
@@ -207,9 +216,25 @@ def main() -> int:
         ]
         manifest_path = next((p for p in candidates if p.exists()), None)
         if manifest_path is None:
-            print(f"{ANSI_RED}ERROR: No project-manifest.yaml found.{ANSI_RESET}")
-            print("  Run /bootstrap to generate one, or pass the path explicitly.")
+            if as_json:
+                print(json.dumps({"valid": False, "errors": ["no project-manifest.yaml found"],
+                                  "warnings": []}, indent=2))
+            else:
+                print(f"{ANSI_RED}ERROR: No project-manifest.yaml found.{ANSI_RESET}")
+                print("  Run /bootstrap to generate one, or pass the path explicitly.")
             return 1
+
+    # ── machine-readable path (parity with verify/catalog/doctor --json) ──────────
+    if as_json:
+        try:
+            doc = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+        except yaml.YAMLError as exc:
+            print(json.dumps({"valid": False, "errors": [f"YAML parse error: {exc}"],
+                              "warnings": []}, indent=2))
+            return 1
+        errors, warnings = validate_document(doc)
+        print(json.dumps({"valid": not errors, "errors": errors, "warnings": warnings}, indent=2))
+        return 1 if (errors or (strict and warnings)) else 0
 
     print(f"\n{ANSI_BOLD}EEIK Manifest Validator{ANSI_RESET}")
     print(f"  Manifest : {manifest_path}")

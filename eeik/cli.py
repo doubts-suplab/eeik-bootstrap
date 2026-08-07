@@ -37,6 +37,7 @@ Examples:
 """
 
 import importlib
+import json
 import sys
 from pathlib import Path
 
@@ -70,48 +71,33 @@ def _mod(module: str, *prefix: str):
 
 # ── status ────────────────────────────────────────────────────────────────────
 
-def cmd_status(_args: list[str]) -> int:
+def _collect_status() -> dict:
+    """Gather EEIK state as a plain dict — the shared source for text + --json rendering."""
     try:
         import yaml
     except ImportError:
-        print(f"{ANSI_RED}pyyaml required.  Run: pip install pyyaml jsonschema{ANSI_RESET}")
-        return 1
+        return {"error": "pyyaml required (pip install pyyaml jsonschema)"}
 
-    print(f"\n{ANSI_BOLD}EEIK Status{ANSI_RESET}\n")
-
-    # Manifest
     manifest_path = REPO_ROOT / "project-manifest.yaml"
+    manifest_info: dict | None = None
     if manifest_path.exists():
-        with open(manifest_path) as f:
-            m = yaml.safe_load(f) or {}
+        m = yaml.safe_load(manifest_path.read_text(encoding="utf-8")) or {}
         project = m.get("project", {})
-        print(f"  {ANSI_GREEN}✓{ANSI_RESET} Manifest found")
-        print(f"      Project  : {project.get('name', '(unnamed)')}")
-        print(f"      Type     : {project.get('type', '?')}")
-        print(f"      Domain   : {project.get('domain', '?')}")
-        print(f"      Profile  : {m.get('governance', {}).get('profile', '?')}")
-    else:
-        print(f"  {ANSI_YELLOW}⚠{ANSI_RESET} No project-manifest.yaml — run /bootstrap or eeik analyze")
+        manifest_info = {
+            "name": project.get("name", "(unnamed)"),
+            "type": project.get("type", project.get("project_type", "?")),
+            "domain": project.get("domain", "?"),
+            "profile": m.get("governance", {}).get("profile", "?"),
+        }
 
-    # Active packs (agents in .claude/agents/ with managed marker)
     agents_dir = REPO_ROOT / ".claude" / "agents"
-    managed    = []
+    managed: list[str] = []
     if agents_dir.exists():
         for f in agents_dir.glob("*.md"):
             first = f.read_text(encoding="utf-8", errors="ignore").splitlines()
             if first and first[0].startswith("# eeik-managed"):
-                pack = first[0].split("pack=")[-1].strip() if "pack=" in first[0] else "unknown"
-                managed.append(pack)
-    active_packs = sorted(set(managed))
-    if active_packs:
-        print(f"\n  {ANSI_BOLD}Active packs ({len(active_packs)}){ANSI_RESET}")
-        for p in active_packs:
-            print(f"    • {p}")
-    else:
-        print(f"\n  {ANSI_YELLOW}⚠{ANSI_RESET} No managed packs activated — run: eeik activate --apply")
+                managed.append(first[0].split("pack=")[-1].strip() if "pack=" in first[0] else "unknown")
 
-    # Adapters
-    print(f"\n  {ANSI_BOLD}Adapters{ANSI_RESET}")
     adapters = {
         "Claude Code": REPO_ROOT / ".claude",
         "Kiro":        REPO_ROOT / ".kiro",
@@ -120,9 +106,45 @@ def cmd_status(_args: list[str]) -> int:
         "Gemini CLI":  REPO_ROOT / "GEMINI.md",
         "Copilot":     REPO_ROOT / ".github" / "instructions",
     }
-    for name, path in adapters.items():
-        exists = path.exists()
-        icon   = f"{ANSI_GREEN}✓{ANSI_RESET}" if exists else f"{ANSI_YELLOW}—{ANSI_RESET}"
+    return {
+        "manifest": manifest_info,
+        "activePacks": sorted(set(managed)),
+        "adapters": {name: path.exists() for name, path in adapters.items()},
+    }
+
+
+def cmd_status(args: list[str]) -> int:
+    state = _collect_status()
+    if "error" in state:
+        print(f"{ANSI_RED}{state['error']}{ANSI_RESET}")
+        return 1
+
+    if "--json" in args:
+        print(json.dumps(state, indent=2))
+        return 0
+
+    print(f"\n{ANSI_BOLD}EEIK Status{ANSI_RESET}\n")
+    mi = state["manifest"]
+    if mi:
+        print(f"  {ANSI_GREEN}✓{ANSI_RESET} Manifest found")
+        print(f"      Project  : {mi['name']}")
+        print(f"      Type     : {mi['type']}")
+        print(f"      Domain   : {mi['domain']}")
+        print(f"      Profile  : {mi['profile']}")
+    else:
+        print(f"  {ANSI_YELLOW}⚠{ANSI_RESET} No project-manifest.yaml — run /bootstrap or eeik seed")
+
+    active_packs = state["activePacks"]
+    if active_packs:
+        print(f"\n  {ANSI_BOLD}Active packs ({len(active_packs)}){ANSI_RESET}")
+        for p in active_packs:
+            print(f"    • {p}")
+    else:
+        print(f"\n  {ANSI_YELLOW}⚠{ANSI_RESET} No managed packs activated — run: eeik activate --apply")
+
+    print(f"\n  {ANSI_BOLD}Adapters{ANSI_RESET}")
+    for name, exists in state["adapters"].items():
+        icon = f"{ANSI_GREEN}✓{ANSI_RESET}" if exists else f"{ANSI_YELLOW}—{ANSI_RESET}"
         print(f"    {icon} {name}")
 
     print()
@@ -158,12 +180,12 @@ HELP = """
   eeik <command> [options]        (or: python3 -m eeik <command>)
 
 {bold}Commands:{reset}
-  status              Show EEIK state (manifest, active packs, adapters)
-  validate            Validate project-manifest.yaml  [--strict]
+  status              Show EEIK state (manifest, active packs, adapters)  [--json]
+  validate            Validate project-manifest.yaml  [--strict] [--json]
   activate            Activate capability packs        [--apply] [--clean] [--list]
   generate-adapters   Generate multi-tool adapters     [--apply] [--tools kiro,codex,cursor,gemini]
   lock                Pin pack versions → eeik.lock    [--file path]
-  diff                Report pack drift vs eeik.lock   [--exit-code]
+  diff                Report pack drift vs eeik.lock   [--exit-code] [--json]
   upgrade             Re-pin eeik.lock to current      [--file path]
   catalog             Query the pack/agent index       [--tag t] [--query x] [--provides n] [--json]
   architectures       List/show reference architectures [<name>] [--json]
