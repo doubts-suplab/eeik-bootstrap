@@ -26,6 +26,7 @@ Commands:
     seed                Copy the seed set (adapter shells + shared config) into an adopting project
     lessons             Closed-loop knowledge capture: draft staged lessons from HALO/APEX audit logs
     doctor              Diagnose common adoption/health problems with an actionable fix for each
+    lint                Content-quality lint for capability-pack agents + standards (frontmatter, structure)
 
 Examples:
     eeik status
@@ -171,6 +172,7 @@ COMMANDS = {
     "seed":              _mod("seed"),
     "lessons":           _mod("lessons"),
     "doctor":            _mod("doctor"),
+    "lint":              _mod("lint"),
 }
 
 HELP = """
@@ -197,6 +199,7 @@ HELP = """
   seed                Copy the seed set into a project [--into DIR] [--apply] [--list]
   lessons             Capture lessons from audit logs  [--from FILE] [--list] [--json]
   doctor              Diagnose adoption/health problems [--json] [--strict] [--exit-code]
+  lint                Lint agent/standard content       [--json] [--strict] [--exit-code] [--show-pass]
 
 {bold}Quick start:{reset}
   1. eeik validate

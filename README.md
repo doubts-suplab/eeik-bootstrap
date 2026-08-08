@@ -167,6 +167,10 @@ governed agent runtime — not ungoverned `claude --print`:
 
 ## EEIK in Action — the Governed Generation Engine
 
+> **Surface reference:** every CLI command, SDK function, and MCP tool — plus MCP production notes and
+> the "what works offline" table — lives in
+> [docs/reference/engine-reference.md](docs/reference/engine-reference.md).
+
 <details>
 <summary><strong>Full engine walkthrough</strong> — demo · lock/drift · catalog · verify · contracts · architectures · MCP · SDK (click to expand)</summary>
 
@@ -247,8 +251,8 @@ call EEIK live instead of copying static adapter files ([ADR-006](docs/decisions
 
 ```bash
 pip install -e ".[mcp]"     # the MCP SDK is an optional extra
-eeik mcp                    # read: eeik_catalog, eeik_validate_manifest, eeik_resolve_packs,
-                            #       eeik_pack_drift, eeik_verify, eeik_reference_architectures, eeik_doctor
+eeik mcp                    # read: eeik_catalog, eeik_validate_manifest, eeik_resolve_packs, eeik_pack_drift,
+                            #       eeik_verify, eeik_reference_architectures, eeik_doctor, eeik_lint
                             # governed write: eeik_generate, eeik_capture_lessons → STAGED, human-review
                             #                 drafts (never auto-applied)
 ```
@@ -270,8 +274,10 @@ packs  = eeik.resolve_packs(manifest=doc)                        # ["core", "arc
 banking = eeik.find_packs(tag="banking")                         # [Pack(...), ...]
 who    = eeik.providers_of("java-architect")                     # [Provider(pack="java", kind="agent")]
 draft  = eeik.generate("agent-generator", spec="a refund agent") # GenerationOutcome — staged, auto_enforced=False
+prev   = eeik.generate("agent-generator", spec="…", preview=True) # governed but not persisted (staged=False)
 lessons = eeik.capture_lessons(audit_records)                    # closed loop: audit → staged LL-NNN drafts
 health = eeik.doctor()                                           # DoctorReport(healthy, counts, diagnostics+fixes)
+content = eeik.lint()                                            # LintReport — agent/standard content well-formedness
 ```
 
 The CLI, the MCP server, and this SDK are three surfaces over **one** implementation — they cannot drift.

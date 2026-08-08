@@ -68,6 +68,53 @@ Agents that process user-provided content (e.g., document summarisation, code ex
 
 ---
 
+## Engine Security Model
+
+The installable `eeik` package (`pip install eeik`) is deliberately narrow in what it can do. This is
+the security contract for the engine itself — distinct from the agents it generates.
+
+### What the engine does
+
+| Capability | Scope |
+|---|---|
+| **Reads** the repository's content layers | `capability-packs/`, `knowledge/`, `templates/`, `generators/`, `bootstrap/`, and the manifest — read-only |
+| **Writes** only to two well-known places | Materialised adapters under `.claude/` (via `eeik activate --apply`) and generated drafts under `.eeik-staging/` — never elsewhere |
+| **Validates & resolves** manifests | Pure functions over YAML/JSON; no code execution from manifest content |
+| **Governs generation** | Every generation runs through HALO's confidence gate; **SUGGEST authority** → staged, never auto-applied |
+
+### What the engine does *not* do
+
+- **No network in the core.** The engine's runtime dependencies are `pyyaml` + `jsonschema` only.
+  It makes no outbound calls; it does not phone home, fetch packs, or send telemetry. (An LLM-backed
+  generation path exists but requires the `claude` CLI / an API key the operator supplies explicitly;
+  absent that, generation runs offline and fail-safe.)
+- **No arbitrary code execution.** Manifests and pack metadata are *data* — parsed, validated, and
+  resolved. The engine never `eval`/`exec`s manifest or pack content.
+- **No secret handling.** The engine reads no credentials and stores none. Secrets belong in the
+  environment / a secrets manager, never in a manifest or pack.
+- **No auto-apply.** Generation and closed-loop lesson capture are SUGGEST authority: output is written
+  to `.eeik-staging/` for human review and never committed to live config automatically. `autoEnforced`
+  is set by the harness, never by a generator.
+
+### Governance & gates
+
+- **HALO is optional and fails safe.** Without `agent-harness` installed, governed generation degrades
+  to a staged, *ungoverned* draft with a warning — it never silently proceeds as if governed. `eeik
+  doctor` reports exactly what is and isn't governed in the current environment.
+- **Conformance is checkable.** `eeik verify` (declared items exist), `eeik lint` (content is
+  well-formed), and `eeik diff` (no drift from `eeik.lock`) are CI-gatable and non-destructive.
+- **The MCP surface is read-first.** MCP tools are read-only except `eeik_generate` / `eeik_capture_lessons`,
+  which are governed writes that only ever *stage* drafts — an MCP host cannot make the engine mutate
+  live config. For production MCP hosting, place auth / rate-limiting at the host, not the engine.
+
+### Supply chain
+
+- Every capability pack carries a `version` and a content **digest**; `eeik.lock` pins both, and
+  `eeik diff` / `eeik upgrade` detect and re-pin drift — so an adopted pack cannot change underneath a
+  project unnoticed.
+
+---
+
 ## Threat Model Template
 
 Use this template when running `/threat-model` for a service. Store the output in `docs/security/threat-models/<service>.md`.

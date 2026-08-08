@@ -27,6 +27,7 @@ from eeik import contract as _contract
 from eeik import doctor as _doctor
 from eeik import generation as _generation
 from eeik import lessons as _lessons
+from eeik import lint as _lint
 from eeik import lock as _lock
 from eeik import manifest as _manifest
 from eeik import packs as _packs
@@ -35,6 +36,7 @@ from eeik.architectures import ReferenceArchitecture
 from eeik.doctor import DoctorReport
 from eeik.generation import GenerationOutcome
 from eeik.lessons import LessonCaptureReport
+from eeik.lint import LintReport
 from eeik.verify import Finding, VerifyReport, verify
 from eeik.versions import all_pack_fingerprints
 
@@ -210,7 +212,9 @@ def validate_agent_contract(contract: dict) -> tuple[bool, str]:
     return _contract.validate_contract(contract)
 
 
-def generate(generator: str = "agent-generator", *, spec: str | None = None) -> GenerationOutcome:
+def generate(
+    generator: str = "agent-generator", *, spec: str | None = None, preview: bool = False
+) -> GenerationOutcome:
     """Run one **governed** generation and stage a human-review draft — never auto-applied (ADR-003).
 
     Generation is SUGGEST authority: the draft flows through HALO's confidence gate, which guarantees
@@ -218,10 +222,14 @@ def generate(generator: str = "agent-generator", *, spec: str | None = None) -> 
     area rather than live config. Returns a :class:`~eeik.generation.GenerationOutcome` carrying the
     decision, the review routing, the audit trail, and the staged path. When HALO is not installed it
     **fails safe** (stages, warns, does not certify the gate). ``spec`` is free-text intent passed to
-    the producer. This is the in-process twin of the ``eeik_generate`` MCP tool.
+    the producer.
+
+    ``preview=True`` runs the same governed path but does **not** persist the draft to staging — the
+    artifact is returned in-memory only (``staged=False``), for local experimentation. It never weakens
+    the SUGGEST-authority guarantee. This is the in-process twin of the ``eeik_generate`` MCP tool.
     """
     producer, kind = _generation.resolve_producer(generator, spec)
-    return _generation.run_generation(generator, producer, producer_kind=kind)
+    return _generation.run_generation(generator, producer, producer_kind=kind, preview=preview)
 
 
 def capture_lessons(records: list[dict[str, Any]]) -> LessonCaptureReport:
@@ -233,6 +241,17 @@ def capture_lessons(records: list[dict[str, Any]]) -> LessonCaptureReport:
     auto-committed. A human curates and promotes. Returns a :class:`~eeik.lessons.LessonCaptureReport`.
     """
     return _lessons.capture_lessons(records)
+
+
+def lint() -> LintReport:
+    """Content-quality lint of capability-pack agents + standards (the `eeik lint` command).
+
+    Complements :func:`verify` (which checks that declared items *exist*): this checks the content is
+    *well-formed* — valid frontmatter, a name matching the file, a usable description, a model, a tools
+    list, and real body structure. Returns a :class:`~eeik.lint.LintReport` (`ok`, counts, findings with
+    level ``pass``/``warn``/``fail``).
+    """
+    return _lint.lint_content()
 
 
 def doctor() -> DoctorReport:
@@ -285,6 +304,7 @@ __all__ = [
     "GenerationOutcome",
     "LessonCaptureReport",
     "DoctorReport",
+    "LintReport",
     "find_packs",
     "providers_of",
     "validate_manifest",
@@ -298,6 +318,7 @@ __all__ = [
     "capture_lessons",
     "curated_lessons",
     "doctor",
+    "lint",
     "seed_plan",
     "ReferenceArchitecture",
     "reference_architectures",

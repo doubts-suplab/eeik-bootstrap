@@ -333,10 +333,15 @@ Risk notes call out dependencies or hazards.
 - [x] **CI matrix Python 3.11/3.12/3.13** + **coverage floor** — done. `eeik-validate.yml` engine-tests
       runs the suite across 3.11/3.12/3.13 with `--cov=eeik --cov-fail-under=50` (currently ~57%) and
       uploads a coverage artifact per version. `pytest-cov` added to the `test` extra.
-- [ ] **Hook tests** — `bats` (or a shell harness) for `pre-bash-guard` / `post-edit-check` etc. _Effort
-      M · Impact M · currently untested shell is a blind spot._
-- [ ] **Content linting beyond agent-lint** — frontmatter schema, description length, required sections
-      (extend `eeik-validate.yml` or add an `eeik lint-content`). _Effort M · Impact M._
+- [x] **Hook tests** — done. `tests/test_hooks.py` drives the shell guards via subprocess (JSON on
+      stdin → exit code): `pre-bash-guard` blocks force-push / hard-reset / `rm -rf` system dirs / DROP
+      DATABASE / cdk destroy / destructive AWS (and *warns* on protected-branch push); `pre-write-guard`
+      blocks system paths / keys / `.env.production`; `post-edit-check` warns but never blocks. 30 cases.
+- [x] **Content linting beyond agent-lint** — done. `eeik lint` checks agent/standard content
+      well-formedness (frontmatter validity, name-matches-file, description length band, model/tools,
+      body structure) with `pass`/`warn`/`fail` levels; three surfaces (`eeik lint`, `eeik.lint()`,
+      `eeik_lint`). It replaces the inline frontmatter grep in `eeik-validate.yml` and immediately caught
+      two `.claude/agents/` files the grep missed (materialised-marker handling). (`eeik/lint.py`)
 
 ### 4. Content & capability packs
 - [ ] **Adapter parity matrix** — document depth per tool (Claude Code / Copilot rich; Cursor / Kiro /
@@ -351,13 +356,18 @@ Risk notes call out dependencies or hazards.
       promotion workflow (curation checklist, who approves). _Effort S · Impact M · builds on ADR-012._
 
 ### 5. Engine & governance robustness
-- [ ] **Document the HALO-absent experience precisely** — a table of "works offline / needs HALO"
-      (validate, resolve, catalog, verify, seed, contract work offline; governed generation stages
-      fail-safe). _Effort S · Impact M._
-- [ ] **Preview / dry-run generation mode** even lighter than staged, for local experimentation. _Effort
-      M · Impact M · must not weaken the SUGGEST-authority guarantee — preview only, still no auto-apply._
-- [ ] **MCP production notes** — auth / rate-limiting guidance for MCP hosts + example configs beyond
-      Claude Code `.mcp.json` (IDEs, an APEX agent). _Effort S · Impact M._
+- [x] **Document the HALO-absent experience precisely** — done: a "what works offline (with/without
+      HALO)" table in [docs/reference/engine-reference.md](reference/engine-reference.md) (everything but
+      governed generation works identically; generation runs fail-safe/ungoverned without HALO;
+      `auto_enforced` is always `False`).
+- [x] **Preview / dry-run generation mode** — done. `preview=True` (SDK `eeik.generate(..., preview=True)`,
+      MCP `eeik_generate` `preview`, CLI `eeik demo --preview`) runs the same governed path — the gate
+      still runs, `auto_enforced` stays `False` — but does **not** persist to `.eeik-staging/`; the
+      artifact is returned in-memory (`staged=False`). Never weakens SUGGEST authority; just skips
+      persistence. (`eeik/generation.py::run_generation`)
+- [x] **MCP production notes** — done. [engine-reference.md](reference/engine-reference.md) covers host
+      configs (`.mcp.json` / `python -m eeik mcp`) and a "Running MCP in production" section (put
+      auth/mTLS + rate-limiting at the gateway, filesystem isolation, least-privilege read-only subset).
 - [x] **`eeik doctor`** delivered (see Quick wins). _Effort M · Impact H._
 - [x] **Consistent `--json` on inspection commands** — `status`, `validate`, and `diff` now emit `--json`
       alongside catalog/architectures/verify/doctor/lessons; the `diff` payload matches
@@ -369,9 +379,10 @@ Risk notes call out dependencies or hazards.
       _Effort S · Impact L · housekeeping._
 - [ ] **"First contribution" path** in CONTRIBUTING (e.g. improve one standard / add one example). _Effort
       S · Impact M._
-- [ ] **Engine security model** section in SECURITY.md — what the Python package can/can't do, the
-      filesystem scope of generators (writes only to `.eeik-staging/`), no network in the core. _Effort S ·
-      Impact M._
+- [x] **Engine security model** section in SECURITY.md — done. Documents what the `eeik` package does /
+      doesn't do (reads content layers; writes only to `.claude/` + `.eeik-staging/`; no network in the
+      core; no arbitrary code execution; no secret handling; no auto-apply), the HALO/fail-safe posture,
+      the read-first MCP surface, and the pack digest/lockfile supply-chain guarantee.
 - [ ] `CHANGELOG.md` + `CODE_OF_CONDUCT.md` + SUPPORT/FAQ (see Quick wins). _Effort S · Impact M._
 
 ### 7. Operational / CI polish

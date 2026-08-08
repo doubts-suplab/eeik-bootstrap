@@ -124,22 +124,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check agent YAML frontmatter
-        run: |
-          failed=0
-          for f in .claude/agents/*.md capability-packs/*/agents/*.md; do
-            [ -f "$f" ] || continue
-            # Check required frontmatter fields
-            if ! grep -q "^description:" "$f"; then
-              echo "FAIL: $f — missing 'description' in frontmatter"
-              failed=1
-            fi
-            if ! grep -q "^model:" "$f"; then
-              echo "WARN: $f — missing 'model' field (will use default)"
-            fi
-          done
-          [ $failed -eq 0 ] || exit 1
-          echo "✓ All agent files have required frontmatter"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install EEIK engine
+        run: pip install -e .
+
+      - name: Content lint (agents + standards)
+        # Richer than a frontmatter grep: name-matches-file, description quality, model/tools, structure.
+        run: python3 -m eeik lint --exit-code
 
       - name: Check for hardcoded secrets
         run: |
