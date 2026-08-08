@@ -372,9 +372,10 @@ Risk notes call out dependencies or hazards.
       _Effort S · Impact L · housekeeping._
 - [ ] **"First contribution" path** in CONTRIBUTING (e.g. improve one standard / add one example). _Effort
       S · Impact M._
-- [ ] **Engine security model** section in SECURITY.md — what the Python package can/can't do, the
-      filesystem scope of generators (writes only to `.eeik-staging/`), no network in the core. _Effort S ·
-      Impact M._
+- [x] **Engine security model** section in SECURITY.md — done. Documents what the `eeik` package does /
+      doesn't do (reads content layers; writes only to `.claude/` + `.eeik-staging/`; no network in the
+      core; no arbitrary code execution; no secret handling; no auto-apply), the HALO/fail-safe posture,
+      the read-first MCP surface, and the pack digest/lockfile supply-chain guarantee.
 - [ ] `CHANGELOG.md` + `CODE_OF_CONDUCT.md` + SUPPORT/FAQ (see Quick wins). _Effort S · Impact M._
 
 ### 7. Operational / CI polish
