@@ -333,8 +333,10 @@ Risk notes call out dependencies or hazards.
 - [x] **CI matrix Python 3.11/3.12/3.13** + **coverage floor** — done. `eeik-validate.yml` engine-tests
       runs the suite across 3.11/3.12/3.13 with `--cov=eeik --cov-fail-under=50` (currently ~57%) and
       uploads a coverage artifact per version. `pytest-cov` added to the `test` extra.
-- [ ] **Hook tests** — `bats` (or a shell harness) for `pre-bash-guard` / `post-edit-check` etc. _Effort
-      M · Impact M · currently untested shell is a blind spot._
+- [x] **Hook tests** — done. `tests/test_hooks.py` drives the shell guards via subprocess (JSON on
+      stdin → exit code): `pre-bash-guard` blocks force-push / hard-reset / `rm -rf` system dirs / DROP
+      DATABASE / cdk destroy / destructive AWS (and *warns* on protected-branch push); `pre-write-guard`
+      blocks system paths / keys / `.env.production`; `post-edit-check` warns but never blocks. 30 cases.
 - [x] **Content linting beyond agent-lint** — done. `eeik lint` checks agent/standard content
       well-formedness (frontmatter validity, name-matches-file, description length band, model/tools,
       body structure) with `pass`/`warn`/`fail` levels; three surfaces (`eeik lint`, `eeik.lint()`,

@@ -79,7 +79,7 @@ low risk, high impact):
 | Onboarding | ~~Adopter-first README + top-of-repo flow diagram; lead with `eeik seed`~~ ✅ (guide as landing page still open) | 🟡 In progress |
 | Distribution | ~~PyPI release automation (OIDC)~~ ✅ workflow ready; ~~badges~~ ✅ (GitHub topics = maintainer repo-setting) | ✅ Done |
 | CLI UX | ~~`eeik doctor`~~ ✅; ~~`--json` on status/validate/diff~~ ✅ (inspection commands consistent) | ✅ Done |
-| Testing | ~~Shipped-content smoke test~~ ✅; ~~Python 3.11/3.12/3.13 matrix + coverage floor (≥50%)~~ ✅; hook tests still open | 🟡 In progress |
+| Testing | ~~Shipped-content smoke test~~ ✅; ~~Python 3.11/3.12/3.13 matrix + coverage floor~~ ✅; ~~hook tests~~ ✅ (30 subprocess cases); ~~content lint~~ ✅ | ✅ Done |
 | Docs/process | ~~`CHANGELOG.md`, `CODE_OF_CONDUCT.md`, SUPPORT/FAQ~~ ✅; ~~engine security-model section~~ ✅ | ✅ Done |
 | CI polish | Dependabot/Renovate; pre-commit (ruff/mypy); make `verify --strict` + `diff` required checks | ⬜ Planned |
 | Content | Adapter parity matrix; stricter domain-pack criteria; staged→committed lessons promotion workflow | ⬜ Planned |
