@@ -76,7 +76,7 @@ low risk, high impact):
 
 | Theme | Headline items | Status |
 |---|---|---|
-| Onboarding | ~~Adopter-first README + top-of-repo flow diagram; lead with `eeik seed`~~ ✅ (guide as landing page still open) | 🟡 In progress |
+| Onboarding | ~~Adopter-first README + top-of-repo flow diagram; lead with `eeik seed`~~ ✅; ~~interactive guide as the newcomer landing page (README leads with it; guide opens with a Get Started section)~~ ✅ | ✅ Done |
 | Distribution | ~~PyPI release automation (OIDC)~~ ✅ workflow ready; ~~badges~~ ✅ (GitHub topics = maintainer repo-setting) | ✅ Done |
 | CLI UX | ~~`eeik doctor`~~ ✅; ~~`--json` on status/validate/diff~~ ✅ (inspection commands consistent) | ✅ Done |
 | Testing | ~~Shipped-content smoke test~~ ✅; ~~Python 3.11/3.12/3.13 matrix + coverage floor~~ ✅; ~~hook tests~~ ✅ (30 subprocess cases); ~~content lint~~ ✅ | ✅ Done |

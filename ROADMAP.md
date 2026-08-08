@@ -300,13 +300,16 @@ Risk notes call out dependencies or hazards.
       conformance gate) with an actionable fix per finding; never throws. Three surfaces: `eeik doctor`
       (`--json`/`--strict`/`--exit-code`), `eeik.doctor()` (SDK), `eeik_doctor` (MCP). (`eeik/doctor.py`)
 
-### 1. Accessibility & onboarding
-- [ ] Restructure README (Quick Start → diagram → "seed vs engine" up front → deep detail collapsed).
+### 1. Accessibility & onboarding ✅ _(shipped v1.4)_
+- [x] Restructure README (Quick Start → diagram → "seed vs engine" up front → deep detail collapsed).
       _Effort S · Impact H._
-- [ ] Make **`docs/index.html` / interactive guide** the default newcomer landing experience; link it
-      prominently and keep it in the doc-sync rule. _Effort S · Impact M._
-- [ ] State the **dual role explicitly and early**: `eeik seed --into <dir>` is the primary *adoption*
+- [x] Make **`docs/index.html` / interactive guide** the default newcomer landing experience; link it
+      prominently and keep it in the doc-sync rule. _Effort S · Impact M._ — README now leads with a
+      "New to EEIK? Start with the interactive guide" link; the guide opens with a **Get Started**
+      section (adopt vs. try-the-engine) mirroring the README Quick Start.
+- [x] State the **dual role explicitly and early**: `eeik seed --into <dir>` is the primary *adoption*
       path (copy config into a project); the engine is for *generation* (ADR-011). _Effort S · Impact H._
+      — the "Who is this for?" table and Quick Start now split adoption vs. generation up front.
 
 ### 2. Packaging, distribution & discoverability
 - [ ] PyPI publish + release automation (tag → build → publish → GitHub Release notes). _Effort M ·

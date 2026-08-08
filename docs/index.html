@@ -318,6 +318,29 @@
     </div>
   </div>
 
+  <!-- GET STARTED -->
+  <section id="get-started">
+    <div class="section-label">Get Started</div>
+    <h2>Two ways in — adopt, or run the engine</h2>
+    <p class="section-desc"><strong style="color:var(--text)">Adopt</strong> the config into your project (the primary path — <span class="mono">eeik seed</span> copies the <em>seed</em> set only, never the engine or EEIK's own agents), or <strong style="color:var(--text)">run the engine</strong> to explore it — no API key, no cloud.</p>
+    <div class="grid-2" style="align-items:start;">
+      <div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:8px;">Adopt into a project</h3>
+        <div class="code-block">$ pip install -e /path/to/eeik-bootstrap
+$ eeik seed --into . --apply     # copy the seed set into this project
+$ eeik doctor                    # check your setup — a fix per issue
+# then: write project-manifest.yaml → eeik activate --apply</div>
+      </div>
+      <div>
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:8px;">Try the engine</h3>
+        <div class="code-block">$ pip install -e ".[test]"
+$ eeik demo                      # governed generation on the real HALO gate
+$ eeik catalog --tag regulated   # query the 22-pack catalog
+$ eeik architectures             # 4 deployable reference architectures</div>
+      </div>
+    </div>
+  </section>
+
   <!-- WHAT IS IT -->
   <section id="what">
     <div class="section-label">Overview</div>
