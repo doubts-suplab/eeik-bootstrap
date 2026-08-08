@@ -83,7 +83,7 @@ low risk, high impact):
 | Docs/process | ~~`CHANGELOG.md`, `CODE_OF_CONDUCT.md`, SUPPORT/FAQ~~ ✅; ~~engine security-model section~~ ✅ | ✅ Done |
 | CI polish | Dependabot/Renovate; pre-commit (ruff/mypy); make `verify --strict` + `diff` required checks | ⬜ Planned |
 | Content | Adapter parity matrix; stricter domain-pack criteria; staged→committed lessons promotion workflow | ⬜ Planned |
-| Governance | ~~Preview/dry-run generation~~ ✅ (`preview=True`, governed but not persisted); HALO-absent "works offline" table + MCP production auth/rate-limit notes still open | 🟡 In progress |
+| Governance | ~~Preview/dry-run generation~~ ✅; ~~HALO-absent "works offline" table~~ ✅; ~~MCP production notes~~ ✅ (see [engine-reference.md](reference/engine-reference.md)) | ✅ Done |
 | Strategic | Composable packs; signed packs / private registry; opt-in telemetry (license: AGPL-3.0 retained by decision) | ⬜ Planned (decisions) |
 
 > **Composable packs** needs a *design decision*, not just implementation (a dependency model beyond

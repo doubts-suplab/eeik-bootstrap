@@ -167,6 +167,10 @@ governed agent runtime — not ungoverned `claude --print`:
 
 ## EEIK in Action — the Governed Generation Engine
 
+> **Surface reference:** every CLI command, SDK function, and MCP tool — plus MCP production notes and
+> the "what works offline" table — lives in
+> [docs/reference/engine-reference.md](docs/reference/engine-reference.md).
+
 <details>
 <summary><strong>Full engine walkthrough</strong> — demo · lock/drift · catalog · verify · contracts · architectures · MCP · SDK (click to expand)</summary>
 

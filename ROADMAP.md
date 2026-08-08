@@ -356,16 +356,18 @@ Risk notes call out dependencies or hazards.
       promotion workflow (curation checklist, who approves). _Effort S · Impact M · builds on ADR-012._
 
 ### 5. Engine & governance robustness
-- [ ] **Document the HALO-absent experience precisely** — a table of "works offline / needs HALO"
-      (validate, resolve, catalog, verify, seed, contract work offline; governed generation stages
-      fail-safe). _Effort S · Impact M._
+- [x] **Document the HALO-absent experience precisely** — done: a "what works offline (with/without
+      HALO)" table in [docs/reference/engine-reference.md](reference/engine-reference.md) (everything but
+      governed generation works identically; generation runs fail-safe/ungoverned without HALO;
+      `auto_enforced` is always `False`).
 - [x] **Preview / dry-run generation mode** — done. `preview=True` (SDK `eeik.generate(..., preview=True)`,
       MCP `eeik_generate` `preview`, CLI `eeik demo --preview`) runs the same governed path — the gate
       still runs, `auto_enforced` stays `False` — but does **not** persist to `.eeik-staging/`; the
       artifact is returned in-memory (`staged=False`). Never weakens SUGGEST authority; just skips
       persistence. (`eeik/generation.py::run_generation`)
-- [ ] **MCP production notes** — auth / rate-limiting guidance for MCP hosts + example configs beyond
-      Claude Code `.mcp.json` (IDEs, an APEX agent). _Effort S · Impact M._
+- [x] **MCP production notes** — done. [engine-reference.md](reference/engine-reference.md) covers host
+      configs (`.mcp.json` / `python -m eeik mcp`) and a "Running MCP in production" section (put
+      auth/mTLS + rate-limiting at the gateway, filesystem isolation, least-privilege read-only subset).
 - [x] **`eeik doctor`** delivered (see Quick wins). _Effort M · Impact H._
 - [x] **Consistent `--json` on inspection commands** — `status`, `validate`, and `diff` now emit `--json`
       alongside catalog/architectures/verify/doctor/lessons; the `diff` payload matches
