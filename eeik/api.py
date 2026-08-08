@@ -27,6 +27,7 @@ from eeik import contract as _contract
 from eeik import doctor as _doctor
 from eeik import generation as _generation
 from eeik import lessons as _lessons
+from eeik import lint as _lint
 from eeik import lock as _lock
 from eeik import manifest as _manifest
 from eeik import packs as _packs
@@ -35,6 +36,7 @@ from eeik.architectures import ReferenceArchitecture
 from eeik.doctor import DoctorReport
 from eeik.generation import GenerationOutcome
 from eeik.lessons import LessonCaptureReport
+from eeik.lint import LintReport
 from eeik.verify import Finding, VerifyReport, verify
 from eeik.versions import all_pack_fingerprints
 
@@ -235,6 +237,17 @@ def capture_lessons(records: list[dict[str, Any]]) -> LessonCaptureReport:
     return _lessons.capture_lessons(records)
 
 
+def lint() -> LintReport:
+    """Content-quality lint of capability-pack agents + standards (the `eeik lint` command).
+
+    Complements :func:`verify` (which checks that declared items *exist*): this checks the content is
+    *well-formed* — valid frontmatter, a name matching the file, a usable description, a model, a tools
+    list, and real body structure. Returns a :class:`~eeik.lint.LintReport` (`ok`, counts, findings with
+    level ``pass``/``warn``/``fail``).
+    """
+    return _lint.lint_content()
+
+
 def doctor() -> DoctorReport:
     """Diagnose common adoption/health problems, each with an actionable fix (the `eeik doctor` command).
 
@@ -285,6 +298,7 @@ __all__ = [
     "GenerationOutcome",
     "LessonCaptureReport",
     "DoctorReport",
+    "LintReport",
     "find_packs",
     "providers_of",
     "validate_manifest",
@@ -298,6 +312,7 @@ __all__ = [
     "capture_lessons",
     "curated_lessons",
     "doctor",
+    "lint",
     "seed_plan",
     "ReferenceArchitecture",
     "reference_architectures",

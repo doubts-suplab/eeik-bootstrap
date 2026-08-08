@@ -247,8 +247,8 @@ call EEIK live instead of copying static adapter files ([ADR-006](docs/decisions
 
 ```bash
 pip install -e ".[mcp]"     # the MCP SDK is an optional extra
-eeik mcp                    # read: eeik_catalog, eeik_validate_manifest, eeik_resolve_packs,
-                            #       eeik_pack_drift, eeik_verify, eeik_reference_architectures, eeik_doctor
+eeik mcp                    # read: eeik_catalog, eeik_validate_manifest, eeik_resolve_packs, eeik_pack_drift,
+                            #       eeik_verify, eeik_reference_architectures, eeik_doctor, eeik_lint
                             # governed write: eeik_generate, eeik_capture_lessons → STAGED, human-review
                             #                 drafts (never auto-applied)
 ```
@@ -272,6 +272,7 @@ who    = eeik.providers_of("java-architect")                     # [Provider(pac
 draft  = eeik.generate("agent-generator", spec="a refund agent") # GenerationOutcome — staged, auto_enforced=False
 lessons = eeik.capture_lessons(audit_records)                    # closed loop: audit → staged LL-NNN drafts
 health = eeik.doctor()                                           # DoctorReport(healthy, counts, diagnostics+fixes)
+content = eeik.lint()                                            # LintReport — agent/standard content well-formedness
 ```
 
 The CLI, the MCP server, and this SDK are three surfaces over **one** implementation — they cannot drift.

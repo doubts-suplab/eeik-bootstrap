@@ -62,6 +62,7 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 | **Clarify dual-purpose root adapters** | ✅ | `bootstrap/seed-manifest.yaml` classifies every root entry seed/generated/engine; `eeik seed` + `eeik.seed_plan()` copy exactly the seed set; seed CI self-skips on the engine repo (ADR-011) |
 | **`eeik doctor` (adoption/health diagnostic)** | ✅ | Diagnoses Python/deps, HALO+MCP availability, manifest validity, pack resolution, adapter materialisation, lock drift, conformance — each with an actionable fix; never throws. CLI (`--json`/`--strict`/`--exit-code`) + `eeik.doctor()` SDK + `eeik_doctor` MCP (`eeik/doctor.py`) |
 | **Shipped-content smoke test + schema completeness** | ✅ | `tests/test_shipped_content.py` guards the real packs/examples; surfaced + fixed a validator crash on malformed input, a stale example, and schema↔resolver gaps (`technology.mainframe`, `anti-corruption-layer`, `solvency-ii`/`basel-iii`). `--json` on status/validate/diff. Engine tests run on **Python 3.11/3.12/3.13** with a **coverage floor (≥50%)** |
+| **`eeik lint` (content-quality gate)** | ✅ | Lints agent/standard content well-formedness (frontmatter, name-matches-file, description quality, model/tools, structure); pass/warn/fail; CLI + `eeik.lint()` + `eeik_lint` MCP; replaces the inline frontmatter grep in CI (`eeik/lint.py`) |
 
 ---
 

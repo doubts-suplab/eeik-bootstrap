@@ -64,6 +64,11 @@ def doctor() -> dict:
     return _api.doctor().to_dict()
 
 
+def lint() -> dict:
+    """Content-quality lint of capability-pack agents + standards (frontmatter, structure)."""
+    return _api.lint().to_dict()
+
+
 def generate(generator: str = "agent-generator", spec: str | None = None) -> dict:
     """Run one governed generation and return a STAGED, human-review draft (never auto-applied)."""
     outcome = _api.generate(generator, spec=spec)
@@ -168,6 +173,14 @@ TOOLS: list[dict[str, Any]] = [
                        "drift, and the conformance gate — each with an actionable fix. Returns "
                        "{healthy, ok, counts, diagnostics}. Read-only; never throws.",
         "handler": doctor,
+        "inputSchema": {"type": "object", "properties": {}},
+    },
+    {
+        "name": "eeik_lint",
+        "description": "Content-quality lint of capability-pack agents + standards — frontmatter validity, "
+                       "name-matches-file, description quality, model/tools, and body structure. "
+                       "Complements verify (existence) with well-formedness. Returns {ok, counts, findings}.",
+        "handler": lint,
         "inputSchema": {"type": "object", "properties": {}},
     },
     {

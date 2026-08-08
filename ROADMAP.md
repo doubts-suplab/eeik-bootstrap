@@ -335,8 +335,11 @@ Risk notes call out dependencies or hazards.
       uploads a coverage artifact per version. `pytest-cov` added to the `test` extra.
 - [ ] **Hook tests** — `bats` (or a shell harness) for `pre-bash-guard` / `post-edit-check` etc. _Effort
       M · Impact M · currently untested shell is a blind spot._
-- [ ] **Content linting beyond agent-lint** — frontmatter schema, description length, required sections
-      (extend `eeik-validate.yml` or add an `eeik lint-content`). _Effort M · Impact M._
+- [x] **Content linting beyond agent-lint** — done. `eeik lint` checks agent/standard content
+      well-formedness (frontmatter validity, name-matches-file, description length band, model/tools,
+      body structure) with `pass`/`warn`/`fail` levels; three surfaces (`eeik lint`, `eeik.lint()`,
+      `eeik_lint`). It replaces the inline frontmatter grep in `eeik-validate.yml` and immediately caught
+      two `.claude/agents/` files the grep missed (materialised-marker handling). (`eeik/lint.py`)
 
 ### 4. Content & capability packs
 - [ ] **Adapter parity matrix** — document depth per tool (Claude Code / Copilot rich; Cursor / Kiro /

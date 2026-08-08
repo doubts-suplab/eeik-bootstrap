@@ -44,7 +44,8 @@ index), `eeik architectures` (engine-surfaced reference architectures, ADR-010),
 adopting project — the explicit dual-purpose boundary, ADR-011), `eeik lessons` (closed-loop knowledge
 capture — HALO/APEX audit logs → staged `LL-NNN` lessons, SUGGEST authority, ADR-012), `eeik doctor`
 (diagnose adoption/health problems — deps, HALO/MCP, manifest, resolution, drift, conformance — each
-with an actionable fix).
+with an actionable fix), `eeik lint` (content-quality lint of pack agents + standards — frontmatter,
+name-matches-file, description quality, structure; complements `verify`).
 Tests: `python3 -m pytest tests/ -q`. Keep `docs/progress.md`, `ROADMAP.md`, `README.md`, and
 `docs/index.html` in sync when this layer changes.
 
