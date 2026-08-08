@@ -22,9 +22,28 @@ eeik lessons --from audit.json     # → staged LL-NNN drafts under .eeik-stagin
 eeik lessons --list                # the curated lessons already promoted here
 ```
 
-Capture is **SUGGEST authority**: drafts are *staged*, never auto-committed. You fill in Root Cause /
-Fix and move a draft into this directory (and add it to the index below) to promote it. Same guarantee
-whether you use the CLI, `eeik.capture_lessons()` (SDK), or `eeik_capture_lessons` (MCP).
+Capture is **SUGGEST authority**: drafts are *staged*, never auto-committed. Same guarantee whether you
+use the CLI, `eeik.capture_lessons()` (SDK), or `eeik_capture_lessons` (MCP).
+
+## Promotion workflow — staged → committed
+
+A staged draft (under `.eeik-staging/lessons/`) is a *proposal*. Promoting it into this directory is a
+deliberate, human-curated step:
+
+1. **Review** the draft in `.eeik-staging/lessons/LL-NNN-*.md`. Confirm it describes a real, reusable
+   lesson (not a one-off), and that its category/severity are right.
+2. **Curate the stubs** the machine leaves for a human: fill in **Root Cause** and **Fix / Prevention**
+   with specifics (the runtime knows *what* happened, not *why* or *how to prevent it*).
+3. **De-duplicate** — if it overlaps an existing `LL-NNN`, fold the new signal (occurrence count, a fresh
+   example) into that lesson instead of adding a near-duplicate.
+4. **Number** it: take the next free `LL-NNN` (the draft is pre-numbered, but re-check after de-dup).
+5. **Move** the file into `knowledge/lessons-learned/` and **add a row** to the index below.
+6. **Consider promotion to a pattern** — if the fix is a reusable *approach* (not just a fix for one
+   bug), promote it to `knowledge/patterns/` and link it from the lesson.
+7. **Commit** with a `docs(lessons):` message. `eeik lessons --list` should now show it.
+
+Promotion is intentionally manual — the closed loop *proposes*; a human *decides* what enters the
+organisation's memory.
 
 ## Index
 

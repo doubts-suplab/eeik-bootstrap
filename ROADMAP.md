@@ -344,16 +344,18 @@ Risk notes call out dependencies or hazards.
       two `.claude/agents/` files the grep missed (materialised-marker handling). (`eeik/lint.py`)
 
 ### 4. Content & capability packs
-- [ ] **Adapter parity matrix** — document depth per tool (Claude Code / Copilot rich; Cursor / Kiro /
-      Gemini / Codex thinner) and set a generator goal to narrow the gap. _Effort S (matrix) / L (close
-      the gap) · Impact M._
-- [ ] **Domain-pack contribution criteria** — prefer generic + extensible patterns over org-specific
-      content; add generic "regulated" exemplars. Guards against sparse/bespoke packs. _Effort S · Impact
-      M · process, enforced in CONTRIBUTING + review._
+- [x] **Adapter parity matrix** — documented per-tool depth + the parity goal (standards/context at
+      parity across all six; format-appropriate agent/command granularity) in
+      [docs/reference/adapter-parity.md](reference/adapter-parity.md). _Closing the granularity gap for
+      the thin adapters remains ongoing generator work._
+- [x] **Domain-pack contribution criteria** — added to CONTRIBUTING: generic + extensible (not
+      org-specific), substantive content passing `lint`/`verify`, generic regulated framing, versioned +
+      resolver-wired, patterns over prescriptions.
 - [ ] Expand **reference architectures**; keep every manifest schema-valid and resolving cleanly (already
       verify-gated). _Effort M · Impact M._
-- [ ] Strengthen **closed-loop capture** — more worked examples + a documented **staged → committed**
-      promotion workflow (curation checklist, who approves). _Effort S · Impact M · builds on ADR-012._
+- [x] Strengthen **closed-loop capture** — documented the **staged → committed** promotion workflow
+      (7-step curation checklist: review → curate stubs → de-dup → number → move + index → maybe promote
+      to a pattern → commit) in `knowledge/lessons-learned/README.md`.
 
 ### 5. Engine & governance robustness
 - [x] **Document the HALO-absent experience precisely** — done: a "what works offline (with/without

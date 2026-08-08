@@ -28,6 +28,27 @@ Contributions must:
 | **ADR** | `docs/decisions/` | An architectural decision for the framework itself |
 | **Runbook** | `docs/runbooks/` | An operational runbook template |
 
+### Domain-pack contribution criteria
+
+Domain packs (banking, insurance, healthcare, retail, …) are high-value but risk becoming sparse or
+organisation-specific. To keep them reusable, a domain pack must:
+
+- **Be generic and extensible, not org-specific.** Encode the *domain's* invariants and regulatory
+  concerns (e.g. "never store PAN/CVV", "reserve stock before charging"), not one company's product,
+  service names, or internal systems. No proprietary rules, endpoints, or account IDs.
+- **Carry substantive content, not stubs.** At least one real agent *and* one standard, each passing
+  `eeik lint` (valid frontmatter, a usable description, real body) and `eeik verify` (everything the
+  `metadata.yaml` declares resolves to a file). A one-paragraph placeholder is not a pack.
+- **Keep regulated examples generic.** Reference the framework by name (GDPR, PCI-DSS, HIPAA, Solvency
+  II, Basel III) and the *control*, not a specific auditor's checklist or a jurisdiction-specific form.
+- **Declare compliance hints + a version** in `metadata.yaml`, and resolve from a manifest field
+  (`project.domain: <name>`) — wire it into `eeik/packs.py` and the canonical capability matrix.
+- **Prefer patterns over prescriptions.** Where a concern generalises (an order state machine, a
+  reservation model), promote it to `knowledge/patterns/` so other domains can reuse it.
+
+If a rule only applies inside one organisation, it belongs in that org's *downstream* project (via
+`eeik seed` + a project-local pack), not in the shared seed.
+
 ---
 
 ## Branch and Commit Conventions
