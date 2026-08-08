@@ -51,6 +51,13 @@ def test_tool_generate_is_governed_and_staged_never_applied():
     assert "eeik_generate" in {tool["name"] for tool in t.TOOLS}
 
 
+def test_tool_generate_preview_is_governed_but_not_persisted():
+    res = t.dispatch("eeik_generate", {"generator": "agent-generator", "spec": "x", "preview": True})
+    assert res["staged"] is False and res["staged_path"] == ""   # preview: not persisted
+    assert res["autoApplied"] is False and res["auto_enforced"] is False  # still governed
+    assert "preview" in res["note"].lower()
+
+
 # ── real MCP round-trip (client ↔ server over in-memory streams) ───────────────────
 
 def test_mcp_roundtrip():

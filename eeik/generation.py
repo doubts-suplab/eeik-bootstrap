@@ -141,18 +141,29 @@ def run_generation(
     producer_kind: str = "offline-demo",
     tenant: str = "eeik",
     user: str = "eeik-cli",
+    preview: bool = False,
 ) -> GenerationOutcome:
-    """Run one generation through the HALO gate and return a structured, staged-only outcome.
+    """Run one generation through the HALO gate and return a structured outcome.
 
     This is the shared core behind ``eeik demo`` / ``eeik run --governed`` (CLI), ``eeik.generate``
     (SDK), and the ``eeik_generate`` MCP tool — one implementation, three surfaces. It performs **no**
     console output; ``govern_generation`` formats a trace from the returned outcome. Whatever the
     outcome, the artifact is only ever *staged* — never applied — because generation is SUGGEST
     authority. When HALO is not installed we **fail safe**: stage, warn, and never certify the gate.
+
+    ``preview=True`` is an even lighter mode for local experimentation: the generation is still governed
+    (the gate still runs; ``auto_enforced`` is still ``False``), but the draft is **not written to
+    staging** — the artifact is returned in-memory only (``staged=False``). Preview never weakens the
+    SUGGEST-authority guarantee; it just skips persistence.
     """
     if not HALO_AVAILABLE:
         artifact, confidence = producer()
-        staged = _write_staged(generator_name, artifact)
+        staged_path = "" if preview else str(_write_staged(generator_name, artifact).relative_to(REPO_ROOT))
+        warnings = [
+            "HALO (agent-harness) is not installed — generation ran UNGOVERNED. "
+            "Install it (pip install agent-harness) for a certified gate. Fail-safe: the artifact "
+            + ("was NOT persisted (preview)." if preview else "was staged, not applied."),
+        ]
         return GenerationOutcome(
             generator=generator_name,
             halo_available=False,
@@ -160,16 +171,12 @@ def run_generation(
             action=None,
             confidence=max(0.0, min(1.0, float(confidence))),
             auto_enforced=False,
-            staged=True,
-            staged_path=str(staged.relative_to(REPO_ROOT)),
+            staged=not preview,
+            staged_path=staged_path,
             bypass_total=0,
             review=None,
             audit=[],
-            warnings=[
-                "HALO (agent-harness) is not installed — generation ran UNGOVERNED. "
-                "Install it (pip install agent-harness) for a certified gate. Fail-safe: the artifact "
-                "was staged, not applied.",
-            ],
+            warnings=warnings,
             artifact=artifact,
         )
 
@@ -192,7 +199,7 @@ def run_generation(
     )
     output = harness.invoke(agent, request)
     decision = output.decision
-    staged = _write_staged(generator_name, agent.artifact)
+    staged_path = "" if preview else str(_write_staged(generator_name, agent.artifact).relative_to(REPO_ROOT))
 
     review_item: dict[str, Any] | None = None
     if review.items:
@@ -206,8 +213,8 @@ def run_generation(
         action=decision.action.value,
         confidence=decision.confidence,
         auto_enforced=decision.auto_enforced,
-        staged=True,
-        staged_path=str(staged.relative_to(REPO_ROOT)),
+        staged=not preview,
+        staged_path=staged_path,
         bypass_total=obs.counter("confidence_gate_bypass_total"),
         review=review_item,
         audit=[{"outcome": e.outcome, "rationale": e.rationale} for e in audit.entries],
@@ -222,15 +229,17 @@ def govern_generation(
     producer_kind: str = "offline-demo",
     tenant: str = "eeik",
     user: str = "eeik-cli",
+    preview: bool = False,
 ) -> int:
     """Run one generation through the HALO gate and print a governance trace. Returns an exit code.
 
     Thin console wrapper over :func:`run_generation` — the CLI/demo surface. The structured outcome
-    is the source of truth; this only formats it.
+    is the source of truth; this only formats it. ``preview`` skips persistence (nothing written).
     """
-    print(f"\n{ANSI_BOLD}EEIK Governed Generation{ANSI_RESET}  ·  generator: {ANSI_CYAN}{generator_name}{ANSI_RESET}")
+    mode = f"  {ANSI_DIM}(preview — not persisted){ANSI_RESET}" if preview else ""
+    print(f"\n{ANSI_BOLD}EEIK Governed Generation{ANSI_RESET}  ·  generator: {ANSI_CYAN}{generator_name}{ANSI_RESET}{mode}")
     outcome = run_generation(
-        generator_name, producer, producer_kind=producer_kind, tenant=tenant, user=user,
+        generator_name, producer, producer_kind=producer_kind, tenant=tenant, user=user, preview=preview,
     )
 
     if not outcome.halo_available:
@@ -255,8 +264,12 @@ def govern_generation(
     for entry in outcome.audit:
         print(f"  {ANSI_DIM}audit:{ANSI_RESET} {entry['outcome']}  \"{entry['rationale']}\"")
 
-    print(f"\n  {ANSI_GREEN}✓ Draft staged for approval:{ANSI_RESET} {outcome.staged_path}")
-    print(f"  {ANSI_DIM}Approve by reviewing and moving the artifact into place, then commit.{ANSI_RESET}\n")
+    if outcome.staged:
+        print(f"\n  {ANSI_GREEN}✓ Draft staged for approval:{ANSI_RESET} {outcome.staged_path}")
+        print(f"  {ANSI_DIM}Approve by reviewing and moving the artifact into place, then commit.{ANSI_RESET}\n")
+    else:
+        print(f"\n  {ANSI_CYAN}✓ Preview only{ANSI_RESET} — governed, not persisted "
+              f"({len(outcome.artifact)} chars in-memory).\n")
     return 0
 
 
@@ -315,12 +328,14 @@ def resolve_producer(generator: str, spec: str | None = None) -> tuple[Producer,
 def main() -> int:
     parser = argparse.ArgumentParser(description="EEIK generation harness (HALO-governed)")
     sub = parser.add_subparsers(dest="cmd", required=True)
-    sub.add_parser("demo", help="Offline governed-generation showcase (no API key)")
+    p_demo = sub.add_parser("demo", help="Offline governed-generation showcase (no API key)")
+    p_demo.add_argument("--preview", action="store_true",
+                        help="Governed but not persisted (nothing written to .eeik-staging/)")
     args = parser.parse_args()
 
     if args.cmd == "demo":
         print(f"{ANSI_BOLD}── EEIK in action: a generator running on HALO ──{ANSI_RESET}")
-        rc = govern_generation("agent-generator", _demo_producer)
+        rc = govern_generation("agent-generator", _demo_producer, preview=args.preview)
         if HALO_AVAILABLE:
             print(f"{ANSI_DIM}The draft was governed by the same runtime APEX uses for its SDLC "
                   f"phase agents.{ANSI_RESET}\n")

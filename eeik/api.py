@@ -212,7 +212,9 @@ def validate_agent_contract(contract: dict) -> tuple[bool, str]:
     return _contract.validate_contract(contract)
 
 
-def generate(generator: str = "agent-generator", *, spec: str | None = None) -> GenerationOutcome:
+def generate(
+    generator: str = "agent-generator", *, spec: str | None = None, preview: bool = False
+) -> GenerationOutcome:
     """Run one **governed** generation and stage a human-review draft — never auto-applied (ADR-003).
 
     Generation is SUGGEST authority: the draft flows through HALO's confidence gate, which guarantees
@@ -220,10 +222,14 @@ def generate(generator: str = "agent-generator", *, spec: str | None = None) -> 
     area rather than live config. Returns a :class:`~eeik.generation.GenerationOutcome` carrying the
     decision, the review routing, the audit trail, and the staged path. When HALO is not installed it
     **fails safe** (stages, warns, does not certify the gate). ``spec`` is free-text intent passed to
-    the producer. This is the in-process twin of the ``eeik_generate`` MCP tool.
+    the producer.
+
+    ``preview=True`` runs the same governed path but does **not** persist the draft to staging — the
+    artifact is returned in-memory only (``staged=False``), for local experimentation. It never weakens
+    the SUGGEST-authority guarantee. This is the in-process twin of the ``eeik_generate`` MCP tool.
     """
     producer, kind = _generation.resolve_producer(generator, spec)
-    return _generation.run_generation(generator, producer, producer_kind=kind)
+    return _generation.run_generation(generator, producer, producer_kind=kind, preview=preview)
 
 
 def capture_lessons(records: list[dict[str, Any]]) -> LessonCaptureReport:

@@ -118,3 +118,15 @@ def test_generate_default_generator():
     out = eeik.generate()
     assert out.generator == "agent-generator"
     assert out.staged is True
+
+
+def test_generate_preview_is_governed_but_not_persisted(tmp_path, monkeypatch):
+    # Point staging at a temp dir so we can assert nothing is written even if the code tried.
+    from eeik import generation as gen
+    monkeypatch.setattr(gen, "STAGING_DIR", tmp_path / ".eeik-staging")
+    out = eeik.generate("agent-generator", spec="a refund agent", preview=True)
+    assert out.staged is False              # preview: not persisted
+    assert out.staged_path == ""
+    assert out.auto_enforced is False       # still governed — SUGGEST authority preserved
+    assert out.artifact                     # artifact returned in-memory
+    assert not (tmp_path / ".eeik-staging").exists()  # nothing written

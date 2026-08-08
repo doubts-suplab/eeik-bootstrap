@@ -69,13 +69,15 @@ def lint() -> dict:
     return _api.lint().to_dict()
 
 
-def generate(generator: str = "agent-generator", spec: str | None = None) -> dict:
-    """Run one governed generation and return a STAGED, human-review draft (never auto-applied)."""
-    outcome = _api.generate(generator, spec=spec)
+def generate(generator: str = "agent-generator", spec: str | None = None, preview: bool = False) -> dict:
+    """Run one governed generation and return a STAGED (or preview-only) draft — never auto-applied."""
+    outcome = _api.generate(generator, spec=spec, preview=preview)
     result = outcome.to_dict()
     # Make the governance guarantee explicit in the wire payload the host reads.
     result["autoApplied"] = False
     result["note"] = (
+        "SUGGEST authority: this draft is returned for review (preview: not persisted), not applied."
+        if preview else
         "SUGGEST authority: this draft is staged for human review, not applied. "
         "Review the artifact and move it into place to adopt it."
     )
@@ -197,6 +199,8 @@ TOOLS: list[dict[str, Any]] = [
                 "generator": {**_STR, "description": "Generator to run (e.g. 'agent-generator', "
                                                      "'repository-generator'). Default: agent-generator."},
                 "spec": {**_STR, "description": "Free-text intent describing what to generate."},
+                "preview": {"type": "boolean", "description": "Preview only — governed but NOT persisted "
+                                                             "to staging (returned in-memory). Default false."},
             },
         },
     },

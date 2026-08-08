@@ -270,6 +270,7 @@ packs  = eeik.resolve_packs(manifest=doc)                        # ["core", "arc
 banking = eeik.find_packs(tag="banking")                         # [Pack(...), ...]
 who    = eeik.providers_of("java-architect")                     # [Provider(pack="java", kind="agent")]
 draft  = eeik.generate("agent-generator", spec="a refund agent") # GenerationOutcome — staged, auto_enforced=False
+prev   = eeik.generate("agent-generator", spec="…", preview=True) # governed but not persisted (staged=False)
 lessons = eeik.capture_lessons(audit_records)                    # closed loop: audit → staged LL-NNN drafts
 health = eeik.doctor()                                           # DoctorReport(healthy, counts, diagnostics+fixes)
 content = eeik.lint()                                            # LintReport — agent/standard content well-formedness
