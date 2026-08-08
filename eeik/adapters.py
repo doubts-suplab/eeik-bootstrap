@@ -532,7 +532,7 @@ def main() -> int:
 
     print(f"\n{ANSI_BOLD}Done.{ANSI_RESET}")
     if dry:
-        print(f"  Pass --apply to write files.")
+        print("  Pass --apply to write files.")
     return 0
 
 

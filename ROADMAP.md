@@ -300,13 +300,16 @@ Risk notes call out dependencies or hazards.
       conformance gate) with an actionable fix per finding; never throws. Three surfaces: `eeik doctor`
       (`--json`/`--strict`/`--exit-code`), `eeik.doctor()` (SDK), `eeik_doctor` (MCP). (`eeik/doctor.py`)
 
-### 1. Accessibility & onboarding
-- [ ] Restructure README (Quick Start → diagram → "seed vs engine" up front → deep detail collapsed).
+### 1. Accessibility & onboarding ✅ _(shipped v1.4)_
+- [x] Restructure README (Quick Start → diagram → "seed vs engine" up front → deep detail collapsed).
       _Effort S · Impact H._
-- [ ] Make **`docs/index.html` / interactive guide** the default newcomer landing experience; link it
-      prominently and keep it in the doc-sync rule. _Effort S · Impact M._
-- [ ] State the **dual role explicitly and early**: `eeik seed --into <dir>` is the primary *adoption*
+- [x] Make **`docs/index.html` / interactive guide** the default newcomer landing experience; link it
+      prominently and keep it in the doc-sync rule. _Effort S · Impact M._ — README now leads with a
+      "New to EEIK? Start with the interactive guide" link; the guide opens with a **Get Started**
+      section (adopt vs. try-the-engine) mirroring the README Quick Start.
+- [x] State the **dual role explicitly and early**: `eeik seed --into <dir>` is the primary *adoption*
       path (copy config into a project); the engine is for *generation* (ADR-011). _Effort S · Impact H._
+      — the "Who is this for?" table and Quick Start now split adoption vs. generation up front.
 
 ### 2. Packaging, distribution & discoverability
 - [ ] PyPI publish + release automation (tag → build → publish → GitHub Release notes). _Effort M ·
@@ -379,8 +382,9 @@ Risk notes call out dependencies or hazards.
 ### 6. Documentation & process
 - [ ] Keep **Tier 4** items marked done (resolver + dual-purpose adapters are closed — reflected above).
       _Effort S · Impact L · housekeeping._
-- [ ] **"First contribution" path** in CONTRIBUTING (e.g. improve one standard / add one example). _Effort
-      S · Impact M._
+- [x] **"First contribution" path** in CONTRIBUTING — done. A "Your First Contribution" section (four
+      graded single-file starts) plus a "Local Development Setup" section (`pip install -e ".[dev]"`,
+      `pre-commit install`, and the exact ruff/mypy/lint/verify/pytest commands CI runs).
 - [x] **Engine security model** section in SECURITY.md — done. Documents what the `eeik` package does /
       doesn't do (reads content layers; writes only to `.claude/` + `.eeik-staging/`; no network in the
       core; no arbitrary code execution; no secret handling; no auto-apply), the HALO/fail-safe posture,
@@ -388,14 +392,21 @@ Risk notes call out dependencies or hazards.
 - [ ] `CHANGELOG.md` + `CODE_OF_CONDUCT.md` + SUPPORT/FAQ (see Quick wins). _Effort S · Impact M._
 
 ### 7. Operational / CI polish
-- [ ] **Dependabot / Renovate** for Python deps + GitHub Actions. _Effort S · Impact M._
-- [ ] **Pre-commit hooks** (ruff, mypy, YAML/JSON-schema checks) mirroring CI locally. _Effort S · Impact
-      M · reuses the `dev` extra._
+- [x] **Dependabot** for Python deps + GitHub Actions — done. `.github/dependabot.yml` runs weekly for
+      the `pip` and `github-actions` ecosystems, groups minor/patch bumps, and uses Conventional-Commit
+      prefixes (`build(deps)` / `ci(deps)`).
+- [x] **Pre-commit hooks** mirroring CI locally — done. `.pre-commit-config.yaml`: hygiene hooks +
+      `ruff check` + `mypy` + local `eeik lint` / `eeik verify --strict` gates. Backed by new
+      `[tool.ruff]` / `[tool.mypy]` config in `pyproject.toml` and `ruff`/`mypy`/`types-PyYAML`/
+      `pre-commit` in the `dev` extra. Formatting is lint-guided, not wholesale-reformatted (the engine's
+      deliberate column-alignment is preserved). Fixed the ruff/mypy findings this surfaced along the way.
 - [ ] Make **`eeik verify --strict --exit-code`** and **`eeik diff --exit-code`** *required* status
       checks (branch protection). _Effort S · Impact H · repo-admin setting; both already run green in
       `eeik-validate.yml`._
-- [ ] **Upload catalog/verify reports as CI artifacts** on failure for faster debugging. _Effort S ·
-      Impact M · add `--json > report` + `upload-artifact`._
+- [x] **Upload catalog/verify reports as CI artifacts** on failure — done. `eeik-validate.yml`
+      engine-tests now writes `catalog`/`verify`/`doctor`/`diff` `--json` to `ci-reports/` and uploads
+      them as an `eeik-diagnostics-<py>` artifact **on failure**, so a red gate is debuggable from the
+      artifact alone.
 
 ### 8. Longer-term strategic
 - [ ] **Composable packs** — richer dependency resolution + conflict detection between packs. _Effort L ·

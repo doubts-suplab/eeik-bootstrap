@@ -159,7 +159,7 @@ def _slug(text: str) -> str:
     return s[:48] or "governed-decision"
 
 
-def draft_lesson(lesson_id: str, group: list[AuditRecord]) -> tuple[str, str, str, str]:
+def draft_lesson(lesson_id: str, group: list[AuditRecord]) -> tuple[str, str, str, str, str]:
     """Synthesise a lesson (id, title, category, severity, markdown) from a group of audit records."""
     lead = group[0]
     severity, category = lead.severity_category()
@@ -327,9 +327,9 @@ def main() -> int:
           f"drafts: {len(report.lessons)}")
     print(f"  {ANSI_DIM}gate → auto_enforced:{ANSI_RESET} {report.auto_enforced}  "
           f"{ANSI_DIM}(SUGGEST: lessons are staged for human curation, never auto-committed){ANSI_RESET}")
-    for lsn in report.lessons:
-        print(f"  {ANSI_GREEN}✓ staged{ANSI_RESET} {lsn.lesson_id} [{lsn.severity}/{lsn.category}] "
-              f"{ANSI_DIM}{lsn.staged_path}{ANSI_RESET}")
+    for draft in report.lessons:
+        print(f"  {ANSI_GREEN}✓ staged{ANSI_RESET} {draft.lesson_id} [{draft.severity}/{draft.category}] "
+              f"{ANSI_DIM}{draft.staged_path}{ANSI_RESET}")
     if report.warnings:
         for w in report.warnings:
             print(f"  {ANSI_YELLOW}⚠ {w}{ANSI_RESET}")

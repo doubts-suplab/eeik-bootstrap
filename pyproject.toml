@@ -46,7 +46,7 @@ mcp = ["mcp>=1.0"]
 test = ["pytest>=7.0", "pytest-cov>=4.0", "agent-harness>=0.1.0", "mcp>=1.0"]
 # Dev tooling for the downstream-product quality gate (.github/workflows/quality-gate.yml): the
 # `pip install -e ".[dev]"` step needs ruff + mypy present, plus the test extras.
-dev = ["ruff>=0.6", "mypy>=1.8", "pytest>=7.0", "pytest-cov>=4.0", "agent-harness>=0.1.0", "mcp>=1.0"]
+dev = ["ruff>=0.6", "mypy>=1.8", "types-PyYAML>=6.0", "pre-commit>=3.5", "pytest>=7.0", "pytest-cov>=4.0", "agent-harness>=0.1.0", "mcp>=1.0"]
 
 [project.scripts]
 eeik = "eeik.cli:main"
@@ -62,3 +62,34 @@ eeik = ["schemas/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff]
+# Lint the engine package (the content layers under the repo root are data, not code).
+target-version = "py311"
+line-length = 110
+src = ["eeik", "tests"]
+
+[tool.ruff.lint]
+# Bug-catching rules. Formatting is intentionally NOT enforced by a reformatter: the engine uses
+# deliberate column-alignment for readability, which `ruff format` would strip. Style is reviewed,
+# not auto-rewritten. Add rules here as the codebase adopts them.
+select = ["F", "E", "W", "UP", "B"]  # correctness + pyupgrade + bugbear; import-order left to review
+ignore = [
+  "E501",  # line length is advisory here (long governed-trace strings read better unwrapped)
+  "E741",  # single-letter loop vars (r, e) are idiomatic in the tight resolver/audit loops
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B011"]  # asserts are the point in tests
+
+[tool.mypy]
+python_version = "3.11"
+# Optional adapter deps (agent_harness, mcp, anyio) are edge-only and may be absent in the core env;
+# the try/except import seams already handle their absence at runtime.
+ignore_missing_imports = true
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+# The content-layer data files and generated adapters are not type-checked as engine source.
+module = ["yaml", "agent_harness.*", "mcp.*", "anyio"]
+ignore_missing_imports = true

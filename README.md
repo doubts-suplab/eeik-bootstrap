@@ -10,6 +10,10 @@
 > tools** — Claude Code, GitHub Copilot, Kiro, Codex CLI, Cursor, Gemini CLI — the enterprise context to
 > act as specialist engineers from day one.
 
+**📖 New to EEIK? Start with the [interactive guide](docs/index.html)** — the fastest visual overview
+(open it in a browser). Then follow the Quick Start below, or jump to the
+[Engine Reference](docs/reference/engine-reference.md).
+
 ## Quick Start
 
 **Adopt the config into your project** (the primary path — copies the *seed* set only, never the engine
@@ -342,7 +346,7 @@ tests/             test_engine.py — versioning, drift, and HALO-governance tes
 
 ── Documentation ─────────────────────────────────────────────────────────────
 docs/
-├── eeik-guide.html    Interactive visual guide — open in browser for full overview
+├── index.html         Interactive visual guide — open in browser for the full overview
 ├── specs/             Internal design specs
 ├── concepts/          Vision, architecture, AI governance
 ├── reference/         Roadmap, inventory, platform capabilities

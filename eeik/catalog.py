@@ -22,6 +22,7 @@ import sys
 from pathlib import Path
 
 from eeik.versions import PACKS_DIR, normalise_version, pack_fingerprint, read_pack_metadata
+from datetime import UTC
 
 REPO_ROOT = Path(__file__).parent.parent
 CATALOG_SCHEMA_VERSION = 1
@@ -77,7 +78,7 @@ def pack_entry(pack_dir: Path) -> dict:
 
 def build_catalog(packs: list[str] | None = None) -> dict:
     """Assemble the full catalog document (all packs on disk unless a subset is given)."""
-    from datetime import datetime, timezone
+    from datetime import datetime
 
     if packs is None:
         names = sorted(p.name for p in PACKS_DIR.iterdir() if p.is_dir())
@@ -86,7 +87,7 @@ def build_catalog(packs: list[str] | None = None) -> dict:
     entries = [pack_entry(PACKS_DIR / n) for n in names if (PACKS_DIR / n).is_dir()]
     return {
         "schemaVersion": CATALOG_SCHEMA_VERSION,
-        "generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "generatedAt": datetime.now(UTC).isoformat(timespec="seconds"),
         "packCount": len(entries),
         "packs": entries,
     }

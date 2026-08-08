@@ -14,6 +14,46 @@ Contributions must:
 
 ---
 
+## Your First Contribution
+
+New here? Start small — the fastest way to learn the layout is to improve one thing end to end.
+Good first contributions, roughly in order of effort:
+
+1. **Improve one standard.** Pick a file in `.claude/standards/` and add a missing CORRECT/WRONG code
+   example or an anti-pattern row. High value, no new structure to learn.
+2. **Add one reference-architecture or manifest example.** Drop a new `bootstrap/examples/*.yaml`; the
+   `eeik verify` gate confirms it stays schema-valid and resolves cleanly, so you get instant feedback.
+3. **Fix a lint finding.** Run `eeik lint` (below) and clean up any `warn`/`fail` it reports on an
+   existing agent or standard — frontmatter, a weak description, a name that doesn't match its file.
+4. **Add one agent to an existing pack.** Follow the [Agent Template](#agent-template) and its checklist.
+
+Each of these is a single-file change you can validate locally in seconds. Open a `docs/` or `feat/`
+branch, run the gates, and send the PR — you don't need to touch the engine to make a real improvement.
+
+### Local Development Setup
+
+The engine is a standard Python package. Set it up once and the same gates CI runs are available
+locally:
+
+```bash
+pip install -e ".[dev]"     # engine + HALO + MCP + ruff/mypy/pytest/pre-commit
+pre-commit install          # run the gates automatically on every `git commit`
+
+# …or run any gate on demand (all are green on a clean tree):
+ruff check .                # correctness lint (config in pyproject.toml [tool.ruff])
+mypy eeik/                  # type check the engine package
+python3 -m eeik lint        # content lint: agent/standard frontmatter, descriptions, structure
+python3 -m eeik verify --strict   # conformance gate: everything a pack declares resolves
+python3 -m pytest tests/ -q # the engine test suite
+```
+
+`pre-commit` mirrors these locally so problems surface before you push (see `.pre-commit-config.yaml`).
+Formatting is intentionally lint-guided rather than enforced by a wholesale reformatter — the engine
+uses deliberate column-alignment for readability, so match the surrounding style; `ruff` catches
+correctness issues, not layout.
+
+---
+
 ## What You Can Contribute
 
 | Type | Location | Description |

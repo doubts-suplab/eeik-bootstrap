@@ -175,13 +175,13 @@ COMMANDS = {
     "lint":              _mod("lint"),
 }
 
-HELP = """
-{bold}eeik — EEIK Bootstrap CLI{reset}
+HELP = f"""
+{ANSI_BOLD}eeik — EEIK Bootstrap CLI{ANSI_RESET}
 
-{bold}Usage:{reset}
+{ANSI_BOLD}Usage:{ANSI_RESET}
   eeik <command> [options]        (or: python3 -m eeik <command>)
 
-{bold}Commands:{reset}
+{ANSI_BOLD}Commands:{ANSI_RESET}
   status              Show EEIK state (manifest, active packs, adapters)  [--json]
   validate            Validate project-manifest.yaml  [--strict] [--json]
   activate            Activate capability packs        [--apply] [--clean] [--list]
@@ -201,13 +201,13 @@ HELP = """
   doctor              Diagnose adoption/health problems [--json] [--strict] [--exit-code]
   lint                Lint agent/standard content       [--json] [--strict] [--exit-code] [--show-pass]
 
-{bold}Quick start:{reset}
+{ANSI_BOLD}Quick start:{ANSI_RESET}
   1. eeik validate
   2. eeik activate --apply
   3. eeik generate-adapters --apply
   4. eeik lock          # pin adopted pack versions
   5. eeik diff          # later: detect drift from upstream
-""".format(bold=ANSI_BOLD, reset=ANSI_RESET)
+"""
 
 
 def main() -> int:

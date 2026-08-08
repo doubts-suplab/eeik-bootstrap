@@ -118,6 +118,26 @@ jobs:
           path: coverage.xml
           retention-days: 7
 
+      - name: Collect diagnostic reports (on failure)
+        if: failure()
+        run: |
+          # Capture the machine-readable state of the engine so a failed gate is debuggable from
+          # the artifact alone — no need to re-run locally to see what drifted / failed conformance.
+          mkdir -p ci-reports
+          python3 -m eeik catalog --json  > ci-reports/catalog.json   2>&1 || true
+          python3 -m eeik verify  --json  > ci-reports/verify.json    2>&1 || true
+          python3 -m eeik doctor  --json  > ci-reports/doctor.json    2>&1 || true
+          python3 -m eeik diff    --json  > ci-reports/diff.json      2>&1 || true
+
+      - name: Upload diagnostic reports (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eeik-diagnostics-${{ matrix.python-version }}
+          path: ci-reports/
+          retention-days: 7
+          if-no-files-found: ignore
+
   lint-agents:
     name: Lint Agent Files
     runs-on: ubuntu-latest

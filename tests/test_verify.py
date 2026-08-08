@@ -56,8 +56,6 @@ def test_pack_conformance_flags_a_bad_pack(tmp_path, monkeypatch):
 
 def test_resolves_uses_pack_or_claude_layer(tmp_path):
     # An agent present in the shared .claude/ layer resolves even if absent from the pack dir.
-    from eeik.verify import _resolves, CLAUDE_DIR
-
     # architect lives in .claude/agents/ (dogfood layer), not in most packs.
     assert (CLAUDE_DIR / "agents" / "architect.md").exists()
     assert _resolves("architect", "agents", tmp_path) is True
