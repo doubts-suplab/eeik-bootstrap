@@ -23,8 +23,7 @@ except ImportError:
     sys.exit(1)
 
 try:
-    import jsonschema
-    from jsonschema import validate, ValidationError, Draft7Validator
+    from jsonschema import Draft7Validator
 except ImportError:
     print("ERROR: jsonschema is required.  Run: pip install pyyaml jsonschema", file=sys.stderr)
     sys.exit(1)
@@ -206,6 +205,7 @@ def main() -> int:
     args     = [a for a in sys.argv[1:] if not a.startswith("--")]
 
     # Locate manifest
+    manifest_path: Path | None
     if args:
         manifest_path = Path(args[0])
     else:

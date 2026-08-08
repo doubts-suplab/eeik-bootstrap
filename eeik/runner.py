@@ -36,7 +36,6 @@ Requirements:
 """
 
 import sys
-import os
 import argparse
 import subprocess
 import tempfile
@@ -178,7 +177,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="Run EEIK generators via Claude harness",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=f"Available generators:\n" + "\n".join(f"  {k}" for k in GENERATOR_REGISTRY),
+        epilog="Available generators:\n" + "\n".join(f"  {k}" for k in GENERATOR_REGISTRY),
     )
     parser.add_argument("generator", nargs="?", help="Generator name")
     parser.add_argument("--dry-run",  action="store_true", help="Print prompt only, do not call claude")

@@ -27,7 +27,6 @@ import sys
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
-import yaml
 
 from eeik.versions import PACKS_DIR, read_pack_metadata
 

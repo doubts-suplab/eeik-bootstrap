@@ -16,7 +16,6 @@ Usage:
 """
 
 import sys
-import shutil
 import argparse
 from pathlib import Path
 
@@ -104,7 +103,6 @@ def resolve_packs(manifest: dict, matrix: dict) -> list[str]:
     mf       = tech.get("mainframe", {})
 
     lang      = backend.get("language", "none")
-    framework = backend.get("framework", "")
     fe_fw     = frontend.get("framework", "none")
     provider  = cloud.get("provider", "none")
     mf_plat   = mf.get("platform", "none")

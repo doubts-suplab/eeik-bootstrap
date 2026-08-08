@@ -20,7 +20,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, UTC
 from pathlib import Path
 
 from eeik.versions import all_pack_fingerprints
@@ -48,7 +48,7 @@ def build_lock(packs: list[str]) -> dict:
     return {
         "schemaVersion": LOCK_SCHEMA_VERSION,
         "eeikVersion": EEIK_VERSION,
-        "generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "generatedAt": datetime.now(UTC).isoformat(timespec="seconds"),
         "packs": all_pack_fingerprints(packs),
     }
 
@@ -80,6 +80,7 @@ def compute_drift(locked: dict, current: dict[str, dict[str, str]]) -> list[dict
         was = locked_packs.get(name)
         now = current.get(name)
         if was is None:
+            assert now is not None  # name ∈ current when it is absent from locked_packs
             drift.append({"pack": name, "kind": "added", "from": None, "to": now["version"]})
         elif now is None:
             drift.append({"pack": name, "kind": "removed", "from": was["version"], "to": None})

@@ -28,7 +28,8 @@ import argparse
 import sys
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
+from collections.abc import Callable
 
 REPO_ROOT = Path(__file__).parent.parent
 STAGING_DIR = REPO_ROOT / ".eeik-staging"
@@ -46,7 +47,6 @@ Producer = Callable[[], "tuple[str, float]"]
 
 try:
     from agent_harness import (
-        Agent,
         AgentInput,
         AuthorityLevel,
         Decision,
@@ -244,7 +244,7 @@ def govern_generation(
 
     if not outcome.halo_available:
         print(f"  {ANSI_YELLOW}⚠ HALO (agent-harness) is not installed — running UNGOVERNED.{ANSI_RESET}")
-        print(f"    Install it for governed generation:  pip install agent-harness")
+        print("    Install it for governed generation:  pip install agent-harness")
         print(f"    Fail-safe: artifact staged (not applied) → {outcome.staged_path}\n")
         return 0
 

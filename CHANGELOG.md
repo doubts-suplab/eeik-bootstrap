@@ -36,6 +36,13 @@ governed, versioned, queryable engine consumed by APEX and CI.
 - **New capability packs** — Go, Node.js/TypeScript (backend languages) and Retail (domain); 22 total.
 - **`--json`** on `status` / `validate` / `diff` (alongside catalog/architectures/verify/doctor/lessons).
 - **Shipped-content smoke test** and a **Python 3.11/3.12/3.13** CI matrix with a coverage floor.
+- **Contributor tooling** — `.pre-commit-config.yaml` (hygiene hooks + `ruff` + `mypy` + local
+  `eeik lint` / `eeik verify` gates), `[tool.ruff]` / `[tool.mypy]` config, and a "Your First
+  Contribution" + "Local Development Setup" guide in `CONTRIBUTING.md`.
+- **Dependabot** (`.github/dependabot.yml`) for the `pip` and `github-actions` ecosystems, grouped
+  minor/patch with Conventional-Commit prefixes.
+- **CI diagnostics on failure** — `eeik-validate.yml` uploads `catalog`/`verify`/`doctor`/`diff` JSON
+  reports as an artifact when the engine-tests gate fails, so a red run is debuggable from the artifact.
 
 ### Changed
 - Consolidated three divergent manifest schemas into one canonical
@@ -51,6 +58,9 @@ governed, versioned, queryable engine consumed by APEX and CI.
   `basel-iii` frameworks — so data / modernization / regulated manifests validate.
 - Manifest validation no longer throws on malformed input (non-mapping sections are coerced).
 - Resolver read `cloud` / `ai` at the canonical top level (AWS / AI packs now resolve).
+- Adopting `ruff`/`mypy` surfaced and fixed real defects: a wrong `draft_lesson` return annotation, a
+  shadowed loop variable, a lockfile None-safety gap, an unused-variable dead branch in the resolver,
+  and several stale imports — plus pyupgrade modernizations (`datetime.UTC`, `collections.abc.Callable`).
 
 ## [1.x] — Stable baseline
 
