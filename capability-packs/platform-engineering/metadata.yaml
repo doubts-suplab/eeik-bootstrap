@@ -1,0 +1,20 @@
+name: platform-engineering-pack
+version: "1.0"
+status: built
+category: cloud
+description: "Platform engineering — internal developer platforms (IDP), golden paths / paved roads, self-service via Backstage, developer experience as a product, and the thinnest-viable-platform principle."
+tags: [platform-engineering, idp, backstage, golden-path, paved-road, developer-experience, self-service, devex]
+
+manifest_triggers:
+  - field: delivery.platform_engineering
+    value: true
+
+agents_provided:
+  - platform-engineer
+
+standards_provided:
+  - platform-engineering-standard
+
+dependencies:
+  - core-pack
+  - architecture-pack

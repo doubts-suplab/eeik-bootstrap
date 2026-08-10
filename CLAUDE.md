@@ -72,7 +72,7 @@ Agents live in `.claude/agents/`. Claude Code automatically selects the most rel
 | Node / TypeScript | `node-developer`, `typescript-api-engineer` |
 | Angular | `angular-developer`, `angular-tester`, `angular-coverage-checker` |
 | Architecture | `architect`, `enterprise-architect`, `arb-reviewer` |
-| Cloud / Infra | `aws-architect`, `cdk-terraform-helper`, `aws-deploy-helper`, `ci-engineer`, `containerisation-helper`, `kubernetes-engineer`, `devsecops-engineer`, `local-deploy-helper` |
+| Cloud / Infra | `aws-architect`, `cdk-terraform-helper`, `aws-deploy-helper`, `ci-engineer`, `containerisation-helper`, `kubernetes-engineer`, `devsecops-engineer`, `local-deploy-helper`, `finops-engineer`, `chaos-engineer`, `platform-engineer` |
 | Data | `data-engineer`, `data-scientist` |
 | Database | `dba-advisor` |
 | Quality | `code-reviewer`, `security-auditor`, `performance-engineer`, `coverage-enforcer`, `test-quality-enforcer`, `tester` |

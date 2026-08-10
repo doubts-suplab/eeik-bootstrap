@@ -1,6 +1,6 @@
 {
   "eeikVersion": "1.4.0",
-  "generatedAt": "2026-08-07T01:08:00+00:00",
+  "generatedAt": "2026-08-10T03:04:22+00:00",
   "packs": {
     "agent-harness": {
       "digest": "924a5809adb95e2b",
@@ -30,6 +30,10 @@
       "digest": "cd0379ecc8dee701",
       "version": "1.0"
     },
+    "chaos-engineering": {
+      "digest": "268df34e90811696",
+      "version": "1.0"
+    },
     "containers": {
       "digest": "ef0ccd06fb6beaee",
       "version": "1.0"
@@ -44,6 +48,10 @@
     },
     "delivery": {
       "digest": "5cc833be99ea2e44",
+      "version": "1.0"
+    },
+    "finops": {
+      "digest": "9744000ac31c9c02",
       "version": "1.0"
     },
     "go": {
@@ -77,6 +85,10 @@
     "openshift": {
       "digest": "7de701374ee36ea1",
       "version": "1.1"
+    },
+    "platform-engineering": {
+      "digest": "20f82b183eb2ffb4",
+      "version": "1.0"
     },
     "python": {
       "digest": "330e2c4ffa25e3fc",

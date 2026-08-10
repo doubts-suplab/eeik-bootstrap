@@ -7,7 +7,8 @@
 # and manifest `capability_packs` overrides. Keep this file in sync with that code.
 #
 # Availability: ✅ built (in capability-packs/) · 📋 planned (roadmap, not built)
-# All 22 packs below are ✅ built as of v1.4 (go, node, retail added); azure/gcp are 📋 planned (ROADMAP v2.0).
+# All 25 packs below are ✅ built as of v1.4 (go, node, retail, finops, chaos-engineering,
+# platform-engineering added); azure/gcp are 📋 planned (ROADMAP v2.0).
 
 backend:
   java:    { packs: [architecture-pack, java-pack] }       # ✅
@@ -26,6 +27,12 @@ cloud:                                 # top-level `cloud` in the schema (resolv
   hybrid:  { packs: [aws-pack] }       # ✅ (aws primary)
   azure:   { packs: [azure-pack] }     # 📋 v2.0
   gcp:     { packs: [gcp-pack] }       # 📋 v2.0
+
+# Cloud/ops opt-in packs — dedicated boolean flags, off by default (existing manifests unaffected).
+ops_optin:
+  "cloud.finops=true":                    { packs: [finops-pack] }                # ✅
+  "observability.chaos_engineering=true": { packs: [chaos-engineering-pack] }      # ✅
+  "delivery.platform_engineering=true":   { packs: [platform-engineering-pack] }   # ✅
 
 # `technology.data.*` (streaming/batch/transformation/warehouse/orchestration) → data-engineering
 data:

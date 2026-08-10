@@ -140,6 +140,16 @@ def resolve_packs(manifest: dict, matrix: dict) -> list[str]:
            ("streaming", "batch", "transformation", "warehouse", "orchestration")):
         selected.add("data-engineering")
 
+    # ── Cloud/ops opt-in packs (dedicated flags — absent by default, so existing manifests are unchanged) ──
+    if cloud.get("finops"):
+        selected.add("finops")
+    observability = manifest.get("observability", {})
+    if observability.get("chaos_engineering"):
+        selected.add("chaos-engineering")
+    delivery = manifest.get("delivery", {})
+    if delivery.get("platform_engineering"):
+        selected.add("platform-engineering")
+
     # ── Domain selection ──────────────────────────────────────────────────────
     domain = project.get("domain", "generic")
     if domain in ("insurance", "banking", "healthcare", "retail"):

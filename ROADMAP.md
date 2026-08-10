@@ -264,9 +264,16 @@ the repository-generator, an `architecture.md`, and a `runbook.md`. `eeik archit
 ### Planned
 - [ ] **Azure capability pack** — AKS, Azure DevOps, Entra ID, Cosmos DB patterns
 - [ ] **GCP capability pack** — GKE, Cloud Run, BigQuery, Pub/Sub patterns
-- [ ] **FinOps agent** — Cloud cost optimisation recommendations, rightsizing, reserved instance analysis
-- [ ] **Platform Engineering agent** — Internal developer platform (IDP) design, backstage integration
-- [ ] **Chaos Engineering** — Game day exercise templates, fault injection patterns, SLO impact analysis
+- [x] **FinOps pack** — `finops-engineer` + `finops-standard` (cost visibility/allocation, rightsizing,
+      RI/Savings-Plans, budgets + anomaly detection, unit economics; Inform→Optimize→Operate). Resolves on
+      `cloud.finops: true`.
+- [x] **Platform Engineering pack** — `platform-engineer` + `platform-engineering-standard` (IDP, golden
+      paths/paved roads, self-service, Backstage, thinnest-viable-platform). Resolves on
+      `delivery.platform_engineering: true`.
+- [x] **Chaos Engineering pack** — `chaos-engineer` + `chaos-engineering-standard` (hypothesis-driven
+      fault injection, blast-radius control, GameDays, SLO/error-budget tie-in). Resolves on
+      `observability.chaos_engineering: true`.
+- [ ] **Azure / GCP capability packs**, **GraphQL Federation** — remain planned.
 - [ ] **GraphQL Federation** — Apollo Federation v2 patterns, subgraph design, gateway configuration
 
 ---

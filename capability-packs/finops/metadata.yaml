@@ -1,0 +1,20 @@
+name: finops-pack
+version: "1.0"
+status: built
+category: cloud
+description: "Cloud FinOps — cost visibility, allocation/tagging, rightsizing, commitment discounts (RI/Savings Plans), budgets & anomaly detection, and unit economics across the Inform → Optimize → Operate lifecycle."
+tags: [finops, cost, cloud, optimization, rightsizing, budgets, showback, chargeback, unit-economics, aws]
+
+manifest_triggers:
+  - field: cloud.finops
+    value: true
+
+agents_provided:
+  - finops-engineer
+
+standards_provided:
+  - finops-standard
+
+dependencies:
+  - core-pack
+  - aws-pack

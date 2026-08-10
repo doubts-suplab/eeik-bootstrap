@@ -4,7 +4,7 @@
 ![License](https://img.shields.io/badge/license-AGPL--3.0-green)
 ![MCP](https://img.shields.io/badge/MCP-read%20model%20%2B%20governed%20write-8A2BE2)
 ![Governed](https://img.shields.io/badge/generation-HALO--governed%20(SUGGEST)-orange)
-![Packs](https://img.shields.io/badge/capability%20packs-22-informational)
+![Packs](https://img.shields.io/badge/capability%20packs-25-informational)
 
 > A ready-to-fork seed **and** an installable, governed generation engine that gives **6 AI coding
 > tools** — Claude Code, GitHub Copilot, Kiro, Codex CLI, Cursor, Gemini CLI — the enterprise context to
