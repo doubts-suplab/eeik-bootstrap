@@ -76,7 +76,7 @@ jobs:
         if: steps.detect.outputs.present == 'true' && github.event_name == 'pull_request'
 
       - name: Upload Surefire reports on failure
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: steps.detect.outputs.present == 'true' && failure()
         with:
           name: surefire-reports
@@ -125,7 +125,7 @@ jobs:
 
       - name: Upload coverage to PR
         if: steps.detect.outputs.present == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: angular-coverage
           path: coverage/
@@ -179,7 +179,7 @@ jobs:
 
       - name: Upload coverage
         if: steps.detect.outputs.present == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: python-coverage
           path: coverage.xml
