@@ -363,6 +363,11 @@ Risk notes call out dependencies or hazards.
       resolver-wired, patterns over prescriptions.
 - [ ] Expand **reference architectures**; keep every manifest schema-valid and resolving cleanly (already
       verify-gated). _Effort M · Impact M._
+      - [x] **multi-agent-ai-platform** — promoted the stray prose blueprint into a full engine-surfaced
+        architecture (supervisor + workers on HALO): resolving manifest, `reference.yaml`, architecture +
+        runbook, CDK app (Fargate + DynamoDB checkpoints/audit + least-privilege Bedrock), and DynamoDB-Local
+        docker-compose. **5 architectures** now; `eeik verify` gates it. Further candidates:
+        event-driven-microservices, regulated-banking-platform.
 - [x] Strengthen **closed-loop capture** — documented the **staged → committed** promotion workflow
       (7-step curation checklist: review → curate stubs → de-dup → number → move + index → maybe promote
       to a pattern → commit) in `knowledge/lessons-learned/README.md`.

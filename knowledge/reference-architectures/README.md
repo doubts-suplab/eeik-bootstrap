@@ -31,13 +31,10 @@ eeik verify                           # asserts each manifest still validates & 
 | [ai-augmented-service](ai-augmented-service/architecture.md) | FastAPI · Bedrock · pgvector · HALO · React · CDK | Staging | + agent-harness · ai-engineering · governance · python · react |
 | [data-platform](data-platform/architecture.md) | Kafka · Spark/Glue · dbt · Airflow · S3 lakehouse · Athena · CDK | Production | + data-engineering · python |
 | [multi-tenant-saas](multi-tenant-saas/architecture.md) | Spring Boot 3 · Aurora RLS · Cognito · EventBridge · React · CDK | Production | core · architecture · aws · delivery · governance · java · react |
+| [multi-agent-ai-platform](multi-agent-ai-platform/architecture.md) | FastAPI · LangGraph · Bedrock · DynamoDB · HALO · CDK | Staging | + agent-harness · ai-engineering · governance · python (supervisor + workers, no frontend) |
 
 Each architecture is also **deployable**: `cdk/` is a real AWS CDK app (`npm install && npx cdk deploy`)
 and `local-dev/` brings it up on a laptop with `docker compose up -d` + seed data. `eeik architectures
 <name>` surfaces both paths, and `eeik verify` checks each declared `cdk/` has a `cdk.json` and each
 `local-dev/` a `docker-compose.yml` — so the infrastructure can't silently rot either.
 
-## Legacy prose blueprints
-
-- [multi-agent-ai-platform.md](multi-agent-ai-platform.md) — narrative blueprint (pre-v1.4 format; not
-  yet engine-surfaced).

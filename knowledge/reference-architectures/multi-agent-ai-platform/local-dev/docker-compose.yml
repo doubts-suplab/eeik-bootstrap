@@ -1,0 +1,44 @@
+# Local development stack for the Multi-Agent AI Platform reference architecture.
+# DynamoDB Local stands in for the checkpoint + audit tables. Bedrock has no local emulator — point the
+# platform at real Bedrock with AWS creds, or inject HALO's StubLlm port (a one-liner) to run offline.
+services:
+  dynamodb:
+    image: amazon/dynamodb-local:2.5.2
+    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-inMemory"]
+    ports: ["8000:8000"]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8000 || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # One-shot: create the checkpoint + audit tables, then exit.
+  seed:
+    image: amazon/aws-cli:2.17.0
+    depends_on:
+      dynamodb:
+        condition: service_healthy
+    environment:
+      AWS_ACCESS_KEY_ID: local
+      AWS_SECRET_ACCESS_KEY: local
+      AWS_DEFAULT_REGION: eu-west-1
+    entrypoint: ["/bin/sh", "-c", "/seed/create-tables.sh"]
+    volumes:
+      - ./seed:/seed:ro
+
+  platform-api:
+    image: public.ecr.aws/docker/library/python:3.12-slim
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+    environment:
+      CHECKPOINT_TABLE: agent-platform-checkpoints
+      AUDIT_TABLE: agent-platform-audit
+      DYNAMODB_ENDPOINT: http://dynamodb:8000
+      HALO_CONFIDENCE_THRESHOLD: "0.80"
+      AWS_ACCESS_KEY_ID: local
+      AWS_SECRET_ACCESS_KEY: local
+      AWS_DEFAULT_REGION: eu-west-1
+    ports: ["8080:8000"]
+    # Replace with your platform image; this default keeps the container up for wiring/experiments.
+    command: ["python", "-c", "import time; print('platform-api placeholder — swap in your image'); time.sleep(3600)"]

@@ -25,6 +25,8 @@ CLI:
 from __future__ import annotations
 
 import argparse
+import asyncio
+import os
 import sys
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -244,7 +246,7 @@ def govern_generation(
 
     if not outcome.halo_available:
         print(f"  {ANSI_YELLOW}⚠ HALO (agent-harness) is not installed — running UNGOVERNED.{ANSI_RESET}")
-        print("    Install it for governed generation:  pip install agent-harness")
+        print("    Install it for governed generation:  pip install halo-agent-harness")
         print(f"    Fail-safe: artifact staged (not applied) → {outcome.staged_path}\n")
         return 0
 
@@ -315,13 +317,106 @@ def offline_producer(generator: str, spec: str | None = None) -> Producer:
     return _produce
 
 
-def resolve_producer(generator: str, spec: str | None = None) -> tuple[Producer, str]:
+# ── LLM-backed producer (real generation, still HALO-governed) ────────────────────
+
+# A machine draft is never auto-enforced (generation is SUGGEST authority), so we never claim an
+# auto-enforce-grade confidence for unreviewed LLM output — this sits below the 0.80 gate bar on
+# purpose, so the trace always shows the draft routed to human review.
+_LLM_DRAFT_CONFIDENCE = 0.75
+
+_GEN_SYSTEM = (
+    "You are an EEIK generator running under HALO governance. Produce a single, complete artifact "
+    "for the requested generator, following the EEIK golden rules and the supplied project manifest. "
+    "Output only the artifact itself (Markdown or YAML as appropriate) with no preamble, no "
+    "explanation, and no surrounding code fence. The artifact is a DRAFT that will be staged for "
+    "human review — never applied automatically."
+)
+
+
+def _resolve_llm_port(model: str | None = None) -> Any | None:
+    """Return a HALO ``LlmPort`` if one is configured, else ``None`` (caller falls back to offline).
+
+    Uses HALO's native Anthropic adapter, keyed by ``ANTHROPIC_API_KEY`` (never hardcoded). The model
+    can be overridden with ``EEIK_GEN_MODEL``; otherwise the adapter's own default applies. Returns
+    ``None`` — never raises — when no key is set or the adapter/runtime is absent, so generation
+    **fails safe** to the deterministic offline producer.
+    """
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        return None
+    try:
+        from halo_agent_harness.adapters.llm_anthropic import AnthropicLlm
+    except ImportError:
+        return None
+    chosen = model or os.environ.get("EEIK_GEN_MODEL")
+    return AnthropicLlm(model=chosen) if chosen else AnthropicLlm()
+
+
+def llm_producer(
+    generator: str,
+    prompt: str,
+    *,
+    llm_port: Any,
+    confidence: float = _LLM_DRAFT_CONFIDENCE,
+    max_tokens: int = 4096,
+) -> Producer:
+    """A real LLM-backed producer: run ``prompt`` through the injected HALO ``LlmPort``.
+
+    The port is injected (constructor/DI, golden rule #1), so tests pass a ``StubLlm`` and production
+    passes the Anthropic adapter — the producer itself never touches an SDK. The returned draft is
+    handed back to :func:`run_generation`, which governs it (the gate stamps ``auto_enforced=False``
+    and stages it for review). A runtime LLM failure propagates so the harness resolves it *safely*
+    (a lowered-confidence DEFER), rather than emitting a half-formed artifact as if it succeeded.
+    """
+    from halo_agent_harness.ports.llm import Message  # lazy: only needed on the LLM path
+
+    def _produce() -> tuple[str, float]:
+        result = asyncio.run(
+            llm_port.complete(
+                [Message(role="user", content=prompt)],
+                system=_GEN_SYSTEM,
+                max_tokens=max_tokens,
+                temperature=0.2,
+            )
+        )
+        content = (getattr(result, "content", "") or "").strip()
+        if not content:
+            raise RuntimeError(f"LLM producer for {generator!r} returned empty content")
+        return content, max(0.0, min(1.0, float(confidence)))
+
+    return _produce
+
+
+def _assemble_generator_prompt(generator: str, spec: str | None) -> str:
+    """Build the full prompt for a named generator (its prompt file + manifest + spec), or fall back.
+
+    Reuses the runner's prompt assembly for the registered generators (repository/agent/knowledge/
+    governance/project-analyzer); for an unregistered name the ``spec`` itself is the instruction.
+    """
+    try:
+        from eeik import prompts  # shared module — no generation ⇄ runner import cycle
+        reg = prompts.GENERATOR_REGISTRY
+        if generator in reg and (prompts.GENERATORS / reg[generator]).exists():
+            return prompts.build_prompt(generator, prompts.load_manifest(None), extra=spec)
+    except Exception:  # noqa: BLE001 - prompt assembly must never break generation
+        pass
+    return (spec or "").strip() or f"Generate a {generator} artifact following EEIK standards."
+
+
+def resolve_producer(
+    generator: str, spec: str | None = None, *, llm_port: Any | None = None
+) -> tuple[Producer, str]:
     """Return ``(producer, producer_kind)`` for a generator.
 
-    v1: always the deterministic offline producer (``producer_kind='offline-demo'``). The seam is
-    here so a future LLM-backed producer (``eeik run`` with an API key) can register per generator
-    without changing the SDK/MCP callers.
+    Prefers a **real LLM-backed** producer (``producer_kind='llm'``) when an ``LlmPort`` is available
+    — either injected (tests) or resolved from ``ANTHROPIC_API_KEY`` + HALO's Anthropic adapter. When
+    no port is configured it **fails safe** to the deterministic offline producer
+    (``producer_kind='offline-demo'``), so the governed path stays exercisable with no key or network.
+    Either way the caller (:func:`run_generation`) governs the result identically.
     """
+    port = llm_port if llm_port is not None else _resolve_llm_port()
+    if port is not None:
+        prompt = _assemble_generator_prompt(generator, spec)
+        return llm_producer(generator, prompt, llm_port=port), "llm"
     return offline_producer(generator, spec), "offline-demo"
 
 

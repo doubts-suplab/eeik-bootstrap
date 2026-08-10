@@ -1,0 +1,70 @@
+# EEIK Reference Architecture — Multi-Agent AI Platform (supervisor + workers on HALO)
+# A schema-valid eeik manifest. Feed it to `eeik resolve-packs` / the repository-generator, or copy it
+# as the starting point for a real governed multi-agent platform (supervisor routing → worker agents).
+
+schema_version: "1.0"
+
+project:
+  name: agent-platform
+  description: Governed multi-agent platform — a supervisor routes tasks to worker agents, all on HALO
+  owner: ai-platform
+  domain: generic
+  project_type: greenfield
+
+technology:
+  backend:
+    language: python
+    version: 3.12
+    framework: fastapi
+  database:
+    type: dynamodb
+    migration_tool: none
+    orm: none
+  messaging:
+    broker: sqs
+    pattern: command-driven
+
+architecture:
+  style: microservices
+  patterns:
+    - ddd
+    - api-gateway
+    - saga
+  api_style: rest
+
+cloud:
+  provider: aws
+  infra_as_code: cdk
+  regions:
+    - eu-west-1
+  multi_account: true
+
+ai:
+  enabled: true
+  pattern: multi-agent
+  framework: langgraph
+  foundation_model: claude
+  governance_required: true
+  memory_pattern: persistent-db
+
+governance:
+  profile: enterprise
+  adr_required: true
+  coverage_threshold: 85
+  reviews_required:
+    - architecture-review
+    - security-review
+    - ai-governance-review
+
+delivery:
+  model: multi-team
+  methodology: agile
+  sprint_length_weeks: 2
+  cicd_platform: github-actions
+
+observability:
+  enabled: true
+  logging: cloudwatch
+  tracing: x-ray
+  metrics: cloudwatch
+  slo_required: true
