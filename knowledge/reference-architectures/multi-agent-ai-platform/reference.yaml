@@ -1,0 +1,56 @@
+name: multi-agent-ai-platform
+title: Multi-Agent AI Platform (supervisor + workers on HALO)
+summary: >
+  A governed multi-agent platform: a supervisor agent routes each task to specialist worker agents
+  (research, code, archive), and every agent runs on the HALO agent runtime — centralized confidence
+  gate, default-deny tool registry, audit, and human-review routing. The supervisor holds no tools
+  (spec §6); workers reach the model only through HALO's LLM port. LangGraph orchestrates the graph;
+  DynamoDB persists checkpoints; Amazon Bedrock serves the models.
+maturity: staging             # poc | staging | production
+manifest: project-manifest.yaml
+
+stack:
+  - python-3.12
+  - fastapi
+  - langgraph
+  - bedrock
+  - dynamodb
+  - halo-agent-harness
+  - aws-cdk
+
+tags: [python, fastapi, multi-agent, supervisor, langgraph, bedrock, ai, agent, halo, governance, aws]
+
+# The capability packs `eeik resolve-packs` produces for this manifest (verify checks the match).
+expected_packs: [core, agent-harness, ai-engineering, architecture, aws, delivery, governance, python]
+
+components:
+  - name: Platform API
+    tech: FastAPI (ECS Fargate)
+    responsibility: Task intake + streaming; submits work to the supervisor graph; exposes run status
+  - name: Supervisor
+    tech: LangGraph graph node (holds NO tools)
+    responsibility: Classifies the task and routes to a worker agent; never executes side effects itself
+  - name: Worker Agents
+    tech: Research / Code / Archive agents on HALO
+    responsibility: Do the work under HALO governance — each with its own authority ceiling + tool allowlist
+  - name: HALO Runtime
+    tech: halo-agent-harness (in-process)
+    responsibility: Governs every agent invocation — confidence gate, tool registry, audit, human review
+  - name: Checkpoint Store
+    tech: DynamoDB
+    responsibility: Persists LangGraph state so long-running multi-step runs survive restarts
+  - name: Foundation Model
+    tech: Amazon Bedrock (Claude)
+    responsibility: Generation for supervisor routing + worker reasoning; reached only via the HALO LLM port
+
+key_decisions:
+  - "The supervisor holds no tools (spec §6) — only workers act, and only through the tool registry."
+  - "Each worker has its own authority ceiling and allowlist; no agent can widen its own authority."
+  - "Model routing by cost/capability: a cheap model routes, stronger models do the work."
+  - "DynamoDB checkpoints make runs resumable; a failed step resolves to a safe DEFER, never a silent retry-loop."
+  - "Every agent decision is audited; low-confidence or tool-denied outcomes route to human review."
+
+# Deployable infrastructure + local dev (ADR-010, ROADMAP v1.3). Surfaced by the engine and verified.
+deployment:
+  cdk: cdk/                 # AWS CDK app — the architecture as deployable infrastructure
+  local_dev: local-dev/     # docker-compose (DynamoDB Local + the platform API) to run it on a laptop

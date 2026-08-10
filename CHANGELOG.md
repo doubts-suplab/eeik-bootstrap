@@ -29,8 +29,11 @@ governed, versioned, queryable engine consumed by APEX and CI.
 - **Conformance gate** — `eeik verify` (`--strict` / `--exit-code`) asserts packs deliver what they
   declare (ADR-008).
 - **HALO Agent Contracts** — `eeik contract` emits schema-valid, runtime-governed contracts (ADR-009).
-- **Reference architectures** — 4 engine-surfaced blueprints, each with a schema-valid manifest,
-  design, runbook, **deployable CDK app**, and **local-dev** (docker-compose + seed) (ADR-010).
+- **Reference architectures** — 5 engine-surfaced blueprints, each with a schema-valid manifest,
+  design, runbook, **deployable CDK app**, and **local-dev** (docker-compose + seed) (ADR-010). The
+  fifth, **multi-agent-ai-platform** (supervisor + workers on HALO), promotes the former stray prose
+  blueprint into the full engine-surfaced structure (Fargate + DynamoDB checkpoints/audit +
+  least-privilege Bedrock; DynamoDB-Local compose).
 - **Governed generation over MCP/SDK** — `eeik generate` / `eeik.generate()` / `eeik_generate` return a
   staged, human-review draft.
 - **Closed-loop knowledge capture** — `eeik lessons` drafts staged `LL-NNN` lessons from HALO/APEX
