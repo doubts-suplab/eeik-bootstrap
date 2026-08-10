@@ -10,7 +10,7 @@
 > tools** — Claude Code, GitHub Copilot, Kiro, Codex CLI, Cursor, Gemini CLI, Windsurf, Cline — the enterprise context to
 > act as specialist engineers from day one.
 
-**📖 New to EEIK? Start with the [interactive guide](docs/index.html)** — the fastest visual overview
+**📖 New to EEIK? Start with the [visual overview](docs/index.html)** — the fastest way to see what it is
 (open it in a browser). Then follow the Quick Start below, or jump to the
 [Engine Reference](docs/reference/engine-reference.md).
 
