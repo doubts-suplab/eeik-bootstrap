@@ -11,11 +11,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-try:
-    import yaml
-except ImportError:  # pragma: no cover - environment guard
-    print("ERROR: pyyaml required.  Run: pip install pyyaml", file=sys.stderr)
-    sys.exit(1)
+import yaml  # pyyaml is a core runtime dependency (see pyproject.toml)
 
 REPO_ROOT = Path(__file__).parent.parent
 GENERATORS = REPO_ROOT / "generators"
