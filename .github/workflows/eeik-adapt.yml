@@ -14,7 +14,7 @@ on:
       tools:
         description: 'Comma-separated adapter tools to regenerate (default: all)'
         required: false
-        default: 'kiro,codex,cursor,gemini'
+        default: 'kiro,codex,cursor,gemini,windsurf,cline'
       dry_run:
         description: 'Dry-run only (no commit)'
         type: boolean
@@ -45,15 +45,15 @@ jobs:
       - name: Generate adapters (dry-run)
         if: ${{ inputs.dry_run == true }}
         run: |
-          python3 -m eeik adapters \
-            --tools "${{ inputs.tools || 'kiro,codex,cursor,gemini' }}"
+          python3 -m eeik generate-adapters \
+            --tools "${{ inputs.tools || 'kiro,codex,cursor,gemini,windsurf,cline' }}"
 
       - name: Generate adapters (apply)
         if: ${{ inputs.dry_run != true }}
         run: |
-          python3 -m eeik adapters \
+          python3 -m eeik generate-adapters \
             --apply \
-            --tools "${{ inputs.tools || 'kiro,codex,cursor,gemini' }}"
+            --tools "${{ inputs.tools || 'kiro,codex,cursor,gemini,windsurf,cline' }}"
 
       - name: Check for changes
         id: changes
@@ -70,12 +70,12 @@ jobs:
         run: |
           git config user.name  "eeik-bot[bot]"
           git config user.email "eeik-bot@users.noreply.github.com"
-          git add .kiro/ AGENTS.md .cursor/ GEMINI.md
+          git add .kiro/ AGENTS.md .cursor/ GEMINI.md .windsurf/ .clinerules/
           git commit -m "chore(adapters): regenerate multi-tool adapters [skip ci]
 
           Triggered by manifest or standards change.
-          Tools: ${{ inputs.tools || 'kiro,codex,cursor,gemini' }}
-          Run: python3 -m eeik adapters --apply"
+          Tools: ${{ inputs.tools || 'kiro,codex,cursor,gemini,windsurf,cline' }}
+          Run: python3 -m eeik generate-adapters --apply"
           git push
 
       - name: Summary
