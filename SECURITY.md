@@ -85,9 +85,12 @@ the security contract for the engine itself — distinct from the agents it gene
 ### What the engine does *not* do
 
 - **No network in the core.** The engine's runtime dependencies are `pyyaml` + `jsonschema` only.
-  It makes no outbound calls; it does not phone home, fetch packs, or send telemetry. (An LLM-backed
-  generation path exists but requires the `claude` CLI / an API key the operator supplies explicitly;
-  absent that, generation runs offline and fail-safe.)
+  It makes no outbound calls; it does not phone home or fetch packs. **Telemetry is opt-in and
+  local-only**: nothing is recorded until you run `eeik telemetry --enable` (or set `EEIK_TELEMETRY=1`),
+  and even then it only keeps aggregate pack/generator counts in a JSON file under `~/.eeik/` — there is
+  no network code in the telemetry module, so nothing is ever transmitted; inspect or delete it any time.
+  (An LLM-backed generation path exists but reaches the model only through HALO's LLM port with an API
+  key the operator supplies explicitly; absent that, generation runs offline and fail-safe.)
 - **No arbitrary code execution.** Manifests and pack metadata are *data* — parsed, validated, and
   resolved. The engine never `eval`/`exec`s manifest or pack content.
 - **No secret handling.** The engine reads no credentials and stores none. Secrets belong in the

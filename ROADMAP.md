@@ -431,8 +431,11 @@ Risk notes call out dependencies or hazards.
 ### 8. Longer-term strategic
 - [ ] **Composable packs** — richer dependency resolution + conflict detection between packs. _Effort L ·
       Impact M · Risk: needs a dependency model beyond today's flat `dependencies:`._
-- [ ] **Opt-in telemetry** — which packs/agents are most used, to prioritise the catalog. _Effort M ·
-      Impact M · Risk: privacy — must be strictly opt-in, local-first, documented._
+- [x] **Opt-in telemetry** — done, **strictly opt-in + local-first + non-identifying** (the privacy bar
+      the item required). `eeik/telemetry.py` keeps aggregate pack/generator counters in
+      `~/.eeik/telemetry.json` **only after** `eeik telemetry --enable` (or `EEIK_TELEMETRY=1`); there is
+      no network code in the module (nothing is transmitted), `record()` is a hard no-op otherwise and
+      never raises. CLI `eeik telemetry [--enable|--disable|--clear|--json]`. Documented in SECURITY.md.
 - [ ] **Enterprise story** — private pack registries, **signed packs** (provenance beyond the content
       digest), air-gapped install. _Effort L · Impact H (enterprise) · builds on `eeik.lock` digests._
 - [x] **Broader tool support** — added **Windsurf** (`.windsurf/rules/`) and **Cline** (`.clinerules/`)

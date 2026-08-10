@@ -158,6 +158,9 @@ def run_generation(
     staging** — the artifact is returned in-memory only (``staged=False``). Preview never weakens the
     SUGGEST-authority guarantee; it just skips persistence.
     """
+    from eeik import telemetry  # opt-in, local-only; a no-op unless the user enabled it
+    telemetry.record("generator", generator_name)
+
     if not HALO_AVAILABLE:
         artifact, confidence = producer()
         staged_path = "" if preview else str(_write_staged(generator_name, artifact).relative_to(REPO_ROOT))

@@ -48,6 +48,9 @@ governed, versioned, queryable engine consumed by APEX and CI.
   dedicated opt-in flags (`cloud.finops`, `observability.chaos_engineering`,
   `delivery.platform_engineering`) — absent by default, so existing manifests resolve unchanged.
 - **`--json`** on `status` / `validate` / `diff` (alongside catalog/architectures/verify/doctor/lessons).
+- **Opt-in telemetry** — `eeik telemetry` (`--enable` / `--disable` / `--clear` / `--json`). Strictly
+  opt-in, local-first, non-identifying: aggregate pack/generator counters in `~/.eeik/telemetry.json`,
+  recorded only after explicit opt-in, with **no network code** in the module. Documented in SECURITY.md.
 - **Two more AI-tool adapters** — `eeik generate-adapters` now also emits **Windsurf** (`.windsurf/rules/`,
   always-on Cascade rules) and **Cline** (`.clinerules/`, persistent workspace rules); **8 tools** total,
   standards + golden rules at parity. New surfaces plug into the same generator registry.
