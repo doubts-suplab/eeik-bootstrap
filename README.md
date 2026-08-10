@@ -51,7 +51,7 @@ flowchart LR
 |---|---|
 | **A team adopting AI tools** | One config, eight tools speaking your standards — `eeik seed` into any repo |
 | **A platform / enablement team** | A governed engine: versioned packs, drift detection, conformance gates |
-| **A product that generates artifacts** (e.g. APEX) | A stable SDK + MCP surface to validate manifests, resolve packs, and govern generation |
+| **A product that generates artifacts** (e.g. APEX) | A stable SDK + MCP surface to validate manifests, resolve packs, and govern generation — see the [versioned integration contract](docs/reference/apex-integration-contract.md) |
 | **A regulated enterprise** | Domain packs (banking/insurance/healthcare/retail), governance reviews, HALO-governed generation |
 
 ---

@@ -52,6 +52,9 @@ governed, versioned, queryable engine consumed by APEX and CI.
   always-on Cascade rules) and **Cline** (`.clinerules/`, persistent workspace rules); **8 tools** total,
   standards + golden rules at parity. New surfaces plug into the same generator registry.
 - **Shipped-content smoke test** and a **Python 3.11/3.12/3.13** CI matrix with a coverage floor.
+- **Versioned integration contract (v1.0)** — `docs/reference/apex-integration-contract.md` pins the
+  stable SDK/MCP surface consumers (APEX, aether-grid) build against: the read model, conformance/health,
+  governed write, stable data types, the three consumption modes, semver rules, and assertable invariants.
 - **Contributor tooling** — `.pre-commit-config.yaml` (hygiene hooks + `ruff` + `mypy` + local
   `eeik lint` / `eeik verify` gates), `[tool.ruff]` / `[tool.mypy]` config, and a "Your First
   Contribution" + "Local Development Setup" guide in `CONTRIBUTING.md`.
