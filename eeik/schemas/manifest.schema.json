@@ -261,6 +261,11 @@
           "type": "boolean",
           "description": "Whether the project uses separate AWS accounts per environment.",
           "default": true
+        },
+        "finops": {
+          "type": "boolean",
+          "description": "Activate the FinOps pack (cost visibility, rightsizing, budgets, unit economics).",
+          "default": false
         }
       }
     },
@@ -375,6 +380,11 @@
           "type": "string",
           "enum": ["github-actions", "jenkins", "gitlab-ci", "azure-devops", "none"],
           "default": "github-actions"
+        },
+        "platform_engineering": {
+          "type": "boolean",
+          "description": "Activate the platform-engineering pack (IDP, golden paths, self-service, Backstage).",
+          "default": false
         }
       }
     },
@@ -433,6 +443,11 @@
         "slo_required": {
           "type": "boolean",
           "description": "Whether formal SLI/SLO definitions are required.",
+          "default": false
+        },
+        "chaos_engineering": {
+          "type": "boolean",
+          "description": "Activate the chaos-engineering pack (fault-injection experiments, GameDays).",
           "default": false
         }
       }

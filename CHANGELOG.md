@@ -42,7 +42,11 @@ governed, versioned, queryable engine consumed by APEX and CI.
   explicit; copies exactly the seed set (ADR-011).
 - **`eeik doctor`** — diagnoses adoption/health problems (deps, HALO/MCP, manifest, resolution, drift,
   conformance) with an actionable fix per finding; never throws.
-- **New capability packs** — Go, Node.js/TypeScript (backend languages) and Retail (domain); 22 total.
+- **New capability packs** — Go, Node.js/TypeScript (backend languages), Retail (domain), and the
+  cloud/ops trio **FinOps** (`finops-engineer`), **Chaos Engineering** (`chaos-engineer`), and
+  **Platform Engineering** (`platform-engineer`); **25 total**. The three cloud/ops packs resolve on
+  dedicated opt-in flags (`cloud.finops`, `observability.chaos_engineering`,
+  `delivery.platform_engineering`) — absent by default, so existing manifests resolve unchanged.
 - **`--json`** on `status` / `validate` / `diff` (alongside catalog/architectures/verify/doctor/lessons).
 - **Shipped-content smoke test** and a **Python 3.11/3.12/3.13** CI matrix with a coverage floor.
 - **Contributor tooling** — `.pre-commit-config.yaml` (hygiene hooks + `ruff` + `mypy` + local

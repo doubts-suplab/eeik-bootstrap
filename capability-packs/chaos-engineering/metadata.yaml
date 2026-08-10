@@ -1,0 +1,19 @@
+name: chaos-engineering-pack
+version: "1.0"
+status: built
+category: cloud
+description: "Chaos & resilience engineering — hypothesis-driven fault-injection experiments, blast-radius control, steady-state definition, GameDay exercises, and SLO/error-budget-driven resilience validation."
+tags: [chaos, resilience, reliability, fault-injection, gameday, sre, slo, testing, aws]
+
+manifest_triggers:
+  - field: observability.chaos_engineering
+    value: true
+
+agents_provided:
+  - chaos-engineer
+
+standards_provided:
+  - chaos-engineering-standard
+
+dependencies:
+  - core-pack

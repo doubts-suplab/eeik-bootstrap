@@ -73,6 +73,27 @@ def test_generic_domain_adds_no_domain_pack():
     assert not ({"insurance", "banking", "healthcare", "retail"} & set(packs))
 
 
+# ── resolver: cloud/ops opt-in packs ────────────────────────────────────────────
+
+def test_finops_flag_resolves_finops_pack():
+    assert "finops" in _resolve(cloud={"provider": "aws", "finops": True})
+
+
+def test_chaos_flag_resolves_chaos_pack():
+    assert "chaos-engineering" in _resolve(observability={"chaos_engineering": True})
+
+
+def test_platform_engineering_flag_resolves_pack():
+    packs = _resolve(delivery={"model": "multi-team", "platform_engineering": True})
+    assert "platform-engineering" in packs
+
+
+def test_ops_packs_absent_by_default():
+    # The opt-in flags are off by default → existing manifests never gain these packs.
+    packs = _resolve(cloud={"provider": "aws"})
+    assert not ({"finops", "chaos-engineering", "platform-engineering"} & set(packs))
+
+
 @pytest.mark.parametrize("profile", ["regulated", "enterprise"])
 def test_regulated_profile_resolves_governance(profile):
     assert "governance" in _resolve(governance={"profile": profile})
