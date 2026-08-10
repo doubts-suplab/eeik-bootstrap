@@ -32,6 +32,7 @@ eeik verify                           # asserts each manifest still validates & 
 | [data-platform](data-platform/architecture.md) | Kafka · Spark/Glue · dbt · Airflow · S3 lakehouse · Athena · CDK | Production | + data-engineering · python |
 | [multi-tenant-saas](multi-tenant-saas/architecture.md) | Spring Boot 3 · Aurora RLS · Cognito · EventBridge · React · CDK | Production | core · architecture · aws · delivery · governance · java · react |
 | [multi-agent-ai-platform](multi-agent-ai-platform/architecture.md) | FastAPI · LangGraph · Bedrock · DynamoDB · HALO · CDK | Staging | + agent-harness · ai-engineering · governance · python (supervisor + workers, no frontend) |
+| [event-driven-microservices](event-driven-microservices/architecture.md) | Spring Boot 3 · Java 21 · Kafka · Schema Registry · saga/outbox · Aurora · CDK | Production | core · architecture · aws · containers · delivery · governance · java |
 
 Each architecture is also **deployable**: `cdk/` is a real AWS CDK app (`npm install && npx cdk deploy`)
 and `local-dev/` brings it up on a laptop with `docker compose up -d` + seed data. `eeik architectures

@@ -1,0 +1,56 @@
+name: event-driven-microservices
+title: Event-Driven Microservices (Kafka + saga/outbox on Spring Boot)
+summary: >
+  Java/Spring Boot microservices communicating over an Apache Kafka backbone. Cross-service consistency
+  is handled with the transactional outbox pattern (no dual-write) and saga orchestration for
+  multi-service workflows; reads are served by CQRS projections. Schema Registry governs event contracts;
+  Aurora PostgreSQL is each service's private store. Deploys to ECS Fargate via CDK.
+maturity: production          # poc | staging | production
+manifest: project-manifest.yaml
+
+stack:
+  - java-21
+  - spring-boot
+  - kafka
+  - schema-registry
+  - aurora-postgresql
+  - flyway
+  - docker
+  - aws-cdk
+
+tags: [java, spring-boot, kafka, event-driven, saga, outbox, cqrs, microservices, schema-registry, aws]
+
+# The capability packs `eeik resolve-packs` produces for this manifest (verify checks the match).
+expected_packs: [core, architecture, aws, containers, delivery, governance, java]
+
+components:
+  - name: API Gateway / Edge
+    tech: Spring Cloud Gateway (ECS Fargate)
+    responsibility: North-south entry; auth, routing, rate limiting to the command services
+  - name: Command Services
+    tech: Spring Boot (per bounded context)
+    responsibility: Own their data + write model; publish domain events via the outbox
+  - name: Transactional Outbox
+    tech: Outbox table + Debezium/poller → Kafka
+    responsibility: Atomically persist state + event in one DB tx; publish reliably (no dual-write)
+  - name: Kafka + Schema Registry
+    tech: Amazon MSK + Confluent Schema Registry
+    responsibility: The event backbone; versioned, compatibility-checked event contracts (Avro)
+  - name: Saga Orchestrator
+    tech: Spring Boot state machine
+    responsibility: Coordinate multi-service workflows with compensating actions on failure
+  - name: Query Services (CQRS)
+    tech: Spring Boot + read-optimised projections
+    responsibility: Build materialised views from events; serve reads without touching write models
+
+key_decisions:
+  - "Transactional outbox, never dual-write: state change and its event commit in one DB transaction."
+  - "Sagas with explicit compensations for cross-service consistency — no distributed 2PC."
+  - "Schema Registry enforces event-contract compatibility; consumers are resilient to additive change."
+  - "Each service owns its database; no shared schema, no cross-service joins — integrate via events."
+  - "Idempotent consumers (dedupe by event id); at-least-once delivery is assumed, exactly-once is not."
+
+# Deployable infrastructure + local dev (ADR-010, ROADMAP v1.3). Surfaced by the engine and verified.
+deployment:
+  cdk: cdk/                 # AWS CDK app — the architecture as deployable infrastructure
+  local_dev: local-dev/     # docker-compose (Kafka + Schema Registry + Postgres) to run it on a laptop

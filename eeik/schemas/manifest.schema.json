@@ -144,6 +144,18 @@
             }
           }
         },
+        "containerisation": {
+          "type": "object",
+          "description": "Container runtime (activates the containers pack when runtime != none).",
+          "additionalProperties": false,
+          "properties": {
+            "runtime": {
+              "type": "string",
+              "enum": ["docker", "containerd", "none"],
+              "default": "none"
+            }
+          }
+        },
         "data": {
           "type": "object",
           "description": "Data-engineering workloads (activates the data-engineering pack).",
