@@ -49,6 +49,10 @@ generated:
     note: Produced by `eeik generate-adapters` (Codex/OpenAI tool context).
   - path: GEMINI.md
     note: Produced by `eeik generate-adapters` (Gemini CLI tool context).
+  - path: .windsurf
+    note: Produced by `eeik generate-adapters` (Windsurf always-on Cascade rules).
+  - path: .clinerules
+    note: Produced by `eeik generate-adapters` (Cline persistent workspace rules).
 
 engine:
   - path: eeik

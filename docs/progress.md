@@ -19,7 +19,7 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 
 | Capability | Status | Notes |
 |---|---|---|
-| 6 AI-tool adapters (Claude, Copilot, Kiro, Codex, Cursor, Gemini) | ✅ | `.claude/`, `.github/`, `.kiro/`, `.cursor/`, `AGENTS.md`, `GEMINI.md` |
+| 8 AI-tool adapters (Claude, Copilot, Kiro, Codex, Cursor, Gemini, Windsurf, Cline) | ✅ | `.claude/`, `.github/`, `.kiro/`, `.cursor/`, `AGENTS.md`, `GEMINI.md`, `.windsurf/`, `.clinerules/` |
 | 19 capability packs | ✅ | Every pack now carries `metadata.yaml` with a `version` |
 | Manifest → pack resolution → `.claude/` materialisation | ✅ | `activate_packs.py`, `capability-matrix.yaml` |
 | Manifest validation (schema + governance rules) | ✅ | `validate_manifest.py` |

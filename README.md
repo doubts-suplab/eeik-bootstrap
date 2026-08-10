@@ -311,6 +311,8 @@ SECURITY.md        Vulnerability reporting
 .github/           Copilot      — 44 agents, instructions, prompts, workflows, hooks
 .kiro/             Kiro         — steering docs (product, tech, structure), hooks
 .cursor/           Cursor       — .mdc rules (golden-rules, architecture, security)
+.windsurf/         Windsurf     — always-on Cascade rules (golden-rules, tech)
+.clinerules/       Cline        — persistent workspace rules (golden-rules, project)
 
 ── Intelligence Layer (tool-agnostic) ────────────────────────────────────────
 capability-packs/  22 packs — core, architecture, java, aws, ai-engineering,
