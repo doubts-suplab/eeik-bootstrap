@@ -44,7 +44,7 @@ over-reach by construction:
   with governed generation, ADR-003).
 
 **Validation reuses HALO's own validator.** `eeik.validate_agent_contract` calls
-`agent_harness.contract.validate_contract` (JSON Schema + the §3.3 semantic binding rule) when the harness
+`halo_agent_harness.contract.validate_contract` (JSON Schema + the §3.3 semantic binding rule) when the harness
 and schema are locatable (editable install, `$AGENT_CONTRACT_SCHEMA`, or a sibling `agent-harness` repo).
 When they are not, generation still works and validation is reported as *skipped* — fail-safe, no hard
 dependency. EEIK does **not** vendor a copy of the schema (that would drift); HALO remains the authority.
@@ -74,4 +74,4 @@ dependency. EEIK does **not** vendor a copy of the schema (that would drift); HA
 ## Related
 
 - ADR-003 (governed generation), ADR-006/007 (MCP/SDK). `eeik/contract.py`, `tests/test_contract.py`.
-- HALO `docs/spec/agent-contract.schema.json`, `agent_harness.contract.validate_contract`.
+- HALO `docs/spec/agent-contract.schema.json`, `halo_agent_harness.contract.validate_contract`.

@@ -119,7 +119,7 @@ eeik validate knowledge/reference-architectures/ai-augmented-service/project-man
 # resolves to: core, agent-harness, ai-engineering, architecture, aws, delivery, governance, python, react
 cp knowledge/reference-architectures/ai-augmented-service/project-manifest.yaml ./project-manifest.yaml
 eeik activate --apply
-pip install agent-harness        # HALO — the governed runtime this architecture depends on
+pip install halo-agent-harness   # HALO — the governed runtime this architecture depends on
 ```
 
 See [`runbook.md`](runbook.md) for operations (gate metrics, review-queue SLAs, ingestion health).

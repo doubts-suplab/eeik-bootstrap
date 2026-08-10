@@ -49,13 +49,21 @@ PACK_SUBDIRS = {
 MANAGED_MARKER = "# eeik-managed"
 
 
+def _rel(p: Path) -> Path | str:
+    """Path relative to the repo root for display; fall back to the name if it lives outside."""
+    try:
+        return p.relative_to(REPO_ROOT)
+    except ValueError:
+        return p.name
+
+
 def log_copy(src: Path, dst: Path, dry: bool) -> None:
     verb = "Would copy" if dry else "Copying"
-    print(f"  {ANSI_CYAN}{verb}{ANSI_RESET}  {src.relative_to(REPO_ROOT)}  →  {dst.relative_to(REPO_ROOT)}")
+    print(f"  {ANSI_CYAN}{verb}{ANSI_RESET}  {_rel(src)}  →  {_rel(dst)}")
 
 
 def log_skip(dst: Path, reason: str) -> None:
-    print(f"  {ANSI_YELLOW}Skip{ANSI_RESET}     {dst.relative_to(REPO_ROOT)}  ({reason})")
+    print(f"  {ANSI_YELLOW}Skip{ANSI_RESET}     {_rel(dst)}  ({reason})")
 
 
 def load_manifest() -> dict:

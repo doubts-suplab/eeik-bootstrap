@@ -46,14 +46,14 @@ ANSI_RESET = "\033[0m"
 Producer = Callable[[], "tuple[str, float]"]
 
 try:
-    from agent_harness import (
+    from halo_agent_harness import (
         AgentInput,
         AuthorityLevel,
         Decision,
         DecisionAction,
         Harness,
     )
-    from agent_harness.adapters.inmemory import (
+    from halo_agent_harness.adapters.inmemory import (
         InMemoryAudit,
         InMemoryHumanReview,
         InMemoryKillSwitch,
@@ -161,7 +161,7 @@ def run_generation(
         staged_path = "" if preview else str(_write_staged(generator_name, artifact).relative_to(REPO_ROOT))
         warnings = [
             "HALO (agent-harness) is not installed — generation ran UNGOVERNED. "
-            "Install it (pip install agent-harness) for a certified gate. Fail-safe: the artifact "
+            "Install it (pip install halo-agent-harness) for a certified gate. Fail-safe: the artifact "
             + ("was NOT persisted (preview)." if preview else "was staged, not applied."),
         ]
         return GenerationOutcome(

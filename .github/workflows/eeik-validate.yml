@@ -88,6 +88,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: pip
 
+      - name: Install HALO runtime (halo-agent-harness) from git
+        # HALO is not yet published to PyPI. Install it from the runtime repo so the `.[test]`
+        # extra's `halo-agent-harness>=0.1.0` is already satisfied (keeping pyproject PyPI-publish-safe —
+        # no direct-URL dependency in EEIK's own metadata). Remove once halo-agent-harness ships to PyPI.
+        run: pip install "halo-agent-harness @ git+https://github.com/doubts-suplab/agent-harness@main#subdirectory=bindings/python"
+
       - name: Install EEIK engine (with test + governance extras)
         run: pip install -e ".[test]"
 

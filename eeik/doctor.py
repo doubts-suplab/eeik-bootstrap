@@ -122,27 +122,27 @@ def check_core_deps() -> Diagnostic:
 
 def check_halo() -> Diagnostic:
     """HALO (agent-harness) is optional; without it, governed generation runs fail-safe."""
-    if not _installed("agent_harness"):
+    if not _installed("halo_agent_harness"):
         return Diagnostic(
             "halo", "warn",
             "HALO (agent-harness) not installed — governed generation will run fail-safe "
             "(staged, ungoverned) and `eeik demo` runs offline",
-            fix="Install it for a certified gate:  pip install agent-harness  (or  pip install -e \".[test]\")",
+            fix="Install it for a certified gate:  pip install halo-agent-harness  (or  pip install -e \".[test]\")",
         )
     try:
-        import agent_harness as halo  # noqa: PLC0415
+        import halo_agent_harness as halo  # noqa: PLC0415
         if all(hasattr(halo, s) for s in ("AgentInput", "Harness", "DecisionAction")):
             return Diagnostic("halo", "pass", "HALO runtime available — generation is fully governed")
         return Diagnostic(
             "halo", "warn",
-            "an 'agent_harness' is installed but does not expose the HALO API (AgentInput/Harness)",
-            fix="Install the real runtime:  pip install agent-harness  (from doubts-suplab/agent-harness)",
+            "a 'halo_agent_harness' is installed but does not expose the HALO API (AgentInput/Harness)",
+            fix="Install the real runtime:  pip install halo-agent-harness  (from doubts-suplab/agent-harness)",
         )
     except Exception:  # noqa: BLE001 - a broken dep must not crash the doctor
         return Diagnostic(
             "halo", "warn",
-            "'agent_harness' is installed but failed to import",
-            fix="Reinstall it:  pip install --force-reinstall agent-harness",
+            "'halo_agent_harness' is installed but failed to import",
+            fix="Reinstall it:  pip install --force-reinstall halo-agent-harness",
         )
 
 

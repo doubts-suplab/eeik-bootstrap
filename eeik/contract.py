@@ -16,7 +16,7 @@ emitted with an **unsigned** governance block: they are drafts a human signs off
 
     eeik contract --blueprint reviewer --name java-reviewer --param language=java --validate
 
-Validation reuses HALO's own `agent_harness.contract.validate_contract` (schema + the §3.3 binding rule)
+Validation reuses HALO's own `halo_agent_harness.contract.validate_contract` (schema + the §3.3 binding rule)
 when the harness + schema are locatable; otherwise generation still works and validation is reported as
 skipped (fail-safe).
 """
@@ -171,7 +171,7 @@ def _locate_schema() -> Path | None:
     if env and Path(env).is_file():
         return Path(env)
     try:
-        from agent_harness.contract import _default_schema_path
+        from halo_agent_harness.contract import _default_schema_path
 
         return _default_schema_path()
     except Exception:
@@ -190,7 +190,7 @@ def validate_contract(contract: dict) -> tuple[bool, str]:
     rather than raising — generation never hard-depends on the harness being present.
     """
     try:
-        from agent_harness.contract import validate_contract as halo_validate
+        from halo_agent_harness.contract import validate_contract as halo_validate
     except ImportError:
         return (False, "skipped: agent-harness not installed")
     schema = _locate_schema()
