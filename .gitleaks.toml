@@ -27,4 +27,6 @@ paths = [
   '''\.kiro/.*''',
   '''AGENTS\.md''',
   '''GEMINI\.md''',
+  # Superseded visual guide (deleted; replaced by docs/index.html) — carried the same doc example in git history.
+  '''docs/eeik-guide\.html''',
 ]
