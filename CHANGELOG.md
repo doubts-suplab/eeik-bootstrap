@@ -43,6 +43,9 @@ governed, versioned, queryable engine consumed by APEX and CI.
   minor/patch with Conventional-Commit prefixes.
 - **CI diagnostics on failure** — `eeik-validate.yml` uploads `catalog`/`verify`/`doctor`/`diff` JSON
   reports as an artifact when the engine-tests gate fails, so a red run is debuggable from the artifact.
+- **Adapter-generation + pack-materialization tests** — `tests/test_adapters.py` (kiro/codex/cursor/
+  gemini generators) and `tests/test_materialization.py` (`eeik activate` copy, managed-marker,
+  dry-run, `--clean`, skip-on-exists); 17 cases, closing a long-standing coverage gap.
 
 ### Changed
 - **Adopted the HALO rebrand (agent-harness ADR-0013).** The runtime's Python distribution/import

@@ -79,9 +79,9 @@ low risk, high impact):
 | Onboarding | ~~Adopter-first README + top-of-repo flow diagram; lead with `eeik seed`~~ ✅; ~~interactive guide as the newcomer landing page (README leads with it; guide opens with a Get Started section)~~ ✅ | ✅ Done |
 | Distribution | ~~PyPI release automation (OIDC)~~ ✅ workflow ready; ~~badges~~ ✅ (GitHub topics = maintainer repo-setting) | ✅ Done |
 | CLI UX | ~~`eeik doctor`~~ ✅; ~~`--json` on status/validate/diff~~ ✅ (inspection commands consistent) | ✅ Done |
-| Testing | ~~Shipped-content smoke test~~ ✅; ~~Python 3.11/3.12/3.13 matrix + coverage floor~~ ✅; ~~hook tests~~ ✅ (30 subprocess cases); ~~content lint~~ ✅ | ✅ Done |
+| Testing | ~~Shipped-content smoke test~~ ✅; ~~Python 3.11/3.12/3.13 matrix + coverage floor~~ ✅; ~~hook tests~~ ✅ (30 subprocess cases); ~~content lint~~ ✅; ~~adapter-generation + pack-materialization tests~~ ✅ (17 cases) | ✅ Done |
 | Docs/process | ~~`CHANGELOG.md`, `CODE_OF_CONDUCT.md`, SUPPORT/FAQ~~ ✅; ~~engine security-model section~~ ✅ | ✅ Done |
-| CI polish | ~~Dependabot (pip + github-actions)~~ ✅; ~~pre-commit (ruff/mypy + local eeik lint/verify)~~ ✅; ~~catalog/verify diagnostics uploaded as CI artifacts on failure~~ ✅; make `verify --strict` + `diff` required checks (repo-admin branch-protection setting) | 🟡 In progress |
+| CI polish | ~~Dependabot (pip + github-actions)~~ ✅; ~~pre-commit (ruff/mypy + local eeik lint/verify)~~ ✅; ~~catalog/verify diagnostics uploaded as CI artifacts on failure~~ ✅ | ✅ Done _(repo-admin follow-up: mark `verify --strict` + `diff` as required checks)_ |
 | Content | ~~Adapter parity matrix~~ ✅; ~~domain-pack criteria~~ ✅ (CONTRIBUTING); ~~staged→committed lessons promotion workflow~~ ✅ (reference-architecture expansion ongoing) | 🟡 In progress |
 | Governance | ~~Preview/dry-run generation~~ ✅; ~~HALO-absent "works offline" table~~ ✅; ~~MCP production notes~~ ✅ (see [engine-reference.md](reference/engine-reference.md)) | ✅ Done |
 | Strategic | Composable packs; signed packs / private registry; opt-in telemetry (license: AGPL-3.0 retained by decision) | ⬜ Planned (decisions) |

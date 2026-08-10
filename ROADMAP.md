@@ -312,9 +312,11 @@ Risk notes call out dependencies or hazards.
       — the "Who is this for?" table and Quick Start now split adoption vs. generation up front.
 
 ### 2. Packaging, distribution & discoverability
-- [ ] PyPI publish + release automation (tag → build → publish → GitHub Release notes). _Effort M ·
-      Impact H · security: use OIDC trusted publishing, no long-lived tokens._
-- [ ] Badges + topics + "Who is this for?". _Effort S · Impact M._
+- [x] PyPI publish + release automation — done. `.github/workflows/release.yml` builds on tag and
+      publishes via **OIDC Trusted Publishing** (no long-lived tokens), gated Java, GitHub Release
+      notes. _Maintainer follow-up (outside the repo): register the PyPI Trusted Publisher._
+- [x] Badges + "Who is this for?" — done (README carries Python/License/MCP/Governed/Packs badges and a
+      "Who is this for?" table). _GitHub **topics** are a maintainer repo-setting, not a repo file._
 
 > **License:** AGPL-3.0 is retained by decision — the strong-copyleft, network-use-disclosure posture is
 > intended for this engine. No relicensing is planned; adopters should read `LICENSE` before use.
@@ -331,8 +333,13 @@ Risk notes call out dependencies or hazards.
       - Closed schema↔resolver gaps the example exposed: added `technology.mainframe` (platform +
         languages — the resolver + governance rules already read it), and the `anti-corruption-layer`
         pattern + `solvency-ii` / `basel-iii` compliance frameworks used by the domain packs.
-- [ ] Broaden `manifest.py` / `packs.py` edge-case coverage + **pack materialization / adapter
-      generation** tests. _Effort M · Impact M._
+- [x] Broaden edge-case coverage + **pack materialization / adapter generation** tests — done.
+      `tests/test_adapters.py` (10 cases) drives the kiro/codex/cursor/gemini generators into a temp
+      root — files land where expected, carry the generated-by banner, JSON/JSONC parses, dry-run
+      writes nothing, empty manifests still generate. `tests/test_materialization.py` (7 cases) drives
+      `activate()` — managed-marker stamping, dry-run safety, skip-on-exists, `--clean` removes only
+      managed files, missing pack dir is a no-op. (Also hardened `packs.py` logging to not crash when a
+      target lives outside the repo root — the same defensive `_rel` pattern used in `lint.py`.)
 - [x] **CI matrix Python 3.11/3.12/3.13** + **coverage floor** — done. `eeik-validate.yml` engine-tests
       runs the suite across 3.11/3.12/3.13 with `--cov=eeik --cov-fail-under=50` (currently ~57%) and
       uploads a coverage artifact per version. `pytest-cov` added to the `test` extra.
@@ -380,8 +387,8 @@ Risk notes call out dependencies or hazards.
       non-inspection commands — activate/generate-adapters/seed apply — stay human-only by design.)
 
 ### 6. Documentation & process
-- [ ] Keep **Tier 4** items marked done (resolver + dual-purpose adapters are closed — reflected above).
-      _Effort S · Impact L · housekeeping._
+- [x] Keep **Tier 4** items marked done (resolver + dual-purpose adapters are closed — reflected above).
+      _housekeeping._
 - [x] **"First contribution" path** in CONTRIBUTING — done. A "Your First Contribution" section (four
       graded single-file starts) plus a "Local Development Setup" section (`pip install -e ".[dev]"`,
       `pre-commit install`, and the exact ruff/mypy/lint/verify/pytest commands CI runs).
@@ -389,7 +396,8 @@ Risk notes call out dependencies or hazards.
       doesn't do (reads content layers; writes only to `.claude/` + `.eeik-staging/`; no network in the
       core; no arbitrary code execution; no secret handling; no auto-apply), the HALO/fail-safe posture,
       the read-first MCP surface, and the pack digest/lockfile supply-chain guarantee.
-- [ ] `CHANGELOG.md` + `CODE_OF_CONDUCT.md` + SUPPORT/FAQ (see Quick wins). _Effort S · Impact M._
+- [x] `CHANGELOG.md` + `CODE_OF_CONDUCT.md` + SUPPORT/FAQ — done (all three shipped; CHANGELOG follows
+      Keep a Changelog and tracks the v1.4 engine track).
 
 ### 7. Operational / CI polish
 - [x] **Dependabot** for Python deps + GitHub Actions — done. `.github/dependabot.yml` runs weekly for
