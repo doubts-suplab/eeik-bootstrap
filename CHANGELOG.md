@@ -48,6 +48,9 @@ governed, versioned, queryable engine consumed by APEX and CI.
   dedicated opt-in flags (`cloud.finops`, `observability.chaos_engineering`,
   `delivery.platform_engineering`) — absent by default, so existing manifests resolve unchanged.
 - **`--json`** on `status` / `validate` / `diff` (alongside catalog/architectures/verify/doctor/lessons).
+- **Two more AI-tool adapters** — `eeik generate-adapters` now also emits **Windsurf** (`.windsurf/rules/`,
+  always-on Cascade rules) and **Cline** (`.clinerules/`, persistent workspace rules); **8 tools** total,
+  standards + golden rules at parity. New surfaces plug into the same generator registry.
 - **Shipped-content smoke test** and a **Python 3.11/3.12/3.13** CI matrix with a coverage floor.
 - **Contributor tooling** — `.pre-commit-config.yaml` (hygiene hooks + `ruff` + `mypy` + local
   `eeik lint` / `eeik verify` gates), `[tool.ruff]` / `[tool.mypy]` config, and a "Your First

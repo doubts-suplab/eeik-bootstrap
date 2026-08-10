@@ -435,7 +435,10 @@ Risk notes call out dependencies or hazards.
       Impact M · Risk: privacy — must be strictly opt-in, local-first, documented._
 - [ ] **Enterprise story** — private pack registries, **signed packs** (provenance beyond the content
       digest), air-gapped install. _Effort L · Impact H (enterprise) · builds on `eeik.lock` digests._
-- [ ] **Broader tool support** — new AI coding surfaces as they appear, via the adapter generator. _Effort
+- [x] **Broader tool support** — added **Windsurf** (`.windsurf/rules/`) and **Cline** (`.clinerules/`)
+      generators to `eeik generate-adapters` (8 tools now); standards/context at parity. Further surfaces
+      plug in via the same registry. _Effort M each · Impact M._
+- [ ] **Broader tool support (ongoing)** — new AI coding surfaces as they appear, via the adapter generator. _Effort
       M each · Impact M._
 - [ ] **Stable APEX integration surface** — keep the SDK/MCP contract stable and document the integration
       surface as a versioned contract. _Effort M · Impact H · protects the primary consumer._
