@@ -488,15 +488,110 @@ eeik generate-adapters --apply
     write_file(REPO_ROOT / "GEMINI.md", gemini_md, dry)
 
 
+# ── Windsurf (Codeium) ──────────────────────────────────────────────────────────
+
+def generate_windsurf(manifest: dict, dry: bool) -> None:
+    print(f"\n{ANSI_BOLD}Windsurf (.windsurf/rules/){ANSI_RESET}")
+    project      = manifest.get("project", {})
+    name         = project.get("name", "this project")
+    tech_summary = read_tech_summary(manifest)
+    golden       = read_golden_rules()
+
+    # Windsurf reads every file under .windsurf/rules/ as always-on workspace rules (Cascade).
+    golden_md = f"""{GENERATED_BANNER}---
+trigger: always_on
+---
+
+# Golden Rules — {name}
+
+Non-negotiable engineering standards. Apply to all generated and edited code.
+
+{golden}
+"""
+    write_file(REPO_ROOT / ".windsurf" / "rules" / "golden-rules.md", golden_md, dry)
+
+    tech_md = f"""{GENERATED_BANNER}---
+trigger: always_on
+---
+
+# Technology & Architecture — {name}
+
+**Type**: {project.get('project_type', 'greenfield')} | **Domain**: {project.get('domain', 'generic')} | **Profile**: {manifest.get('governance', {}).get('profile', 'standard')}
+
+## Stack
+
+{tech_summary}
+
+## Architecture (hexagonal + DDD)
+
+- `domain/` — pure business logic, no framework dependencies
+- `application/` — use cases and orchestration
+- `infrastructure/` — adapters for DB, messaging, external services
+- `web/` — HTTP layer, DTOs
+
+## Repository intelligence
+
+This repository uses **EEIK**. Deeper context lives in `capability-packs/`, `knowledge/patterns/`,
+`knowledge/anti-patterns/`, and `.claude/memory/`. Regenerate this file with
+`eeik generate-adapters --apply` after a manifest change.
+"""
+    write_file(REPO_ROOT / ".windsurf" / "rules" / "tech.md", tech_md, dry)
+
+
+# ── Cline ───────────────────────────────────────────────────────────────────────
+
+def generate_cline(manifest: dict, dry: bool) -> None:
+    print(f"\n{ANSI_BOLD}Cline (.clinerules/){ANSI_RESET}")
+    project      = manifest.get("project", {})
+    name         = project.get("name", "this project")
+    tech_summary = read_tech_summary(manifest)
+    golden       = read_golden_rules()
+
+    # Cline reads every Markdown file in .clinerules/ as persistent instructions for the workspace.
+    golden_md = f"""{GENERATED_BANNER}# Golden Rules — {name}
+
+Non-negotiable engineering standards. Apply to all code Cline writes or edits.
+
+{golden}
+"""
+    write_file(REPO_ROOT / ".clinerules" / "golden-rules.md", golden_md, dry)
+
+    project_md = f"""{GENERATED_BANNER}# Project — {name}
+
+{project.get('description', f'Enterprise application: {name}')}
+
+**Type**: {project.get('project_type', 'greenfield')} | **Domain**: {project.get('domain', 'generic')} | **Profile**: {manifest.get('governance', {}).get('profile', 'standard')}
+
+## Technology
+
+{tech_summary}
+
+## Architecture (hexagonal + DDD)
+
+- `domain/` — pure business logic, no framework dependencies
+- `application/` — use cases and orchestration
+- `infrastructure/` — adapters for DB, messaging, external services
+- `web/` — HTTP layer, DTOs
+
+## Repository intelligence
+
+This repository uses **EEIK**. Standards, patterns, and decisions live in `capability-packs/`,
+`knowledge/`, and `.claude/memory/`. Regenerate with `eeik generate-adapters --apply`.
+"""
+    write_file(REPO_ROOT / ".clinerules" / "project.md", project_md, dry)
+
+
 # ── main ──────────────────────────────────────────────────────────────────────
 
-ALL_TOOLS = ["kiro", "codex", "cursor", "gemini"]
+ALL_TOOLS = ["kiro", "codex", "cursor", "gemini", "windsurf", "cline"]
 
 GENERATORS = {
-    "kiro":   generate_kiro,
-    "codex":  generate_codex,
-    "cursor": generate_cursor,
-    "gemini": generate_gemini,
+    "kiro":     generate_kiro,
+    "codex":    generate_codex,
+    "cursor":   generate_cursor,
+    "gemini":   generate_gemini,
+    "windsurf": generate_windsurf,
+    "cline":    generate_cline,
 }
 
 

@@ -435,10 +435,16 @@ Risk notes call out dependencies or hazards.
       Impact M · Risk: privacy — must be strictly opt-in, local-first, documented._
 - [ ] **Enterprise story** — private pack registries, **signed packs** (provenance beyond the content
       digest), air-gapped install. _Effort L · Impact H (enterprise) · builds on `eeik.lock` digests._
-- [ ] **Broader tool support** — new AI coding surfaces as they appear, via the adapter generator. _Effort
+- [x] **Broader tool support** — added **Windsurf** (`.windsurf/rules/`) and **Cline** (`.clinerules/`)
+      generators to `eeik generate-adapters` (8 tools now); standards/context at parity. Further surfaces
+      plug in via the same registry. _Effort M each · Impact M._
+- [ ] **Broader tool support (ongoing)** — new AI coding surfaces as they appear, via the adapter generator. _Effort
       M each · Impact M._
-- [ ] **Stable APEX integration surface** — keep the SDK/MCP contract stable and document the integration
-      surface as a versioned contract. _Effort M · Impact H · protects the primary consumer._
+- [x] **Stable APEX integration surface** — documented as a **versioned contract** (v1.0) in
+      [docs/reference/apex-integration-contract.md](reference/apex-integration-contract.md): the stable
+      SDK/MCP read-model + governed-write surface, the three consumption modes (SDK/MCP/vendored
+      fallback), semver rules, and the invariants a consumer can assert (one drift schema, stable
+      resolve order, generation never auto-applies, read-model never needs HALO). _protects the primary consumer._
 
 > Scheduling note: the **Quick wins** block is **done** — the "v1.5 — Adoption & Distribution"
 > increment (adopter-first README + diagram, PyPI release workflow, badges, CHANGELOG /

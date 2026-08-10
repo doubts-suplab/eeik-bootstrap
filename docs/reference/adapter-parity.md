@@ -1,6 +1,6 @@
 # Adapter Parity Matrix
 
-EEIK projects the same intelligence into **six** AI coding tools. The tools differ in what their config
+EEIK projects the same intelligence into **eight** AI coding tools. The tools differ in what their config
 formats can express, so depth is not identical — this matrix makes the gap explicit, so adopters know
 what to expect per tool and contributors know where to invest.
 
@@ -14,6 +14,8 @@ what to expect per tool and contributors know where to invest.
 | **Kiro** | `.kiro/` | — | steering docs | — | hooks + settings | 🟡 Steering |
 | **Codex CLI** | `AGENTS.md` (+ per-dir) | context file | embedded | — | — | 🟡 Context |
 | **Gemini CLI** | `GEMINI.md` | context file | embedded | — | — | 🟡 Context |
+| **Windsurf** | `.windsurf/rules/` | — | always-on rule files | — | — | 🟡 Rules |
+| **Cline** | `.clinerules/` | — | persistent rule files | — | — | 🟡 Rules |
 
 🟢 **Full** — agents + standards + commands (+ hooks) as first-class, individually-addressable files.
 🟡 **Rules / Steering / Context** — the tool's format expresses standards + project context, but not the
@@ -39,7 +41,7 @@ content into each format. The goal for the thinner adapters is **coverage parity
 context** (every tool enforces the same rules), while accepting **format-appropriate granularity** for
 agents/commands. Concretely:
 
-- **Keep standards + golden rules at parity across all six** — this is the non-negotiable floor.
+- **Keep standards + golden rules at parity across all eight** — this is the non-negotiable floor.
 - For Cursor/Kiro/Codex/Gemini, **consolidate the most-used agents' guidance** into the tool's
   rules/steering/context rather than attempting 1:1 agent files the format can't trigger.
 - Track new tools as they appear via the same generator (see ROADMAP §8, "Broader tool support").

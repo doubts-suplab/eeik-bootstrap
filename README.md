@@ -6,8 +6,8 @@
 ![Governed](https://img.shields.io/badge/generation-HALO--governed%20(SUGGEST)-orange)
 ![Packs](https://img.shields.io/badge/capability%20packs-25-informational)
 
-> A ready-to-fork seed **and** an installable, governed generation engine that gives **6 AI coding
-> tools** — Claude Code, GitHub Copilot, Kiro, Codex CLI, Cursor, Gemini CLI — the enterprise context to
+> A ready-to-fork seed **and** an installable, governed generation engine that gives **8 AI coding
+> tools** — Claude Code, GitHub Copilot, Kiro, Codex CLI, Cursor, Gemini CLI, Windsurf, Cline — the enterprise context to
 > act as specialist engineers from day one.
 
 **📖 New to EEIK? Start with the [interactive guide](docs/index.html)** — the fastest visual overview
@@ -31,8 +31,8 @@ eeik doctor                                 # check your setup (deps, manifest, 
 ```bash
 pip install -e ".[test]"                    # engine + HALO (agent-harness) + pytest
 eeik demo                                   # generate an agent on the real HALO confidence gate
-eeik catalog --tag regulated                # query the 22-pack capability catalog
-eeik architectures                          # 4 proven, deployable reference architectures
+eeik catalog --tag regulated                # query the 25-pack capability catalog
+eeik architectures                          # 5 proven, deployable reference architectures
 ```
 
 ```mermaid
@@ -49,14 +49,14 @@ flowchart LR
 
 | You are… | EEIK gives you… |
 |---|---|
-| **A team adopting AI tools** | One config, six tools speaking your standards — `eeik seed` into any repo |
+| **A team adopting AI tools** | One config, eight tools speaking your standards — `eeik seed` into any repo |
 | **A platform / enablement team** | A governed engine: versioned packs, drift detection, conformance gates |
-| **A product that generates artifacts** (e.g. APEX) | A stable SDK + MCP surface to validate manifests, resolve packs, and govern generation |
+| **A product that generates artifacts** (e.g. APEX) | A stable SDK + MCP surface to validate manifests, resolve packs, and govern generation — see the [versioned integration contract](docs/reference/apex-integration-contract.md) |
 | **A regulated enterprise** | Domain packs (banking/insurance/healthcare/retail), governance reviews, HALO-governed generation |
 
 ---
 
-A ready-to-fork seed repository that gives **6 AI coding tools** — Claude Code, GitHub Copilot, Kiro, Codex CLI, Cursor, and Gemini CLI — the enterprise context they need to act as specialist engineers from day one.
+A ready-to-fork seed repository that gives **8 AI coding tools** — Claude Code, GitHub Copilot, Kiro, Codex CLI, Cursor, Gemini CLI, Windsurf, and Cline — the enterprise context they need to act as specialist engineers from day one.
 
 EEIK transforms AI coding assistants from generic code generators into context-aware engineering partners that understand:
 
@@ -69,7 +69,7 @@ EEIK transforms AI coding assistants from generic code generators into context-a
 - AI engineering patterns
 - Organizational knowledge
 
-Drop the configuration layers from this repository into any project and all 6 AI tools become engineering assistants that understand your ecosystem from day one.
+Drop the configuration layers from this repository into any project and all 8 AI tools become engineering assistants that understand your ecosystem from day one.
 
 EEIK is not a runnable application.
 
@@ -118,13 +118,15 @@ Every project should leave the organization smarter than it was before the proje
 EEIK combines:
 
 ### AI Configuration Layer
-For all 6 AI tools:
+For all 8 AI tools:
 - **Claude Code** — `.claude/` (44 agents, 19 commands, hooks, memory)
 - **GitHub Copilot** — `.github/` (44 agents, instructions, prompts, workflows)
 - **Kiro** — `.kiro/steering/` (always-on steering docs)
 - **Codex CLI** — `AGENTS.md` + 5 subdirectory `AGENTS.md` templates
 - **Cursor** — `.cursor/rules/` (glob-matched `.mdc` rules)
 - **Gemini CLI** — `GEMINI.md` (persistent project context)
+- **Windsurf** — `.windsurf/rules/` (always-on Cascade rules)
+- **Cline** — `.clinerules/` (persistent workspace rules)
 
 ### Capability Layer
 Reusable engineering intelligence:
