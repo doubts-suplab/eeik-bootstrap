@@ -393,10 +393,10 @@ def _assemble_generator_prompt(generator: str, spec: str | None) -> str:
     governance/project-analyzer); for an unregistered name the ``spec`` itself is the instruction.
     """
     try:
-        from eeik import runner  # lazy import avoids a generation ⇄ runner cycle
-        reg = runner.GENERATOR_REGISTRY
-        if generator in reg and (runner.GENERATORS / reg[generator]).exists():
-            return runner.build_prompt(generator, runner.load_manifest(None), extra=spec)
+        from eeik import prompts  # shared module — no generation ⇄ runner import cycle
+        reg = prompts.GENERATOR_REGISTRY
+        if generator in reg and (prompts.GENERATORS / reg[generator]).exists():
+            return prompts.build_prompt(generator, prompts.load_manifest(None), extra=spec)
     except Exception:  # noqa: BLE001 - prompt assembly must never break generation
         pass
     return (spec or "").strip() or f"Generate a {generator} artifact following EEIK standards."
