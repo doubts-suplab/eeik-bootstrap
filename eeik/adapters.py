@@ -102,6 +102,117 @@ def read_tech_summary(manifest: dict) -> str:
     return "\n".join(lines) if lines else "- (no manifest — generic enterprise defaults apply)"
 
 
+# ── repository intelligence (projected into every adapter so each tool is substantive) ──────
+
+def _read_yaml(path: Path) -> dict:
+    try:
+        return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    except (OSError, yaml.YAMLError):
+        return {}
+
+
+def _frontmatter(path: Path) -> dict:
+    """Parse the leading YAML frontmatter (--- … ---) of an agent/standard file."""
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return {}
+    # Tolerate an eeik-managed marker line before the frontmatter.
+    if text.startswith("# eeik-managed"):
+        text = text.split("\n", 1)[1] if "\n" in text else ""
+    if not text.startswith("---"):
+        return {}
+    end = text.find("\n---", 3)
+    if end == -1:
+        return {}
+    return _read_yaml_str(text[3:end])
+
+
+def _read_yaml_str(s: str) -> dict:
+    try:
+        return yaml.safe_load(s) or {}
+    except yaml.YAMLError:
+        return {}
+
+
+def _first_sentence(text: str, limit: int = 140) -> str:
+    one = " ".join(str(text).split())
+    one = one.split(". ")[0].rstrip(".")
+    return (one[:limit] + "…") if len(one) > limit else one
+
+
+def read_pack_index() -> str:
+    """A Markdown table of the capability packs available in this repo (name + focus)."""
+    rows = []
+    if PACKS_DIR.exists():
+        for d in sorted(p for p in PACKS_DIR.iterdir() if p.is_dir()):
+            meta = _read_yaml(d / "metadata.yaml")
+            if not meta:
+                continue
+            rows.append(f"| `{d.name}` | {_first_sentence(meta.get('description', ''), 90)} |")
+    if not rows:
+        return "_(no capability packs found)_"
+    return "| Pack | Focus |\n|---|---|\n" + "\n".join(rows)
+
+
+def read_standards_index() -> str:
+    """Comma-separated list of the standards materialised in `.claude/standards/`."""
+    d = REPO_ROOT / ".claude" / "standards"
+    files = sorted(f.stem for f in d.glob("*.md")) if d.exists() else []
+    return ", ".join(f"`{s}`" for s in files) if files else "_(none)_"
+
+
+def read_agent_index(limit: int | None = None) -> str:
+    """A Markdown table of the specialist agents (name + trigger) from `.claude/agents/`."""
+    d = REPO_ROOT / ".claude" / "agents"
+    if not d.exists():
+        return "_(no agents found)_"
+    rows = []
+    for f in sorted(d.glob("*.md")):
+        fm = _frontmatter(f)
+        name = fm.get("name") or f.stem
+        desc = _first_sentence(fm.get("description", ""), 110)
+        if desc:
+            rows.append(f"| `{name}` | {desc} |")
+    if limit:
+        rows = rows[:limit]
+    if not rows:
+        return "_(no agents found)_"
+    return "| Agent | Use for |\n|---|---|\n" + "\n".join(rows)
+
+
+def read_patterns_index() -> str:
+    """Bulleted list of approved patterns in `knowledge/patterns/`."""
+    d = REPO_ROOT / "knowledge" / "patterns"
+    if not d.exists():
+        return "_(none)_"
+    items = [f"- `{f.stem}`" for f in sorted(d.glob("*.md")) if f.name.lower() != "readme.md"]
+    return "\n".join(items) if items else "_(none)_"
+
+
+def capability_context() -> str:
+    """A rich, tool-agnostic 'what this repo gives you' block (packs + standards + patterns)."""
+    return f"""## Capability packs (engineering intelligence available)
+
+{read_pack_index()}
+
+Activate the packs your `project-manifest.yaml` selects with `eeik activate --apply`; each materialises
+its agents and standards into `.claude/`.
+
+## Standards enforced
+
+{read_standards_index()}
+
+Standards live in `.claude/standards/` (and `capability-packs/<pack>/standards/`). They define the
+CORRECT/WRONG patterns the golden rules summarise.
+
+## Approved patterns
+
+{read_patterns_index()}
+
+See `knowledge/patterns/` for the full write-ups and `knowledge/anti-patterns/` for what to avoid."""
+
+
 # ── Kiro ──────────────────────────────────────────────────────────────────────
 
 def generate_kiro(manifest: dict, dry: bool) -> None:
@@ -157,9 +268,7 @@ Consult `.claude/memory/domain-glossary.md` for terminology.
 
 {golden}
 
-## Standards Files
-
-Full standards are in `capability-packs/core/standards/` and `.claude/standards/`.
+{capability_context()}
 """
 
     # steering/structure.md
@@ -185,6 +294,12 @@ templates/        Code templates per technology
 - **Hexagonal Architecture** — domain / application / infrastructure / web layers
 - **Domain-Driven Design** — bounded contexts, aggregates, domain events
 - Dependencies always flow inward (domain has zero outward dependencies)
+
+## Specialist agents
+
+Route each task to the right specialist (`.claude/agents/`):
+
+{read_agent_index()}
 
 ## Package Structure (Java)
 
@@ -278,6 +393,18 @@ Child AGENTS.md files in subdirectories override or extend these instructions.
 ## Non-Negotiable Coding Rules
 
 {golden}
+
+---
+
+{capability_context()}
+
+---
+
+## Specialist agents
+
+Route work to the right specialist (guidance lives in `.claude/agents/`):
+
+{read_agent_index()}
 
 ---
 
@@ -417,6 +544,21 @@ Full standard: `capability-packs/core/standards/security-baseline.md`
 """
     write_file(REPO_ROOT / ".cursor" / "rules" / "security.mdc", security_mdc, dry)
 
+    # capabilities.mdc — the engineering intelligence available (packs, standards, agents)
+    capabilities_mdc = f"""---
+description: EEIK Capabilities — packs, standards, and specialist agents available in this repo
+globs: ["**/*"]
+alwaysApply: false
+---
+{GENERATED_BANNER}
+{capability_context()}
+
+## Specialist agents
+
+{read_agent_index()}
+"""
+    write_file(REPO_ROOT / ".cursor" / "rules" / "capabilities.mdc", capabilities_mdc, dry)
+
 
 # ── Gemini CLI ────────────────────────────────────────────────────────────────
 
@@ -463,6 +605,12 @@ Context is structured across:
 | `knowledge/anti-patterns/` | What NOT to do and why |
 | `knowledge/adr-repository/` | Architecture Decision Records |
 | `.claude/memory/` | Project-specific context, constraints, decisions |
+
+{capability_context()}
+
+## Specialist agents
+
+{read_agent_index()}
 
 ## Architecture
 
@@ -531,9 +679,14 @@ trigger: always_on
 
 ## Repository intelligence
 
-This repository uses **EEIK**. Deeper context lives in `capability-packs/`, `knowledge/patterns/`,
-`knowledge/anti-patterns/`, and `.claude/memory/`. Regenerate this file with
-`eeik generate-adapters --apply` after a manifest change.
+This repository uses **EEIK**. Regenerate this file with `eeik generate-adapters --apply` after a
+manifest change.
+
+{capability_context()}
+
+## Specialist agents
+
+{read_agent_index()}
 """
     write_file(REPO_ROOT / ".windsurf" / "rules" / "tech.md", tech_md, dry)
 
@@ -575,8 +728,13 @@ Non-negotiable engineering standards. Apply to all code Cline writes or edits.
 
 ## Repository intelligence
 
-This repository uses **EEIK**. Standards, patterns, and decisions live in `capability-packs/`,
-`knowledge/`, and `.claude/memory/`. Regenerate with `eeik generate-adapters --apply`.
+This repository uses **EEIK**. Regenerate with `eeik generate-adapters --apply`.
+
+{capability_context()}
+
+## Specialist agents
+
+{read_agent_index()}
 """
     write_file(REPO_ROOT / ".clinerules" / "project.md", project_md, dry)
 
