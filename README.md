@@ -10,7 +10,7 @@
 > tools** — Claude Code, GitHub Copilot, Kiro, Codex CLI, Cursor, Gemini CLI, Windsurf, Cline — the enterprise context to
 > act as specialist engineers from day one.
 
-**📖 New to EEIK? Start with the [interactive guide](docs/index.html)** — the fastest visual overview
+**📖 New to EEIK? Start with the [visual overview](docs/index.html)** — the fastest way to see what it is
 (open it in a browser). Then follow the Quick Start below, or jump to the
 [Engine Reference](docs/reference/engine-reference.md).
 
@@ -311,6 +311,8 @@ SECURITY.md        Vulnerability reporting
 .github/           Copilot      — 44 agents, instructions, prompts, workflows, hooks
 .kiro/             Kiro         — steering docs (product, tech, structure), hooks
 .cursor/           Cursor       — .mdc rules (golden-rules, architecture, security)
+.windsurf/         Windsurf     — always-on Cascade rules (golden-rules, tech)
+.clinerules/       Cline        — persistent workspace rules (golden-rules, project)
 
 ── Intelligence Layer (tool-agnostic) ────────────────────────────────────────
 capability-packs/  22 packs — core, architecture, java, aws, ai-engineering,

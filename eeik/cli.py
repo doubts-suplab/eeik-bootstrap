@@ -173,6 +173,7 @@ COMMANDS = {
     "lessons":           _mod("lessons"),
     "doctor":            _mod("doctor"),
     "lint":              _mod("lint"),
+    "telemetry":         _mod("telemetry"),
 }
 
 HELP = f"""
@@ -200,6 +201,7 @@ HELP = f"""
   lessons             Capture lessons from audit logs  [--from FILE] [--list] [--json]
   doctor              Diagnose adoption/health problems [--json] [--strict] [--exit-code]
   lint                Lint agent/standard content       [--json] [--strict] [--exit-code] [--show-pass]
+  telemetry           Opt-in local usage stats          [--enable] [--disable] [--clear] [--json]
 
 {ANSI_BOLD}Quick start:{ANSI_RESET}
   1. eeik validate

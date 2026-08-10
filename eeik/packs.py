@@ -213,9 +213,12 @@ def activate(packs: list[str], dry: bool, clean: bool) -> int:
                     except OSError:
                         pass
 
+    from eeik import telemetry  # opt-in, local-only; a no-op unless the user enabled it
+
     for pack_name in packs:
         pack_dir = PACKS_DIR / pack_name
         print(f"\n  {ANSI_BOLD}[{pack_name}]{ANSI_RESET}")
+        telemetry.record("pack", pack_name)
         any_file = False
 
         for subdir_name, target_dir in PACK_SUBDIRS.items():

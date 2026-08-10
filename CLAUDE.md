@@ -45,7 +45,8 @@ adopting project — the explicit dual-purpose boundary, ADR-011), `eeik lessons
 capture — HALO/APEX audit logs → staged `LL-NNN` lessons, SUGGEST authority, ADR-012), `eeik doctor`
 (diagnose adoption/health problems — deps, HALO/MCP, manifest, resolution, drift, conformance — each
 with an actionable fix), `eeik lint` (content-quality lint of pack agents + standards — frontmatter,
-name-matches-file, description quality, structure; complements `verify`).
+name-matches-file, description quality, structure; complements `verify`), `eeik telemetry` (opt-in,
+local-first, non-identifying pack/generator usage counters — off by default, no network; ADR/ROADMAP §8).
 Tests: `python3 -m pytest tests/ -q`. Keep `docs/progress.md`, `ROADMAP.md`, `README.md`, and
 `docs/index.html` in sync when this layer changes.
 

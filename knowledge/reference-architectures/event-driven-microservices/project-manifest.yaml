@@ -1,0 +1,65 @@
+# EEIK Reference Architecture — Event-Driven Microservices (Kafka + saga/outbox on Spring Boot)
+# A schema-valid eeik manifest. Feed it to `eeik resolve-packs` / the repository-generator, or copy it
+# as the starting point for a real event-driven microservices platform.
+
+schema_version: "1.0"
+
+project:
+  name: order-events-platform
+  description: Event-driven microservices — Kafka backbone, saga orchestration, transactional outbox
+  owner: platform
+  domain: generic
+  project_type: greenfield
+
+technology:
+  backend:
+    language: java
+    version: 21
+    framework: spring-boot
+  database:
+    type: aurora-postgresql
+    migration_tool: flyway
+    orm: spring-data-jpa
+  messaging:
+    broker: kafka
+    pattern: event-driven
+  containerisation:
+    runtime: docker
+
+architecture:
+  style: microservices
+  patterns:
+    - ddd
+    - saga
+    - outbox
+    - cqrs
+    - api-gateway
+  api_style: rest
+
+cloud:
+  provider: aws
+  infra_as_code: cdk
+  regions:
+    - eu-west-1
+  multi_account: true
+
+governance:
+  profile: enterprise
+  adr_required: true
+  coverage_threshold: 85
+  reviews_required:
+    - architecture-review
+    - security-review
+
+delivery:
+  model: multi-team
+  methodology: agile
+  sprint_length_weeks: 2
+  cicd_platform: github-actions
+
+observability:
+  enabled: true
+  logging: cloudwatch
+  tracing: x-ray
+  metrics: cloudwatch
+  slo_required: true

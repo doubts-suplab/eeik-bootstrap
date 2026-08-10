@@ -373,8 +373,13 @@ Risk notes call out dependencies or hazards.
       - [x] **multi-agent-ai-platform** — promoted the stray prose blueprint into a full engine-surfaced
         architecture (supervisor + workers on HALO): resolving manifest, `reference.yaml`, architecture +
         runbook, CDK app (Fargate + DynamoDB checkpoints/audit + least-privilege Bedrock), and DynamoDB-Local
-        docker-compose. **5 architectures** now; `eeik verify` gates it. Further candidates:
-        event-driven-microservices, regulated-banking-platform.
+        docker-compose. `eeik verify` gates it.
+      - [x] **event-driven-microservices** — Kafka + saga/outbox + CQRS on Spring Boot/Java 21: resolving
+        manifest (`core, architecture, aws, containers, delivery, governance, java`), `reference.yaml`,
+        architecture + runbook (outbox/saga/DLQ ops), CDK app (MSK + Aurora + Fargate edge), and a
+        Kafka+Schema-Registry+Postgres docker-compose with an outbox schema. Added `technology.containerisation`
+        to the schema (the resolver already read it). **6 architectures** now.
+        Further candidate: regulated-banking-platform.
 - [x] Strengthen **closed-loop capture** — documented the **staged → committed** promotion workflow
       (7-step curation checklist: review → curate stubs → de-dup → number → move + index → maybe promote
       to a pattern → commit) in `knowledge/lessons-learned/README.md`.
@@ -431,8 +436,11 @@ Risk notes call out dependencies or hazards.
 ### 8. Longer-term strategic
 - [ ] **Composable packs** — richer dependency resolution + conflict detection between packs. _Effort L ·
       Impact M · Risk: needs a dependency model beyond today's flat `dependencies:`._
-- [ ] **Opt-in telemetry** — which packs/agents are most used, to prioritise the catalog. _Effort M ·
-      Impact M · Risk: privacy — must be strictly opt-in, local-first, documented._
+- [x] **Opt-in telemetry** — done, **strictly opt-in + local-first + non-identifying** (the privacy bar
+      the item required). `eeik/telemetry.py` keeps aggregate pack/generator counters in
+      `~/.eeik/telemetry.json` **only after** `eeik telemetry --enable` (or `EEIK_TELEMETRY=1`); there is
+      no network code in the module (nothing is transmitted), `record()` is a hard no-op otherwise and
+      never raises. CLI `eeik telemetry [--enable|--disable|--clear|--json]`. Documented in SECURITY.md.
 - [ ] **Enterprise story** — private pack registries, **signed packs** (provenance beyond the content
       digest), air-gapped install. _Effort L · Impact H (enterprise) · builds on `eeik.lock` digests._
 - [x] **Broader tool support** — added **Windsurf** (`.windsurf/rules/`) and **Cline** (`.clinerules/`)

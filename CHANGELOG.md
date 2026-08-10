@@ -29,11 +29,12 @@ governed, versioned, queryable engine consumed by APEX and CI.
 - **Conformance gate** — `eeik verify` (`--strict` / `--exit-code`) asserts packs deliver what they
   declare (ADR-008).
 - **HALO Agent Contracts** — `eeik contract` emits schema-valid, runtime-governed contracts (ADR-009).
-- **Reference architectures** — 5 engine-surfaced blueprints, each with a schema-valid manifest,
-  design, runbook, **deployable CDK app**, and **local-dev** (docker-compose + seed) (ADR-010). The
-  fifth, **multi-agent-ai-platform** (supervisor + workers on HALO), promotes the former stray prose
-  blueprint into the full engine-surfaced structure (Fargate + DynamoDB checkpoints/audit +
-  least-privilege Bedrock; DynamoDB-Local compose).
+- **Reference architectures** — 6 engine-surfaced blueprints, each with a schema-valid manifest,
+  design, runbook, **deployable CDK app**, and **local-dev** (docker-compose + seed) (ADR-010).
+  **multi-agent-ai-platform** (supervisor + workers on HALO) promotes the former stray prose blueprint
+  into the full structure; **event-driven-microservices** (Kafka + saga/outbox + CQRS on Spring Boot)
+  adds a Java/EDA blueprint with an MSK + Aurora + Fargate CDK app and a Kafka + Schema-Registry +
+  Postgres compose. Also added `technology.containerisation` to the schema (the resolver already read it).
 - **Governed generation over MCP/SDK** — `eeik generate` / `eeik.generate()` / `eeik_generate` return a
   staged, human-review draft.
 - **Closed-loop knowledge capture** — `eeik lessons` drafts staged `LL-NNN` lessons from HALO/APEX
@@ -48,6 +49,9 @@ governed, versioned, queryable engine consumed by APEX and CI.
   dedicated opt-in flags (`cloud.finops`, `observability.chaos_engineering`,
   `delivery.platform_engineering`) — absent by default, so existing manifests resolve unchanged.
 - **`--json`** on `status` / `validate` / `diff` (alongside catalog/architectures/verify/doctor/lessons).
+- **Opt-in telemetry** — `eeik telemetry` (`--enable` / `--disable` / `--clear` / `--json`). Strictly
+  opt-in, local-first, non-identifying: aggregate pack/generator counters in `~/.eeik/telemetry.json`,
+  recorded only after explicit opt-in, with **no network code** in the module. Documented in SECURITY.md.
 - **Two more AI-tool adapters** — `eeik generate-adapters` now also emits **Windsurf** (`.windsurf/rules/`,
   always-on Cascade rules) and **Cline** (`.clinerules/`, persistent workspace rules); **8 tools** total,
   standards + golden rules at parity. New surfaces plug into the same generator registry.
