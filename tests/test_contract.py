@@ -67,7 +67,7 @@ def test_agentname_is_slugified():
 
 def test_validates_against_halo_schema():
     """Every blueprint's contract must pass HALO's own validator (schema + §3.3 binding rule)."""
-    pytest.importorskip("agent_harness", reason="agent-harness not installed")
+    pytest.importorskip("halo_agent_harness", reason="halo-agent-harness not installed")
     if contract_mod._locate_schema() is None:
         pytest.skip("agent-contract.schema.json not locatable in this environment")
     for bp in BLUEPRINTS:

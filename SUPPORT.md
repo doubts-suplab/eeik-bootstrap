@@ -32,7 +32,7 @@ verify. `bootstrap/seed-manifest.yaml` classifies every root entry as `seed` / `
 **Do I need HALO (`agent-harness`) installed?**
 No — it's optional. Without it, governed generation runs *fail-safe* (drafts are staged, ungoverned)
 and `eeik demo` runs offline. `eeik doctor` tells you exactly what works with and without it. Install
-it (`pip install agent-harness`) for a certified confidence gate.
+it (`pip install halo-agent-harness`) for a certified confidence gate.
 
 **Does generation ever change my files automatically?**
 No. Generation is **SUGGEST authority** — every draft (agents, lessons) is written to `.eeik-staging/`

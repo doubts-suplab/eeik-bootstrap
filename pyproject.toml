@@ -40,13 +40,13 @@ Issues = "https://github.com/doubts-suplab/eeik-bootstrap/issues"
 
 [project.optional-dependencies]
 # Governed generation: EEIK's generators run on the HALO agent-harness runtime (ADR-003).
-governance = ["agent-harness>=0.1.0"]
+governance = ["halo-agent-harness>=0.1.0"]
 # MCP server: expose the EEIK read model over the Model Context Protocol (ADR-006).
 mcp = ["mcp>=1.0"]
-test = ["pytest>=7.0", "pytest-cov>=4.0", "agent-harness>=0.1.0", "mcp>=1.0"]
+test = ["pytest>=7.0", "pytest-cov>=4.0", "halo-agent-harness>=0.1.0", "mcp>=1.0"]
 # Dev tooling for the downstream-product quality gate (.github/workflows/quality-gate.yml): the
 # `pip install -e ".[dev]"` step needs ruff + mypy present, plus the test extras.
-dev = ["ruff>=0.6", "mypy>=1.8", "types-PyYAML>=6.0", "pre-commit>=3.5", "pytest>=7.0", "pytest-cov>=4.0", "agent-harness>=0.1.0", "mcp>=1.0"]
+dev = ["ruff>=0.6", "mypy>=1.8", "types-PyYAML>=6.0", "pre-commit>=3.5", "pytest>=7.0", "pytest-cov>=4.0", "halo-agent-harness>=0.1.0", "mcp>=1.0"]
 
 [project.scripts]
 eeik = "eeik.cli:main"
@@ -84,12 +84,12 @@ ignore = [
 
 [tool.mypy]
 python_version = "3.11"
-# Optional adapter deps (agent_harness, mcp, anyio) are edge-only and may be absent in the core env;
+# Optional adapter deps (halo_agent_harness, mcp, anyio) are edge-only and may be absent in the core env;
 # the try/except import seams already handle their absence at runtime.
 ignore_missing_imports = true
 warn_unused_ignores = true
 
 [[tool.mypy.overrides]]
 # The content-layer data files and generated adapters are not type-checked as engine source.
-module = ["yaml", "agent_harness.*", "mcp.*", "anyio"]
+module = ["yaml", "halo_agent_harness.*", "mcp.*", "anyio"]
 ignore_missing_imports = true
