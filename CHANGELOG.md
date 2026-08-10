@@ -17,6 +17,12 @@ governed, versioned, queryable engine consumed by APEX and CI.
   read-model **MCP server** (`eeik mcp`, ADR-006) — three surfaces over one implementation.
 - **Governed generation on HALO** — every generator runs through the confidence gate; SUGGEST
   authority, staged for human review, never auto-applied; fails safe without HALO (ADR-003).
+- **LLM-backed generators** — real generation for the repository/agent/knowledge/governance
+  generators runs on HALO's `LlmPort` (native Anthropic adapter, keyed by `ANTHROPIC_API_KEY`).
+  `resolve_producer` returns `producer_kind='llm'` when a port is available (injectable for tests)
+  and **fails safe** to the deterministic offline producer otherwise; `eeik run <gen> --governed`,
+  the SDK `eeik.generate()`, and the MCP `eeik_generate` tool all use it. Governance is unchanged
+  (SUGGEST, staged, `auto_enforced=False`).
 - **Pack versioning + lockfile** — `eeik lock` / `diff` / `upgrade` pin versions + content digests to
   `eeik.lock` (ADR-004).
 - **Queryable catalog** — `eeik catalog` indexes all 22 packs / agents / standards with provenance.

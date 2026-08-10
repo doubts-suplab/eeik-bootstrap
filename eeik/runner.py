@@ -211,22 +211,27 @@ def main() -> int:
         return 0
 
     if args.governed:
-        # Governed path: the raw claude output is a *draft* proposed at SUGGEST authority. The HALO
-        # harness (not this script) decides enforcement — SUGGEST can never auto-enforce, so the
-        # draft is staged for human approval. See eeik/generation.py / ADR-003.
-        from eeik.generation import govern_generation
+        # Governed path: the LLM output is a *draft* proposed at SUGGEST authority. The HALO harness
+        # (not this script) decides enforcement — SUGGEST can never auto-enforce, so the draft is
+        # staged for human approval. Generation runs on HALO's LlmPort (not a raw SDK/CLI); when no
+        # LLM is configured we fail safe and stage the assembled prompt itself. See eeik/generation.py
+        # / ADR-003.
+        from eeik.generation import govern_generation, llm_producer, _resolve_llm_port
 
-        def _producer() -> tuple[str, float]:
-            if not check_claude_available():
-                print(f"{ANSI_YELLOW}claude CLI unavailable — staging the assembled prompt as the "
-                      f"draft artifact.{ANSI_RESET}", file=sys.stderr)
+        port = _resolve_llm_port()
+        if port is not None:
+            producer = llm_producer(args.generator, prompt, llm_port=port, confidence=args.confidence)
+            kind = "llm"
+        else:
+            print(f"{ANSI_YELLOW}No LLM configured (set ANTHROPIC_API_KEY + install the halo `llm` "
+                  f"extra) — staging the assembled prompt as the draft.{ANSI_RESET}", file=sys.stderr)
+
+            def producer() -> tuple[str, float]:
                 return prompt, args.confidence
-            result = subprocess.run(
-                ["claude", "--print"], input=prompt, capture_output=True, text=True, cwd=str(REPO_ROOT)
-            )
-            return (result.stdout or prompt), args.confidence
 
-        return govern_generation(args.generator, _producer)
+            kind = "prompt-only"
+
+        return govern_generation(args.generator, producer, producer_kind=kind)
 
     return run_claude(prompt, args.output)
 

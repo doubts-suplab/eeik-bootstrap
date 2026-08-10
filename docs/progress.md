@@ -49,7 +49,7 @@ Last updated: 2026-07-25 (v1.4 — Governed Generation Engine, Tier 1).
 | **Node.js / TypeScript pack** | ✅ | `node-developer`, `typescript-api-engineer` + node-standard (strict TS, Zod, NestJS/Fastify, Vitest); resolves on `backend.language: node` |
 | **Retail domain pack** | ✅ | `retail-domain-expert`, `ecommerce-specialist` + retail-standard (catalog/checkout/inventory/order state machine, PCI-DSS, GDPR); resolves on `project.domain: retail` |
 | **Directory taxonomy documented** | ✅ | ADR-005 + `ARCHITECTURE.md` — engine / content / adapters / docs layers + placement rule |
-| LLM-backed generators (repository/agent/knowledge/governance) | 🟡 | Prompts + governed harness exist; require the `claude` CLI / API key to produce real output |
+| **LLM-backed generators (repository/agent/knowledge/governance)** | ✅ | Real generation runs on HALO's `LlmPort` (Anthropic adapter, keyed by `ANTHROPIC_API_KEY`); `resolve_producer` returns `producer_kind='llm'` when a port is available and **fails safe** to the offline producer otherwise. Governed identically (SUGGEST, staged, `auto_enforced=False`). SDK `eeik.generate()`, MCP `eeik_generate`, and `eeik run <gen> --governed` all use it (`eeik/generation.py`) |
 | **EEIK MCP server** | ✅ | `eeik mcp` — read model over MCP (`eeik_catalog`, `eeik_validate_manifest`, `eeik_resolve_packs`, `eeik_pack_drift`); read-only v1 (`eeik/mcp_server.py`, ADR-006) |
 | **Stable Python API / SDK** | ✅ | `import eeik` — typed `find_packs`/`providers_of`/`validate_manifest`/`resolve_packs`/`pack_drift`/`write_lock`; CLI + MCP delegate to it (`eeik/api.py`, ADR-007) |
 | **apex-sdlc onboarding consumes the engine** | ✅ | Cross-repo: APEX validates + resolves via the real engine — SDK (`import eeik`) or MCP (`eeik mcp`), vendored fallback (apex `app/onboarding/eeik_engine.py`) |
@@ -79,7 +79,7 @@ low risk, high impact):
 | Onboarding | ~~Adopter-first README + top-of-repo flow diagram; lead with `eeik seed`~~ ✅; ~~interactive guide as the newcomer landing page (README leads with it; guide opens with a Get Started section)~~ ✅ | ✅ Done |
 | Distribution | ~~PyPI release automation (OIDC)~~ ✅ workflow ready; ~~badges~~ ✅ (GitHub topics = maintainer repo-setting) | ✅ Done |
 | CLI UX | ~~`eeik doctor`~~ ✅; ~~`--json` on status/validate/diff~~ ✅ (inspection commands consistent) | ✅ Done |
-| Testing | ~~Shipped-content smoke test~~ ✅; ~~Python 3.11/3.12/3.13 matrix + coverage floor~~ ✅; ~~hook tests~~ ✅ (30 subprocess cases); ~~content lint~~ ✅; ~~adapter-generation + pack-materialization tests~~ ✅ (17 cases) | ✅ Done |
+| Testing | ~~Shipped-content smoke test~~ ✅; ~~Python 3.11/3.12/3.13 matrix + coverage floor~~ ✅; ~~hook tests~~ ✅ (30 subprocess cases); ~~content lint~~ ✅; ~~adapter-generation + pack-materialization tests~~ ✅ (17 cases); ~~LLM-generation tests~~ ✅ (StubLlm, 7 cases) | ✅ Done |
 | Docs/process | ~~`CHANGELOG.md`, `CODE_OF_CONDUCT.md`, SUPPORT/FAQ~~ ✅; ~~engine security-model section~~ ✅ | ✅ Done |
 | CI polish | ~~Dependabot (pip + github-actions)~~ ✅; ~~pre-commit (ruff/mypy + local eeik lint/verify)~~ ✅; ~~catalog/verify diagnostics uploaded as CI artifacts on failure~~ ✅ | ✅ Done _(repo-admin follow-up: mark `verify --strict` + `diff` as required checks)_ |
 | Content | ~~Adapter parity matrix~~ ✅; ~~domain-pack criteria~~ ✅ (CONTRIBUTING); ~~staged→committed lessons promotion workflow~~ ✅ (reference-architecture expansion ongoing) | 🟡 In progress |
