@@ -18,7 +18,7 @@ jobs:
     name: Secrets Scan (Gitleaks)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0  # Full history for commit scanning
 
@@ -43,7 +43,7 @@ jobs:
           - name: Python (pip-audit)
             check: python
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Java — OWASP Dependency Check
         if: matrix.check == 'java'
@@ -102,7 +102,7 @@ jobs:
     name: Container Vulnerability Scan (Trivy)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Build image for scanning
         run: |
@@ -140,7 +140,7 @@ jobs:
     outputs:
       languages: ${{ steps.detect.outputs.languages }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Detect CodeQL languages present
         id: detect
@@ -175,7 +175,7 @@ jobs:
       matrix:
         language: ${{ fromJson(needs.codeql-detect.outputs.languages) }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Initialise CodeQL
         uses: github/codeql-action/init@v3
