@@ -254,8 +254,8 @@
       "properties": {
         "provider": {
           "type": "string",
-          "enum": ["aws", "azure", "gcp", "hybrid"],
-          "description": "Primary cloud provider."
+          "enum": ["aws", "azure", "gcp", "hybrid", "local-first"],
+          "description": "Primary cloud provider. 'local-first' denotes a self-hosted / offline-capable posture (e.g. local Ollama, Docker Compose) with no managed-cloud dependency."
         },
         "infra_as_code": {
           "type": "string",
@@ -298,13 +298,13 @@
         },
         "framework": {
           "type": "string",
-          "enum": ["langgraph", "crewai", "autogen", "mcp", "bedrock-agents", "none"],
-          "description": "Primary AI/agent framework."
+          "enum": ["langgraph", "crewai", "autogen", "mcp", "bedrock-agents", "agent-harness", "none"],
+          "description": "Primary AI/agent framework. 'agent-harness' denotes the HALO generic agent runtime (doubts-suplab/agent-harness)."
         },
         "foundation_model": {
           "type": "string",
-          "enum": ["claude", "gpt-4", "llama", "titan", "mixed"],
-          "description": "Primary foundation model provider."
+          "enum": ["claude", "gpt-4", "llama", "titan", "ollama", "mixed"],
+          "description": "Primary foundation model provider. 'ollama' denotes locally-served open models (the local-first posture)."
         },
         "governance_required": {
           "type": "boolean",
@@ -380,7 +380,7 @@
         },
         "methodology": {
           "type": "string",
-          "enum": ["agile", "kanban", "scaled-agile"],
+          "enum": ["agile", "kanban", "scaled-agile", "incremental"],
           "default": "agile"
         },
         "sprint_length_weeks": {
