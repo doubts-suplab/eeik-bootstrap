@@ -55,7 +55,7 @@ architecture:
 
 # ── Cloud Platform (required) ─────────────────────────────────
 cloud:
-  provider: <provider>            # aws | azure | gcp | hybrid
+  provider: <provider>            # aws | azure | gcp | hybrid | local-first (self-hosted / offline)
   infra_as_code: cdk              # cdk | terraform | both | none
   regions:
     - eu-west-1                   # target deployment region(s)
@@ -65,8 +65,8 @@ cloud:
 ai:
   enabled: true
   pattern: <pattern>              # rag | single-agent | multi-agent | enterprise-agent-platform | none
-  framework: <framework>          # langgraph | crewai | autogen | mcp | bedrock-agents | none
-  foundation_model: claude        # claude | gpt-4 | llama | titan | mixed
+  framework: <framework>          # langgraph | crewai | autogen | mcp | bedrock-agents | agent-harness (HALO) | none
+  foundation_model: claude        # claude | gpt-4 | llama | titan | ollama (local) | mixed
   governance_required: false      # auto-set true for regulated domains or multi-agent+
   memory_pattern: <memory>        # in-session | persistent-db | vector-store | none
 
@@ -87,7 +87,7 @@ governance:
 # ── Delivery Model (required) ─────────────────────────────────
 delivery:
   model: <model>                  # single-team | multi-team | enterprise-program
-  methodology: agile              # agile | kanban | scaled-agile
+  methodology: agile              # agile | kanban | scaled-agile | incremental
   sprint_length_weeks: 2          # 1 | 2 | 3 | 4
   cicd_platform: github-actions   # github-actions | jenkins | gitlab-ci | azure-devops | none
 
